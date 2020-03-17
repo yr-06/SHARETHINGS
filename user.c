@@ -9,6 +9,8 @@ typedef struct compte_u{
         char prenom[32]
         char ID[64];
         char mdp[64];
+	char mail[64];
+	char tel[15];
         //ressource à afficher : struct ressource_user* ressource; livres empruntes/deposes
 
 }user;
@@ -32,6 +34,7 @@ char * get_ID(user u){
         return(u->ID);
 }
 
+
 //Setters : permet d'attribuer a des variables des valeurs
 
 void set_nom(user u, char * nom){
@@ -54,14 +57,16 @@ void set_ID(user u, char * ID){
         strcpy(u->ID, ID);
 
 }
-//fonctions : 
+//fonctions :
 //1) permet de changer de donnees (mdp, ID , etats des ressources...)
 user changer_donnees(user u, int choix){
 	char newMdp[32];
 	char checkNewMdp[32];
-	char newID[64];
+	char newMail[64];
+	char newTel[15];
 	printf("Pour changer de mot de passe, tapez 1\n");
-	printf("Pour changer d'identifiant, tapez 2\n");
+	printf("Pour changer le mail associé à votre compte, tapez 2\n");
+	printf("Pour changer le numéro associé à votre compte, tapez 3\n");
 	scanf("%d", &choix);
 	switch(choix){
 		case 1:
@@ -77,9 +82,14 @@ user changer_donnees(user u, int choix){
 				return changer_donnees(user u, int choix);
 			}
 		case 2:
-			printf("Vous avez choisi de changer d'identifiant."
-			printf("Entrez votre nouvel identifiant: \n");
-			scanf("%s",newID);
+			printf("Vous avez choisi de changer le mail associé à votre compte.");
+			printf("Entrez le nouveau mail:\n");
+			scanf("%s",newMail);
+		case 3:
+			printf("Vous avez choisi de changer le numéro de téléphone associé à votre compte.");
+			printf("Entrez le nouveau numéro:\n");
+			scanf("%s",newTel);
+
 	}
 
 }
