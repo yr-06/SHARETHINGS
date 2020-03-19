@@ -2,7 +2,7 @@
 #define STRUCT__H
 typedef struct s_pers *Personne;
 
-typedef struct s_ress *Ressurce; 
+typedef struct s_ressource *Ressource; 
 
 typedef struct s_elementa *Elementa;
 

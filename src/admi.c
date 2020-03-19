@@ -14,8 +14,11 @@ void get_adm(FILE *f){
     int n;
     printf("Veuillez entrer le mot de passe administrateur :\n");
     scanf("%s",&s);
+    s=crypt(s,);
+    c=crypt(c,);
     fscanf(f,"%s",&c);
-    if (s=c){
+    int n=strcmp(s,c);
+    if (n=0){
         printf("Bienvenue dans le menu administrateur\n");
         printf("Que voulez-vous faire ?\n");
         printf("Ajouter un usager: 1\n Modifier les données d'un usager: 2\n Supprimer un usager: 3\n");
@@ -23,7 +26,8 @@ void get_adm(FILE *f){
         choix();
     }
     printf("Mot de passe incorrect. Réessayez?\n")
-    printf("OUI= 1, NON=0");
+    printf("OUI= 1, NON=0\n");
+    printf("votre choix ")
     scanf("%d",&n);
     if(n=1){
          get_admf(f);

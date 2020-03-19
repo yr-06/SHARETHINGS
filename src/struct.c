@@ -12,7 +12,7 @@ struct s_pers {
     Liste l;
 };
 
-struct s_ressources {
+struct s_ressource {
     char *type;
     char nom[32];
     statut t;
@@ -46,7 +46,7 @@ struct s_liste {
     Elementl head;
     Elementl tail;
 };
-enum statut {LIBRE=0; EMPRUNT};
+typedef enum en_statut {LIBRE=0; EMPRUNT} statut;
 
 //Fonctions sur Liste de Ressources
 
@@ -129,6 +129,7 @@ Annuaire pop_fa(Annuaire ls){
 Annuaire pop_ba(Annuaire ls){
 
 }
+
 Annuaire insert_at(int i,Personne pers,Annuaire annu){
     assert(i<lsannu->size)&&(i>=0);
     switch(i){
