@@ -16,44 +16,44 @@ typedef struct compte_u{
 }user;
 
 //getters : permet de recuperer les differentes variables
-char * get_nom(user u){
+char * getNom(user u){
         return(u->nom);
 
  }
 
-char * get_prenom(user u){
+char * getPrenom(user u){
         return(u->prenom);
 
 }
-char * get_mdp(user u){
+char * getMdpUser(user u){
         return(u->mdp);
 }
 
 
-char * get_ID(user u){
+char * getID(user u){
         return(u->ID);
 }
 
 
 //Setters : permet d'attribuer a des variables des valeurs
 
-void set_nom(user u, char * nom){
+void setNom(user u, char * nom){
         strcpy(u->nom, nom);//copie la valeur d'une chaine de caractere à la position voulue(par le biais de
 //pointeur)
 }
 
 
-void set_prenom(user u, char * prenom){
+void setPrenom(user u, char * prenom){
         strcpy(u->prenom, prenom);
 
 }
 
-void set_mdp(user u, char * mdp){
+void setMdpUser(user u, char * mdp){
         strcpy(u->mdp, mdp);
 
 }
 
-void set_ID(user u, char * ID){
+void setID(user u, char * ID){
         strcpy(u->ID, ID);
 
 }
