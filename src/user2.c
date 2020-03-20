@@ -58,7 +58,7 @@ void setID(user u, char * ID){
 
 }
 //fonctions :
-//1) permet de changer de donnees (mdp, ID , etats des ressources...)
+//permet de changer de donnees (mdp, ID , etats des ressources...)
 user changer_donnees(user u, int choix){
 	char newMdp[32];
 	char checkNewMdp[32];
@@ -94,3 +94,7 @@ user changer_donnees(user u, int choix){
 
 }
 
+
+void suppr_compte(user u){
+//permet de supprimer le compte d'un utilisateur après avoir supprimer les ressources
+}
