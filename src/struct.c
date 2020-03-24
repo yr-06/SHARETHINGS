@@ -13,7 +13,7 @@ struct s_pers {
     char *id;//identifiant de son compte
     char *pwd;//mot de passe lié au compte
     char mail[64];//mail de la personne
-	char tel[15];//numero de telephone de la personne
+    char tel[15];//numero de telephone de la personne
     Liste emprunt;//Liste de Ressources empruntées actuellement par la personne
     //Liste possession;--> liste des ressources dont la personne est proprio --> necessaire?
 };
