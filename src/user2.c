@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../include/personne.h"
+#include "../include/ressources.h"
 
 //structure pour compte users. Si compte commun , mettre un int qui dit si oui ou non on est admin.
 typedef struct compte_u{

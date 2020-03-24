@@ -4,15 +4,13 @@
 #include <crypt.h>
 #include <unistd.h>
 #include "../include/admi.h"
-#include "../include/struct.h"
-/*void get_adm(FILE *f){
-    if(f=null){
-        initialize(f);
-    }
+#include "../include/personne.h"
+#include "../include/ressources.h"
+void get_adm(FILE *f){
     char *s;
     char *c;
     int n;
-    printf("Veuillez entrer le mot de passe administrateur :\n");
+    printf("Veuillez entrer votre identifiant:\n");
     scanf("%s",&s);
     s=crypt(s,);
     c=crypt(c,);
@@ -38,28 +36,62 @@ void init_mtp(FILE *f){
     
     scanf("%s",&s);
     fprintf(f,
-}*/
 
-void add_ress(Personne p, Liste ){
+
+void add_ress(Personne p, Liste base){
     Elementl lr=(Elementl)malloc(sizeof(s_elementl));
     Ressource ress=(Ressource)malloc(sizeof(s_ressource));
+    char*type;
+    char*name;
     ress->nom_proprio=p->nom;
     ress->prenom_proprio=p->prenom_proprio;
-
-
-
+    printf("Veuillez entrer le type de votre ressource :");
+    scanf(%s,&type);
+    printf("\nVeuillez entrer le nom de votre ressource :");
+    scanf(%s,&name);
+    ress->nom=name;
+    ress->type=type;
+    r->t=0;
+    //ajouter instruction pour initialiser dates de pret, nom de l'emprunteur
     lr->r->ress;
+    lr->i=i++;
+    int i=base->size;
+    push_bl(base,i,lr);
+}
+   
+void modif_ress(){}; 
+void add_pers(Annuaire annu){
+    Elementa la=(Elementa)malloc(sizeof(s_elementa));
+    Personne pers=(Personne)malloc(sizeof(s_pers));
+    char*prenom;
+    char*name;
+    int i,j;
+    j=annu->size;
+    printf("Veuillez entrer votre nom:");
+    scanf(%s,&name);
+    printf("\nVeuillez entrer votre prénom:");
+    scanf(%s,&prenom);
+    pers->nom=name;
+    pers->prenom=prenom;
+    la->p->;
+    ann->i=i++;
+    int i=base->size;
     
 
 
+}
+void modif_pers(Annuaire annu,Personne p){
+    int i,j;
+    j=annu->size;
+    current_a=annu->head;
+    for(i=0;i<j;i++){
+        if(p->i==current_a->p->i){
+            //offrir le choix du champ à modifier 
+        }
+        current_a=current_a->next;
+    }
 
-
-
-
-};
-void modif_ress(){}; 
-void add_pers(){};
-void modif_pers(){}; 
+} 
 void supp_pers(){};
 void affichPers(){};
 /*void choix(){

@@ -1,7 +1,11 @@
+#ifndef __RESSOURCES_H__
 #define __RESSOURCES_H__
 
+
 //structures:
-typedef struct ressources_u *ressources;
+typedef struct s_ressource *Ressource; 
+typedef struct s_elementl *Elementl;
+typedef struct s_liste *Liste;
 
 //getters 
 
@@ -20,5 +24,12 @@ char ressource_dispo(ressources r);//permet de savoir si un ressource est dispo
 int nb_pret(s_pers p);//retourne le nombre de pret d'une personne
 int nb_emprunt(s_pers p);//retourne le nombre d'emprunt d'une personne
 void rappel_finEmprunt(ressources r);//affiche un message pour rappeler la date de fin d'emprunt 
+
+Liste push_bl(Liste ls,int i, Elementl l)
+Liste push_fl(Liste ls,Elementl l)
+Liste pop_fl(Liste ls)
+Liste pop_bl(Liste ls)
+Liste insert_at(int i,Ressource ress,Liste ls)
+Liste remove_at(int i,Liste ls)
 
 

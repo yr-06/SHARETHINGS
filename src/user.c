@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "../include/user.h"
-#include "../include/struct.h"
+#include "../include/personne.h"
+#include "../include/ressources.h"
 
 void get_user(FILE *g){
     string s;
