@@ -2,6 +2,6 @@
 #define ADMI__H
 void get_adm(FILE *f)
 void add_ress(){};
-void modif_ress{}; 
-void supp_pers{};
+void modif_ress(){}; 
+void supp_pers(){};
 #endif

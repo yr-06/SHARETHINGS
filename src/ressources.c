@@ -1,7 +1,8 @@
 
 #include <stdio.h>
 #include <stlib.h>
-
+#include "../include/struct.h"
+//Cc,c Ali je comprends tjrs pas le dropBy et le takenBy ?
 
 
 //structure pour les ressources
@@ -16,6 +17,8 @@
 	struct ressources_u *next;// pointeur vers la ressource suivante afin de rattacher une ressource à son 
 //propriétaire
 }ressources;
+
+
 
 
 //getters

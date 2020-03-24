@@ -3,22 +3,30 @@
 #include <crypt.h>
 #include "../include/struct.h"
 
+/*CC c Ali, G enfin compris ce que voulait dire Clement et Remi en parlant de type compte commun aux 2 menus: c le type Personne en faites. A chaque personne correspond des informations permettant de ce connecter et donc un compte. Donc en faite c plus simple comme ça c juste que j'avais pas compris quand tu me l'avais expliquée.
+Donc en effet y a pas besoin de creer de type à part pour les comptes administrateurs et utilisateurs. On gère juste les Personnes c plus simples. Et en plus c ce que demande Philippe ds le sujet, il veut absolument qu'on ait au moins un type Personne et un type Ressource. En vrai pour le moment ça change pas grand chose, c'est juste au niveau de main.c qu'il faudra modifier mais ça je m'en occupe à la fin, c'est pas le plus urgent. Pour le moment il faut absolument qu'on se mette d'accord sur les structures qu'on utilise parce que c'est la base du projet et n peut pas travailler avec des tructures différentes toi et moi ou on cours à la cata !!! Ce que g fait c que j'ai include mon struct.h ds ton ressource.c, dc il faudrait modifier tes fonctions par rapport à ce qui se trouve ds struct.c et struct.h. Je t'ai mis à disposition des explications sur Insta si tu es perdue, c l'explication de ce qu'on avait prévue au départ avec l'aide de Clement. Y a des fonctions qui faut encore que je complète mais grossomodo tu trouves ça ds le cours de Philippe.Tu m'appelles si tu as des questions ou si tu t'en sors pas ;)Bisous (je v m'entraîner dc je serais de nv sur le projet vers 15h~16 certainement)*/
+
 struct s_pers {
-    int i;
-    char nom[32];
-    char prenom[32];
-    char *id;
-    char *pwd;
-    Liste l;
+    int i;//numéro de compte (correspondra aussi à son indice dans Annuaire)
+    char nom[32];//nom de la personne
+    char prenom[32];//prenom de la personne
+    char *id;//identifiant de son compte
+    char *pwd;//mot de passe lié au compte
+    char mail[64];//mail de la personne
+	char tel[15];//numero de telephone de la personne
+    Liste emprunt;//Liste de Ressources empruntées actuellement par la personne
+    //Liste possession;--> liste des ressources dont la personne est proprio --> necessaire?
 };
 
 struct s_ressource {
-    char *type;
-    char nom[32];
-    statut t;
-    char *proprio;
-    char *date_d;
-    char *date_f;
+    char *type;//type de ressouces: livre, bouteilles,CD,magazines,etc...
+    char nom[32];//nom de la ressource
+    statut t;//enum définissant disponibilité de la ressource--> sorte de booléen
+    char *nom_proprio;// nom du proprio de la ressource-->permet de comparer avec le nom d'une Personne si besoin
+    char *prenom_proprio;//prenom du proprio  de la ressource-->permet de comparer avec le prénom d'une Personne si besoin
+    char *date_d;//date de debut du pret 
+    char *date_f;//date de fin du pret
+    /*si ressource dispo laisser dernière date de pret, ne les modifier que lorsque la ressource est pretée à nouveau */
 };
 
 struct s_elementa{
@@ -26,14 +34,14 @@ struct s_elementa{
     Personne p;
     s_elementa *previous;
     s_elementa *next;
-};
+};//element d'un Annuaire
 
 struct s_elementl{
     int i;
     Ressource r;
     s_elementl *previous;
     s_elementl *next;
-};
+};//element d'une Liste
 
 struct s_annuaire {
     int size;
@@ -112,7 +120,7 @@ Liste remove_at(int i,Liste ls){
     
 }
 
-//Fonctions sur listes de Personnes
+//Fonctions sur listes de Personnes= type Annuaire
 
 Annuaire push_ba(Annuaire annu,int i, Elementa a){
 
@@ -131,7 +139,7 @@ Annuaire pop_ba(Annuaire ls){
 }
 
 Annuaire insert_at(int i,Personne pers,Annuaire annu){
-    assert(i<lsannu->size)&&(i>=0);
+    assert(i<annu->size)&&(i>=0);
     switch(i){
         case 0:
             return (push_f(annu,pers));
