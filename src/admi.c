@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include "../include/admi.h"
 #include "../include/struct.h"
-void get_adm(FILE *f){
+/*void get_adm(FILE *f){
     if(f=null){
         initialize(f);
     }
@@ -38,15 +38,31 @@ void init_mtp(FILE *f){
     
     scanf("%s",&s);
     fprintf(f,
-}
+}*/
 
-void add_ress(){};
+void add_ress(Personne p, Liste ){
+    Elementl lr=(Elementl)malloc(sizeof(s_elementl));
+    Ressource ress=(Ressource)malloc(sizeof(s_ressource));
+    ress->nom_proprio=p->nom;
+    ress->prenom_proprio=p->prenom_proprio;
+
+
+
+    lr->r->ress;
+    
+
+
+
+
+
+
+};
 void modif_ress(){}; 
 void add_pers(){};
 void modif_pers(){}; 
 void supp_pers(){};
 void affichPers(){};
-void choix(){
+/*void choix(){
       int d;
       printf("Saisissez votre choix: ");
       scanf("%d",d);
@@ -75,4 +91,4 @@ void choix(){
               choix();
               break;
     }
-}
+}*/

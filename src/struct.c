@@ -21,6 +21,8 @@ struct s_pers {
 struct s_ressource {
     char *type;//type de ressouces: livre, bouteilles,CD,magazines,etc...
     char nom[32];//nom de la ressource
+    char *takenBy_nom;
+    char *takenBy_prenom;
     statut t;//enum définissant disponibilité de la ressource--> sorte de booléen
     char *nom_proprio;// nom du proprio de la ressource-->permet de comparer avec le nom d'une Personne si besoin
     char *prenom_proprio;//prenom du proprio  de la ressource-->permet de comparer avec le prénom d'une Personne si besoin
