@@ -4,11 +4,17 @@
 #include "../include/struct.h"
 //Cc,c Ali je comprends tjrs pas le dropBy et le takenBy ?
 
+//le takenBy fait office de boolean mais en chaine de caractères. Tout simplement, si une ressource
+//qu'on veut emprunter est disponible, alors la valeur de takenBy vaudra 0 ou ' '.
+// Si elle ne l'est pas, ce sera remplacé non pas par 1 mais pas l'identifiant de celui qui l'a pris.
+//Cela permet de savoir qui a emprunté la ressource. Ce char nous aide aussi pour la fonction "dispo".
+//Pour le dropBy, en effet ca n'avait rien à voir. J'espère que tu comprendras mieux avec les nvx coms. 
 
 //structure pour les ressources
 //ressources : fournisseur + demandeurs
  struct ressources_u{
-	char dropBy; //déposé par --> sera remplacé par l'ID si non dispo; sinon sera égal à '0'
+	char dropBy; //déposé par --> sera remplacé par l'ID si déposé par un élève; sinon sera égal à 'biblio' si 
+	//est présent à l'origine.
 	char takenBy; //pris par --> sera remplacé par l'ID si non dispo; sinon sera égal à '0'
 	char * type;//type de ressources : emprunt, depot
 	char ID[64]; //une liste de ressources est associée à un compte précis
@@ -66,6 +72,8 @@ char ressource_dispo(ressources r){
 
 }
 int nb_pret(s_pers p){
+	liste = p->emprunt;
+	return(size(liste));
 //consulter le nombre de pret
 }
 
