@@ -11,100 +11,112 @@
 // Si elle ne l'est pas, ce sera remplacé non pas par 1 mais pas l'identifiant de celui qui l'a pris.
 //Cela permet de savoir qui a emprunté la ressource. Ce char nous aide aussi pour la fonction "dispo".
 //Pour le dropBy, en effet ca n'avait rien à voir. J'espère que tu comprendras mieux avec les nvx coms. 
+//structures:
 
-//structure pour les ressources
-//ressources : fournisseur + demandeurs
- 
+//Ressouce
  struct s_ressource {
     char *type;//type de ressouces: livre, bouteilles,CD,magazines,etc...
     char nom[32];//nom de la ressource
-    char *takenBy_nom;
-    char *takenBy_prenom;
-    statut t;//enum définissant disponibilité de la ressource--> sorte de booléen
-    char *nom_proprio;// nom du proprio de la ressource-->permet de comparer avec le nom d'une Personne si besoin
-    char *prenom_proprio;//prenom du proprio  de la ressource-->permet de comparer avec le prénom d'une Personne si besoin
+    char ID[64];//= ID de la ressource
+    char *takenBy;// = ID de l'utilisateur qui a pris la ressource.
+    char *dropBy;// = ID de l'utilisateur qui a déposé la ressource.
     char *date_d;//date de debut du pret 
     char *date_f;//date de fin du pret
-    /*si ressource dispo laisser dernière date de pret, ne les modifier que lorsque la ressource est pretée à nouveau */
 };
 
+//Element d'une liste
 struct s_elementl{
     int i;
     Ressource r;
     s_elementl *previous;
     s_elementl *next;
-};//element d'une Liste
 
+
+};
+//Liste
 struct s_liste {
     int size;
     Elementl head;
     Elementl tail;
 };
-typedef enum en_statut {LIBRE=0; EMPRUNT} statut;
 
 
-
-
-//getters
+//getters :
 //recuperer les informations liees a la ressource
-char * getID(ressources r){
+char * getID(Ressource r){
 	return(r->ID);
 }
 
-char * getDropBy(ressources r){
+char * getDropBy(Ressource r){
 	return(r->dropBy);
 }
 
-char * getTakenBy(ressources r){
+char * getTakenBy(Ressource r){
 	return(r->takenBy);
 }
 
-ressources getNextRessource(ressources r){
-	return(r->next);
+char * getTypeRessource(Ressource r){
+	return(r->type);
+}
+
+char * getNom(Ressource r) {
+	return(r->nom);
+}
+
+//permet de savoir par qui la ressource est empruntee
+char * getRessourceDispo(Ressource r){
+        if(isDispo(r) == 1){
+           return "La ressource est disponible."
+       }
+        return getTakenBy(r);//return l'ID de celui qui l'a emprunté.
+}
+
+char * getDateDebut(Ressource r){
+	return(r->date_d);
+}
+
+char * getDateFin(Ressource r){
+	return(r->date_f);
 }
 
 
-//setters
-//associe des valeurs a certaines variables
 
-
-void setID(ressources r, char * ID){
-	strcpy(r->ID,ID);
+//setters:
+void setTakenBy(Ressource r, char * takenBy){
+	strcpy(r->takenBy, takenBy);
 }
 
-void setType(ressources r, char * type){
-	strcpy(r->type,type);
+void setDateDebut(Ressource r, char * date_d){
+	strcpy(r->date_d, date_d);
+}
+
+void setDateFin(Ressource r, char * date_f){
+	strcpy(r->date_f, date_f);
 }
 
 
 
+//fonctions sur Ressource:
 
-//fonctions sur ressources
-ressources suppr_ressource(ressources r){
-//supprime les ressources d'une personne
-
-}
-
-char ressource_dispo(ressources r){
 //permet de savoir si une ressource est disponible
-
-}
-int nb_pret(s_pers p){
-	liste = p->emprunt;
-	return(size(liste));
-//consulter le nombre de pret
+int isDispo(Ressource r){
+        if(getTakenBy(r) == '0'){
+                return 1;
+        }                                                                                                                       return 0;
 }
 
-int nb_emprunt(s_pers p){
-//consulter le nombre d'emprunt
+
+
+//Fonctions sur Liste de Ressources:
+
+//permet de supprimer une ressource grace à l'indice dans une liste
+void removeRessource(Ressource r,Liste l){
+	remove_at(getIndex(r,l), l);
 }
 
-void rappel_finEmprunt(ressources r){
-//va afficher un message de rappel quand ce sera la fin de l'emprunt
-}
 
-//Fonctions sur Liste de Ressources
 
+/*
 Liste push_bl(Liste ls,int i, Elementl l){
 
 }
@@ -120,7 +132,11 @@ Liste pop_fl(Liste ls){
 Liste pop_bl(Liste ls){
 
 }
+à quoi servent ces fonctions. Peux-tu mettre un commentaire dans chacune d'elle stp :)
+*/
 
+
+//permet d'ajouter une ressource à un indice précis dans une liste
 Liste insert_at(int i,Ressource ress,Liste ls){
     assert(i<ls->size)&&(i>=0);
     switch(i){
@@ -145,6 +161,7 @@ Liste insert_at(int i,Ressource ress,Liste ls){
     }
 }
 
+//permet de supprimer une ressource dans une liste à un indice précis
 Liste remove_at(int i,Liste ls){
     assert(i<ls->size)&&(i>=0);
     switch(i){
@@ -164,5 +181,29 @@ Liste remove_at(int i,Liste ls){
             ls->size--;
             return ls;
     }
-    
+
+}
+
+//getters sur les listes:
+
+//fonction qui récupère l'indice d'une ressource dans une liste de ressources.
+int getIndex(Ressource r, Liste l){
+	int pos = 0;
+	Elementl current = l->head;
+	for(int i = 0; i<(l->size);i++){
+		if(r == current->r){
+			pos = i;
+		}
+		current=current->next;
+	}
+	return pos;
+}
+
+//fonction qui récupère une ressource à partir d'un indice dans une liste de ressources.
+Ressource getRessource(int index, Liste l){
+	Elementl current = l->head;
+	for(int i = 0;i<index; i++){
+		current=current->next;
+	}
+	return current->r;
 }
