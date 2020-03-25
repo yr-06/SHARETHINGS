@@ -3,7 +3,7 @@
 #include <crypt.h>
 #include <string.h>
 
-
+//fonction permettant de chiffrer une mot de passe
 char* chiffrementMdp(char* chaine){
 	char * chiffre;
 	chiffre = (char*) malloc(sizeof(char)*64);

@@ -25,11 +25,13 @@ int nb_pret(Personne p);//retourne le nombre de pret d'une personne
 int nb_emprunt(Personne p);//retourne le nombre d'emprunt d'une personne
 void rappel_finEmprunt(Ressource r);//affiche un message pour rappeler la date de fin d'emprunt 
 
-Liste push_bl(Liste ls,int i, Elementl l)
-Liste push_fl(Liste ls,Elementl l)
-Liste pop_fl(Liste ls)
-Liste pop_bl(Liste ls)
-Liste insert_at(int i,Ressource ress,Liste ls)
-Liste remove_at(int i,Liste ls)
 
+Liste push_bl(Liste ls,int i, Elementl l);
+Liste push_fl(Liste ls,Elementl l);
+Liste pop_fl(Liste ls);
+Liste pop_bl(Liste ls);
+Liste insert_at(int i,Ressource ress,Liste ls);
+Liste remove_at(int i,Liste ls);
 
+int getIndex(Ressource r, Liste l);
+Ressource getRessource(int index, Liste l);

@@ -144,6 +144,14 @@ void set_tel(Personne p){
 
 //Fonctions sur listes de Personnes= type Annuaire
 
+
+
+
+int nb_pret(Personne p){
+	return(p->emprunt->size);
+//consulter le nombre de pret
+}
+
 Annuaire push_ba(Annuaire annu,int i, Elementa a){
 
 }
