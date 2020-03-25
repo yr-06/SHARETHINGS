@@ -3,25 +3,24 @@
 //Initialise mot de passe
 
 // gestion des menus
-void gestmenu(FILE *f,FILE *g)){
-    int m;
-    printf("Bienvenue !\n");
-    printf("Menu administrateur=1, Menu usager=2\n");
-    printf("Veuillez choisir votre option d'identification :");
-    scanf("%d",&m);
-    if (m=1){
-        get_adm(f);
-    }
-    if (m=2){
-        get_user(g);
-    }
-}
+ gestmenu(){
+    Personne p= (Personne)malloc(sizeof(s_pers));
+    
+    printf("Bienvenue dans le menu de notre base de données !\n");
+    printf("Veuillez entrer votre identifiant (tapez):\n");
+    scanf("%s",&s);
+    p=search_pers(annu,s);
+
+
+
+
+
 
 int main ( int argc, char *argv []){
     FILE *f=NULL;
     FILE *g=NULL;
     f=fopen("mtp_amin.txt", "a+");
-    g=fopen("id_users.txt", "a+");
+    g=fopen("id_users.json", "a+");
     gestmenu(f,g);
 
 }

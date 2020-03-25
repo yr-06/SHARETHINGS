@@ -3,6 +3,7 @@
 #include <stlib.h>
 #include <assert.h>
 #include <crypt.h>
+#include "../include/chiffrement.h"
 #include "../include/ressources.h"
 
 
@@ -47,19 +48,19 @@ typedef enum en_statut {LIBRE=0; EMPRUNT} statut;
 
 //getters
 //recuperer les informations liees a la ressource
-char * getID(ressources r){
+char * getID(Ressource r){
 	return(r->ID);
 }
 
-char * getDropBy(ressources r){
+char * getDropBy(Ressource r){
 	return(r->dropBy);
 }
 
-char * getTakenBy(ressources r){
+char * getTakenBy(Ressource r){
 	return(r->takenBy);
 }
 
-ressources getNextRessource(ressources r){
+Ressource getNextRessource(Ressource r){
 	return(r->next);
 }
 
@@ -68,11 +69,11 @@ ressources getNextRessource(ressources r){
 //associe des valeurs a certaines variables
 
 
-void setID(ressources r, char * ID){
+void setID(Ressource r, char * ID){
 	strcpy(r->ID,ID);
 }
 
-void setType(ressources r, char * type){
+void setType(Ressource r, char * type){
 	strcpy(r->type,type);
 }
 
@@ -80,12 +81,12 @@ void setType(ressources r, char * type){
 
 
 //fonctions sur ressources
-ressources suppr_ressource(ressources r){
+Ressource suppr_ressource(Ressource r){
 //supprime les ressources d'une personne
 
 }
 
-char ressource_dispo(ressources r){
+char ressource_dispo(Ressource r){
 //permet de savoir si une ressource est disponible
 
 }
@@ -95,11 +96,11 @@ int nb_pret(s_pers p){
 //consulter le nombre de pret
 }
 
-int nb_emprunt(s_pers p){
+int nb_emprunt(Personne p){
 //consulter le nombre d'emprunt
 }
 
-void rappel_finEmprunt(ressources r){
+void rappel_finEmprunt(Ressources r){
 //va afficher un message de rappel quand ce sera la fin de l'emprunt
 }
 

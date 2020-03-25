@@ -4,38 +4,46 @@
 #include <crypt.h>
 #include <unistd.h>
 #include "../include/admi.h"
+#include "../include/chiffrement.h"
 #include "../include/personne.h"
 #include "../include/ressources.h"
-void get_adm(FILE *f){
+
+int get_adm(FILE *f,Annuaire annu){
     char *s;
     char *c;
-    int n;
-    printf("Veuillez entrer votre identifiant:\n");
-    scanf("%s",&s);
-    s=crypt(s,);
-    c=crypt(c,);
+    char *pwd;
+    
+    if (p->a=1){
+        printf("Veuillez entrer le mot de passe administrateur\n");
+        scanf("%s",&c);
+
+        printf("Mot de passe incorrect. Réessayez?\n")
+        printf("OUI= 1, NON=0\n");
+
+    }
+ /*   c=crypt(c,);
     fscanf(f,"%s",&c);
     int n=strcmp(s,c);
-    if (n=0){
+  if (n=0){
         printf("Bienvenue dans le menu administrateur\n");
         printf("Que voulez-vous faire ?\n");
         printf("Ajouter un usager: 1\n Modifier les données d'un usager: 2\n Supprimer un usager: 3\n");
         printf("Afficher la liste des usagers:4\n Quitter: 0\n");
         choix();
     }
-    printf("Mot de passe incorrect. Réessayez?\n")
-    printf("OUI= 1, NON=0\n");
+   
     printf("votre choix ")
     scanf("%d",&n);
     if(n=1){
          get_admf(f);
     }
-}
+}*/
 void init_mtp(FILE *f){
-    printf("Veuillez initialiser le mot de passe administrateur:\n"
-    
-    scanf("%s",&s);
-    fprintf(f,
+    char*pwd;
+    printf("Veuillez initialiser le mot de passe administrateur:");
+    scanf("%s",&pwd);
+    fprintf(f,"%s",chiffrementMdp(pwd));
+}
 
 
 void add_ress(Personne p, Liste base){
@@ -60,32 +68,13 @@ void add_ress(Personne p, Liste base){
 }
    
 void modif_ress(){}; 
-void add_pers(Annuaire annu){
-    Elementa la=(Elementa)malloc(sizeof(s_elementa));
-    Personne pers=(Personne)malloc(sizeof(s_pers));
-    char*prenom;
-    char*name;
-    int i,j;
-    j=annu->size;
-    printf("Veuillez entrer votre nom:");
-    scanf(%s,&name);
-    printf("\nVeuillez entrer votre prénom:");
-    scanf(%s,&prenom);
-    pers->nom=name;
-    pers->prenom=prenom;
-    la->p->;
-    ann->i=i++;
-    int i=base->size;
-    
 
-
-}
 void modif_pers(Annuaire annu,Personne p){
     int i,j;
     j=annu->size;
     current_a=annu->head;
     for(i=0;i<j;i++){
-        if(p->i==current_a->p->i){
+        if(p->num_account==current_a->p->num_account){
             //offrir le choix du champ à modifier 
         }
         current_a=current_a->next;
