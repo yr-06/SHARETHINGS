@@ -6,6 +6,7 @@ typedef struct s_elementa *Elementa;
 
 typedef struct s_annuaire *Annuaire;
 
+int nb_pret(Personne p);
 Annuaire push_ba(Annuaire annu,int i, Elementa a)
 Annuaire push_fa(Annuaire a,Elementa a)
 Annuaire pop_fa(Annuaire ls)
