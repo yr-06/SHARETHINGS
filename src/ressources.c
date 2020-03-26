@@ -112,22 +112,22 @@ void rappel_finEmprunt(Ressources r){
 /*
 Liste push_bl(Liste ls,int i, Elementl l){
 
-}
+}//push un element ds le next de l'element à l'indice i (est utilisé pour insert_at)
 
 Liste push_fl(Liste ls,Elementl l){
 
-}
+}//push un element ds le previous de l'element à l'indice i (est utilisé pour insert_at)
+
 
 Liste pop_fl(Liste ls){
 
-}
+}//pop un element ds le previous de l'element à l'indice i (est utilisé pour remove_at)
 
 Liste pop_bl(Liste ls){
 
-}
-à quoi servent ces fonctions. Peux-tu mettre un commentaire dans chacune d'elle stp :)
-*/
+}//pop un element ds le next de l'element à l'indice i (est utilisé pour remove_at)
 
+*/
 
 //permet d'ajouter une ressource à un indice précis dans une liste
 Liste insert_at(int i,Ressource ress,Liste ls){
