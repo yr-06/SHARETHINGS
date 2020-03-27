@@ -4,7 +4,9 @@
 #include "../include/personne.h"
 #include "../include/ressources.h"
 #include "../include/chiffrement.h"
-/*completer code des fonctions vides-->demander aux filles ou à PY*/
+/*-completer code des fonctions vides-->demander aux filles ou à PY
+-setters opérationnels (tester et réfléchir pour set_pwd, set_autor,set_emprunt)
+-getters opérationnels (tester et répléchir celui de pwd, autor, emprunt)*/
 
 struct s_pers {
     int num_account;//numéro de compte (correspondra aussi à son indice dans Annuaire)
@@ -41,7 +43,7 @@ char*get_num_account(Personne p){
     return p->num_account;
 }
 
-autor get_autor(Personne p){
+int get_autor(Personne p){
     return p->a;
 }
 
@@ -72,7 +74,7 @@ char*get_tel(Personne p){
 
 
  //setters
-void set_num_account(int i,Personne p){
+void set_num_account(Personne p, int i){
    strcpy( p->num_account,i);
 } 
 void set_autor(Personne p, int a){
@@ -100,9 +102,6 @@ void set_autor(Personne p, int a){
 }
 
 void set_name(Personne p,char*name){
-   /* char name[32];
-    printf("Veuillez entrer votre nom :")
-    scanf(%s,&name);*/
     strcpy(p->nom,name);
 }
 
@@ -111,34 +110,21 @@ void set_prenom(Personne p,char*prenom){
 }
 
 void set_id(Personne p,char*id){
-    /*char *id;
-    printf("Veuillez entrer votre identifiant:")
-    scanf(%s,&id);*/
    strcpy(p->id,id);
 }
 
 void set_pwd(Personne p,char*pwd){
-    /*char *pwd;
-    char *crypted;
-    printf("Veuillez entrer votre mot de passe:")
-    scanf(%s,&pwd);
-    crypted=chiffrementMdp(pwd);*/
     strcpy(p->pwd,pwd);
 }
 
 void set_mail(Personne p,char*mail){
-    /*char mail[15];
-    printf("Veuillez entrer votre adresse mail :")
-    scanf(%s,&mail);*/
     strcpy(p->mail,mail);
 }   
 
 void set_tel(Personne p,char*tel){
-    /*char tel[15];
-    printf("Veuillez entrer votre numéro de téléphone :")
-    scanf(%s,&tel);*/
     strcpy(p->tel,tel);
 }
+
 
 //Fonctions sur listes de Personnes= type Annuaire
 
@@ -147,7 +133,11 @@ int nb_pret(Personne p){
 }//consulter le nombre de pret
 
 
-/*Annuaire push_ba(Annuaire annu,int i, Elementa a){
+/*
+Annuaire create_annuaire(){
+    Annuaire annu=(Annuaire)malloc(sizeof(struct s_annuaire ));
+}
+Annuaire push_ba(Annuaire annu,int i, Elementa a){
     return annu;
 }
 
@@ -274,6 +264,7 @@ Personne create_pers(){
     scanf("%16s",tel);
     set_tel(pers,tel);
     free(tel);
+    pers->emprunt=create_liste;
     return pers;
 }//permet d'initialiser les champs de la structure Personne
 
