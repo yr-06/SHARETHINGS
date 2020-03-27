@@ -8,12 +8,12 @@
 
 struct s_pers {
     int num_account;//numéro de compte (correspondra aussi à son indice dans Annuaire)
-    autor a;//enum qui definit autorisation ou non d'entrer ds le menu admin
+    int a;//int qui definit autorisation ou non d'entrer ds le menu admin
     char nom[32];//nom de la personne
     char prenom[32];//prenom de la personne
-    char *id;//identifiant de son compte
-    char *pwd;//mot de passe lié au compte
-    char mail[64];//mail de la personne
+    char id[32];//identifiant de son compte
+    char pwd[64];//mot de passe lié au compte
+    char mail[32];//mail de la personne
     char tel[15];//numero de telephone de la personne
     Liste emprunt;//Liste de Ressources empruntées actuellement par la personne
     //Liste possession;--> liste des ressources dont la personne est proprio --> necessaire?
@@ -73,10 +73,11 @@ char*get_tel(Personne p){
 
  //setters
 void set_num_account(int i,Personne p){
-    p->num_account=i;
+   strcpy( p->num_account,i);
 } 
-void set_autor(Personne p){
-    int a;
+void set_autor(Personne p, int a){
+    strcpy( p->a,a);
+    /* int a;
     char *s;
     char*u ="USER";
     char*ad ="ADMIN";
@@ -95,77 +96,71 @@ void set_autor(Personne p){
     }
     else{
         printf("ERRROR");
-    }  
+    }  */
 }
 
-void set_name(Personne p){
-    char name[32];
+void set_name(Personne p,char*name){
+   /* char name[32];
     printf("Veuillez entrer votre nom :")
-    scanf(%s,&name);
-    p->nom=name;
+    scanf(%s,&name);*/
+    strcpy(p->nom,name);
 }
 
-void set_prenom(Personne p){
-    char prenom[32];
-    printf("Veuillez entrer votre prénom :")
-    scanf(%s,&prenom);
-    p->prenom=prenom;
+void set_prenom(Personne p,char*prenom){
+    strcpy(p->prenom,prenom);
 }
 
-void set_id(Personne p){
-    char *id;
+void set_id(Personne p,char*id){
+    /*char *id;
     printf("Veuillez entrer votre identifiant:")
-    scanf(%s,&id);
-    p->id=id;
+    scanf(%s,&id);*/
+   strcpy(p->id,id);
 }
 
-void set_pwd(Personne p){
-    char *pwd;
+void set_pwd(Personne p,char*pwd){
+    /*char *pwd;
     char *crypted;
     printf("Veuillez entrer votre mot de passe:")
     scanf(%s,&pwd);
-    crypted=chiffrementMdp(pwd);
-    p->pwd=crypted;
+    crypted=chiffrementMdp(pwd);*/
+    strcpy(p->pwd,pwd);
 }
 
-void set_mail(Personne p){
-    char mail[15];
+void set_mail(Personne p,char*mail){
+    /*char mail[15];
     printf("Veuillez entrer votre adresse mail :")
-    scanf(%s,&mail);
-    p->mail=mail;
+    scanf(%s,&mail);*/
+    strcpy(p->mail,mail);
 }   
 
-void set_tel(Personne p){
-    char tel[15];
+void set_tel(Personne p,char*tel){
+    /*char tel[15];
     printf("Veuillez entrer votre numéro de téléphone :")
-    scanf(%s,&tel);
-    p->tel=tel;
+    scanf(%s,&tel);*/
+    strcpy(p->tel,tel);
 }
 
 //Fonctions sur listes de Personnes= type Annuaire
 
-
-
-
 int nb_pret(Personne p){
 	return(p->emprunt->size);
-//consulter le nombre de pret
-}
+}//consulter le nombre de pret
 
-Annuaire push_ba(Annuaire annu,int i, Elementa a){
 
+/*Annuaire push_ba(Annuaire annu,int i, Elementa a){
+    return annu;
 }
 
 Annuaire push_fa(Annuaire a,Elementa a){
-
+    return annu;
 }
 
 Annuaire pop_fa(Annuaire ls){
-
+    return annu;
 }
 
 Annuaire pop_ba(Annuaire ls){
-
+    return annu;
 }
 
 Annuaire insert_at(int i,Personne pers,Annuaire annu){
@@ -227,33 +222,74 @@ Annuaire remove_pers(Annuaire annu, Personne pers){
     annu=remove_at(i,annu);
     return annu;
 }//permet de supprimer une Personne de l'Annuaire
-
-
+*/
 
 //Fonction sur les manipulations de personnes
 Personne create_pers(){
-    Personne pers=(Personne)malloc(sizeof(s_pers));
-    pers->emprunt=(Liste)malloc(sizeof(s_liste));
-    set_autor(pers);
-    set_name(pers);
-    set_prenom(pers);
-    set_id(pers);
-    set_pwd(pers);
-    set_mail(pers);
-    set_tel(pers);
+    Personne pers=(Personne)malloc(sizeof(struct s_pers));
+    pers->emprunt=(Liste)malloc(sizeof(struct s_liste));
+    char *name;
+    name=(char*)malloc(sizeof(char)*33);
+    printf("Veuillez entrer votre nom :\n");
+    scanf("%33s",name);
+    set_name(pers,name);
+    free(name);
+
+    char *prenom;
+    prenom=(char*)malloc(sizeof(char)*33);
+    printf("Veuillez entrer votre prénom :");
+    scanf("%33s",prenom);
+    set_prenom(pers,prenom);
+    free(prenom);
+   
+
+    char *id;
+    id=(char*)malloc(sizeof(char)*33);
+    printf("Veuillez entrer votre identifiant:");
+    scanf("%33s",id);
+    set_id(pers,id);
+    free(id);
+
+    char *pwd;
+    char *crypted;
+    pwd=(char*)malloc(sizeof(char)*65);
+    crypted=(char*)malloc(sizeof(char)*65);
+    printf("Veuillez entrer votre mot de passe:");
+    scanf("%65s",pwd);
+    crypted=chiffrementMdp(pwd);
+    set_pwd(pers,crypted);
+    free(pwd);
+    free(crypted);
+   
+    char *mail;
+    mail=(char*)malloc(sizeof(char)*33);
+    printf("Veuillez entrer votre adresse mail :");
+    scanf("%32s",mail);
+    set_mail(pers,mail);
+    free(mail);
+    
+    char *tel;
+    tel=(char*)malloc(sizeof(char)*16);
+    printf("Veuillez entrer votre numéro de téléphone :");
+    scanf("%16s",tel);
+    set_tel(pers,tel);
+    free(tel);
     return pers;
 }//permet d'initialiser les champs de la structure Personne
 
+/*
 Personne search_pers(Annuaire annu, char * id){
+    Personne pers=(Personne)malloc(sizeof(struct s_pers));
      int i;
      int j=annu->size;
      Elementa current_a=annu->head;
      for (i=0;i<j;i++){
          if(strcmp(id,current_a->p->id)){
-             return current->a->p;
+            pers=current->a->p;
          }
          current_a=current_a->next;
      }
+     return pers;
 }//permet de rechercher une personne ds un Annuaire à partir de son id  
 
 int create_num_account(Annuaire annu, Personne pers){
@@ -272,4 +308,4 @@ int indice_personne_annu(Annuaire annu, Personne pers){
          }
          current_a=current_a->next;
      }
-}
+}*/
