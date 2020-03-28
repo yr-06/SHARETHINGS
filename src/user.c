@@ -102,27 +102,95 @@ void suppr_compte(user u){
 //permet de supprimer le compte d'un utilisateur après avoir supprimer les ressources
 }*/
 
-void get_user(Annuaire annu,Liste ls,Personne p){
-	char*mdp;;
-  mdp=(char*)malloc(sizeof(char)*65);
-  printf("Veuillez entrer votre mot de passe :\n");
+int get_user(Annuaire annu,Liste ls,Personne p){
+        char*mdp;
+        mdp=(char*)malloc(sizeof(char)*65);
+        printf("Veuillez entrer votre mot de passe :\n");
 	scanf("%65s",mdp);
-  mdp=chiffrementMdp(mdp);
+        mdp=chiffrementMdp(mdp);
 	int n=strcmp(mdp,p->pwd);
-  if (n=0){
-		printf("Bienvenue %s %s dans le menu administrateur!\n",get_name(p),get_prenom(p));
-		printf("Que voulez-vous faire ?\n");
-    printf("Rechrcher une ressource: 1\n Modifier vos données personnelles: 2\n Supprimer une ressoure: 3\n");printf("Ajouter une ressource: 4\n Afficher la liste des usagers:5\n Quitter: 0\n");       
-		choix_user(annu,ls,p);
-    return 0;
+        if (n=0){
+          printf("Bienvenue %s %s !\n",get_name(p),get_prenom(p));
+          printf(" Que voulez-vous faire ?\n");
+          printf(" Rechrcher une ressource: 1\n Modifier vos données personnelles: 2\n Supprimer une ressoure: 3\n");
+          printf(" Ajouter une ressource: 4\n Emprunter une ressource: 5\n Modifier une ressource: 6\n Quitter: 0\n");       
+          choix_user(annu,ls,p);
+          return 0;
 
 	}
 	int i;
-    printf("Mot de passe incorrect. Réessayez?\n")
-    printf("OUI= 1 ?\t NON=0 ?\n");
+        printf("Mot de passe incorrect. Réessayez?\n")
+        printf("OUI= 1 ?\t NON=0 ?\n");
+        scanf("%d",&i);
+        if(i=1){
+                get_user(annu,ls,p);
+        }
+}
+
+void modif_pers_user(Personne p){
+    int i;
+    printf("\n\n Que voulez-vous modifier ?\n")
+    printf(" Modifier identifiant: 1\n Modifier mot de passe: 2\n Modifier adresse mail: 3\n");
+    printf(" Modifier numéro de téléphone: 4\n Quitter: 0\n");
+    printf(" Saisissez votre choix : \n");
     scanf("%d",&i);
-    if(i=1){
-        get_mdp(f,p);
+    switch (i)
+    {
+    case 0:
+        break;
+    case 1:
+       modif_id(p);
+       break;
+    case 2:
+        modif_pwd(p);
+        break;
+    case 3:
+        modif_mail(p);
+        break;
+    case 4:
+        modif_tel(p);
+        break;
+    default:
+        break;
+    }
+    int u;
+    printf(" Continuer les modifications ?\n OUI=1 ?\t NON=0 ?\n");
+    scanf("%d",&u);
+    if(u==1){
+        modif_pers_user(p);
+    }
+}
+void modif_ress(Ressource r,Personne p){
+    int i;
+    printf("\n\n Que voulez-vous modifier ?\n")
+    printf(" Modifier identifiant: 1\n Modifier mot de passe: 2\n Modifier adresse mail: 3\n");
+    printf(" Modifier numéro de téléphone: 4\n Quitter: 0\n");
+    printf(" Saisissez votre choix : \n");
+    scanf("%d",&i);
+    switch (i)
+    {
+    case 0:
+        break;
+    case 1:
+       modif_id(p);
+       break;
+    case 2:
+        modif_pwd(p);
+        break;
+    case 3:
+        modif_mail(p);
+        break;
+    case 4:
+        modif_tel(p);
+        break;
+    default:
+        break;
+    }
+    int u;
+    printf(" Continuer les modifications ?\n OUI=1 ?\t NON=0 ?\n");
+    scanf("%d",&u);
+    if(u==1){
+        modif_pers_user(p);
     }
 }
 void choix_user(Annuaire annu,Liste ls,Personne p){
@@ -134,19 +202,73 @@ void choix_user(Annuaire annu,Liste ls,Personne p){
               printf("Vous allez être redirigé\n");
               break;
           case 1:
-              break;
+                char*m;
+                m=(char*)malloc(sizeof(char)*33);
+                printf("Veuillez entrer le type de ressources recherchées :\n");
+                scanf("%33s",m);
+                search_ress_type(ls,m);
+                break;
 
           case 2:
-
+            affich_pers(p);
+            modif_annuaire_user(annu,p);
+            break;
           case 3:
-          
+                //supprimer une ressource
+                break;
           case 4:
-         
-          case 5:
-            
+                //ajouter une ressource
+                break;
+          case 5 :
+                //modifier une ressource
+                break;
 
+        
+         
           default :
-           
+            int i;
+            printf("Choix invalide.Réessayer ?\n OUI=1 ?\t NON=0 ?\n");
+            scanf("%d",&i);
+            if(i=1){
+                 choix_user(annu,ls,p);
+            }
             break;
     }
 }
+
+Annuaire modif_annuaire_user(Annuaire annu,Personne p,){
+     int j=annu->size;
+     Elementa current_a=annu->head;
+     for (i=0;i<j;i++){
+         if(strcmp(id,current_a->p->id)==0){
+            modif_pers_user(current->a->p);
+            int n=pers_existing (annu,current->a->p);
+            switch (n){
+                case 0:    
+                    printf("Modification effectuée avec succès\n");
+                    affich_pers(current->a->p);
+                    return annu;
+
+                case 1:
+                    printf("Identifiant déjà utilisé.Veuillez en changer\n");
+                    modif_pers_user(current->a->p);
+                    break;
+        
+                case 3:
+                    printf("Cette adresse mail est déjà liée à un compte. Veuillez en choisir une autre\n");
+                    modif_pers_user(current->a->p);
+                    break;
+                case 4:
+                    printf("Ce numéro de téléphone est déjà lié à un compte. Veuillez en utiliser un autre\n");
+                    modif_pers_user(current->a->p);
+                    break;
+                default:
+                    break;
+                }
+            }
+            
+         }
+         current_a=current_a->next;
+}
+
+

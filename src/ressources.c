@@ -18,6 +18,7 @@
  struct s_ressource {
     char type[32];//type de ressouces: livre, bouteilles,CD,magazines,etc...
     char nom[32];//nom de la ressource
+    int a;//int qui definit si ressource est dispo ou non
     char ID[64];//= ID de la ressource
     char takenBy[32];// = ID de l'utilisateur qui a pris la ressource.
     char dropBy[32];// = ID de l'utilisateur qui a déposé la ressource.
@@ -84,6 +85,10 @@ char * getDateFin(Ressource r){
 
 
 //setters:
+void setName(Ressource r,char*name){
+    strcpy(r->nom,name);
+
+}
 void setTakenBy(Ressource r, char * takenBy){
 	strcpy(r->takenBy, takenBy);
 }
@@ -96,6 +101,79 @@ void setDateFin(Ressource r, char * date_f){
 	strcpy(r->date_f, date_f);
 }
 
+//modifyer
+void modifNom(Ressource r){
+        char *name;
+        name=(char*)malloc(sizeof(char)*33);
+        printf("Veuillez entrer un nom pour cette ressource:\n");
+        scanf("%33s",name);
+        setName(r,name);
+        free(name);
+}
+
+void modifType(Ressource r){
+    char *type;
+    type=(char*)malloc(sizeof(char)*33);
+    printf("Veuillez entrer le type de cette ressource:\n");
+    scanf("%33s",type);
+    setType(r,type);
+    free(prenom);
+}
+
+void modifDate_Deb(Ressource r){
+    char *date;
+    date=(char*)malloc(sizeof(char)*16);
+    printf("Veuillez entrer une date de début de prêt:\n");
+    scanf("%16s",date);
+    setDateDebut(r,date);
+    free(date);
+}
+
+void modifDate_Fin(Ressource r){
+    char *date;
+    date=(char*)malloc(sizeof(char)*16);
+    printf("Veuillez entrer une date de fin de prêt:\n");
+    scanf("%16s",date);
+    setDateFin(r,date);
+    free(date);
+}
+
+
+
+void modif_pwd(Personne p){
+    char *pwd;
+    char *crypted;
+    pwd=(char*)malloc(sizeof(char)*65);
+    crypted=(char*)malloc(sizeof(char)*65);
+    printf("Veuillez entrer votre mot de passe:\n");
+    scanf("%65s",pwd);
+    crypted=chiffrementMdp(pwd);
+    set_pwd(p,crypted);
+    free(pwd);
+    free(crypted);
+   
+}
+void modif_mail(Personne p){
+    char *mail;
+    mail=(char*)malloc(sizeof(char)*33);
+    printf("Veuillez entrer votre adresse mail :\n");
+    scanf("%32s",mail);
+    set_mail(p,mail);
+    free(mail);
+}
+
+void modif_tel(Personne p){
+    char *tel;
+    tel=(char*)malloc(sizeof(char)*16);
+    printf("Veuillez entrer un numéro de téléphone :\n");   
+    scanf("%16s",tel);
+    set_tel(p,tel);
+    free(tel);   
+}
+
+
+
+
 char ressource_dispo(Ressource r){
 //permet de savoir si une ressource est disponible
 
@@ -107,6 +185,12 @@ int nb_emprunt(Personne p){
 void rappel_finEmprunt(Ressources r){
 //va afficher un message de rappel quand ce sera la fin de l'emprunt
 }
+
+
+
+
+
+
 
 
 
@@ -208,7 +292,8 @@ void search_ress_type(Liste ls,char*type){
     int j=ls->size;
     for (i = 0; i<j; i++){
         if(strcmp(type,current_l->r->type)==0){
-            printf("Type:%s\t Nom:%s\t Id:%s\t Takenby:%s",getType(current_l->r),getNom(current_l->r),getID(current_l->r),getTakenBy(current_l->r));
+            printf("Type\t Nom\t Identifiant\t Takenby\n\n");
+            printf("%s\t %s\t %s\t %s\n",getType(current_l->r),getNom(current_l->r),getID(current_l->r),getTakenBy(current_l->r));
         }
         current_l=current_l->next;
     }

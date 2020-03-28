@@ -7,6 +7,7 @@
 #include "../include/chiffrement.h"
 #include "../include/personne.h"
 #include "../include/ressources.h"
+/*modif_pers opérationnel*/
 
 void get_adm(FILE *f,FILE*g,Annuaire annu,Personne p){
     int i=get_autor(p);
@@ -125,7 +126,7 @@ void modif_pers(Personne p,FILE*f){
         break;
     }
     int u;
-    printf("Continuer ?\n OUI=1 ?\t NON=0 ?\n");
+    printf(" Continuer les modifications ?\n OUI=1 ?\t NON=0 ?\n");
     scanf("%d",&u);
     if(u==1){
         modif_pers(p,f);
