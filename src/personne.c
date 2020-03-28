@@ -5,6 +5,8 @@
 #include "../include/ressources.h"
 #include "../include/chiffrement.h"
 /*-completer code des fonctions vides-->demander aux filles ou à PY
+-tester modifyer
+-faire une fonction affichant liste des Personnes
 -setters opérationnels (tester et réfléchir pour set_pwd, set_autor,set_emprunt)
 -getters opérationnels (tester et répléchir celui de pwd, autor, emprunt)*/
 
@@ -289,8 +291,6 @@ Annuaire remove_at(int i,Annuaire annu){
     }
 }//permet d'enlever un Elementa à un indice précis de l'Annuaire
 
-    
-
 
 //Fonction sur les manipulations de personnes
 Personne create_pers(FILE *f){
@@ -355,7 +355,7 @@ Personne create_pers(FILE *f){
 }//permet d'initialiser les champs de la structure Personne
 
 void affich_pers(Personne p){
-    printf("\nVoici le récapitulatif de vos informations personnelles:\n");
+    printf("\nVoici le récapitulatif des données de ce compte:\n");
     printf("N° de compte :%s\n", get_num_account(p))
     printf("Nom :%s\n", get_name(p));
     printf("Prenom :%s\n", get_prenom(p));
@@ -368,9 +368,24 @@ void affich_pers(Personne p){
     printf("N° de téléphone :%s\n", get_tel(p));
     printf("Nombre d'emprunt actuel :%s\n", get_nb_pret(p));
     if(get_autor(p)==1){
-        printf("_--------Ce compte est habilité à se connecter en tant qu'administrateur----------\n");
+        printf("--------Ce compte est habilité à se connecter en tant qu'administrateur----------\n");
     }
 } 
+
+void affich_list_pers(Annuaire annu,FILE*f){
+     int i;
+     int j=annu->size;
+     Elementa current_a=annu->head;
+     for (i=0;i<j;i++){
+        fprintf(f,"N° de compte :%s\t", get_num_account(current_a->p))
+        fprintf(f,"Nom :%s\t", get_name(current_a->p));
+        fprintf(f,"Prenom :%s\t", get_prenom(current_a->p));
+        fprintf(f,"Date de naissance :%s\t",get_naiss(current_a->p));
+        fprintf(f,"Identifiant :%s\n", get_id(current_a->p));
+        current_a=current_a->next;
+    } 
+}
+
 
 Annuaire add_pers(Annuaire annu,Personne pers){
     int n=pers_existing (annu,pers);

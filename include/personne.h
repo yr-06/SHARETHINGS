@@ -61,6 +61,7 @@ Annuaire remove_at(int i,Annuaire annu)
     
 Personne create_pers(FILE *f)
 void affich_pers(Personne p)
+void affich_list_pers(Annuaire annu,FILE*f)
 
 Annuaire add_pers(Annuaire annu,Personne pers)
 Annuaire remove_pers(Annuaire annu, Personne pers)

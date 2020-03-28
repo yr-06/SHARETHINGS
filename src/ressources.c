@@ -21,8 +21,8 @@
     char ID[64];//= ID de la ressource
     char takenBy[32];// = ID de l'utilisateur qui a pris la ressource.
     char dropBy[32];// = ID de l'utilisateur qui a déposé la ressource.
-    char date_d[9];//date de debut du pret 
-    char date_f[9];//date de fin du pret
+    char date_d[15];//date de debut du pret 
+    char date_f[15];//date de fin du pret
 };
 
 //Element d'une liste

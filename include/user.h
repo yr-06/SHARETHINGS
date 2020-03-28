@@ -1,7 +1,7 @@
 #define __USER_H__
 
 
-//structures:
+/*//structures:
 
 typedef struct compte_u *user;
 
@@ -21,5 +21,7 @@ void set_ID(user u, char * ID);//associe l'identifiant entré à l'utilisateur e
 //gestion du compte
 user changer_donnees(user u, int choix); //permet de changer les donnees liees a son compte
 void suppr_compte(user u);//supprime le compte d'un utilisateur
-
+*/
+void get_user(Annuaire annu,Liste ls,Personne p)
+void choix_user(Annuaire annu,Liste ls,Personne p)
 

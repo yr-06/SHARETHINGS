@@ -8,18 +8,18 @@
 #include "../include/personne.h"
 #include "../include/ressources.h"
 
-void get_adm(FILE *f,Annuaire annu,Personne p){
+void get_adm(FILE *f,FILE*g,Annuaire annu,Personne p){
     int i=get_autor(p);
     switch(i){
         case 0:
          printf("Vous n'avez pas les habilitations nécessaire pour continuer\n");
         case 1:
             printf("Vous êtes habilité à vous connecter en tant qu'administrateur\n");
-            get_mdp(f,annu,p);
+            get_mdp(f,g,annu,p);
     }
 }
 
-int get_mdp(FILE*f,Annuaire annu,Personne p){
+int get_mdp_admin(FILE*f,FILE*g,Annuaire annu,Personne p){
     if(f=NULL){
         init_mtp_admin(f);
         get_mdp(f,p);
@@ -34,11 +34,11 @@ int get_mdp(FILE*f,Annuaire annu,Personne p){
     c=chiffrementMdp(c);
     int n=strcmp(mdp,c);
   if (n=0){
-       printf("Bienvenue %s %s dans le menu administrateur!\n",get_name(p),get_prenom(p));
+        printf("Bienvenue %s %s dans le menu administrateur!\n",get_name(p),get_prenom(p));
         printf("Que voulez-vous faire ?\n");
         printf("Ajouter un usager: 1\n Modifier les données d'un usager: 2\n Supprimer un usager: 3\n");
-        printf("Afficher la liste des usagers:4\n Quitter: 0\n");
-        choix();
+        printf("Afficher les données d'un usager: 4\n Afficher la liste des usagers:5\n Quitter: 0\n");
+        choix_admin(annu,f,g);
         return 0;
     }
     int i;
@@ -123,7 +123,7 @@ void modif_pers(Personne p,FILE*f){
     }
 }
 
-void choix(Annuaire annu,FILE*f){
+void choix_admin(Annuaire annu,FILE*f,FILE*g){
       int d;
       printf("Saisissez votre choix : \n");
       scanf("%d",&d);
@@ -143,8 +143,7 @@ void choix(Annuaire annu,FILE*f){
             scanf("%33s",m);
             Personne pat=search_pers(annu,m);
             affich_pers(pat);
-            modif_pers(pat,f);
-            affich_pers(pat);
+            modif_annuaire(annu,pat,f);
           case 3:
             char*m;
             m=(char*)malloc(sizeof(char)*33);
@@ -160,7 +159,8 @@ void choix(Annuaire annu,FILE*f){
             scanf("%33s",m);
             Personne pat=search_pers(annu,m);
             affichPers(pat);
-          
+          case 5:
+            void affich_list_pers(annu,g);
           default :
             int i;
             printf("Choix invalide.Réessayer ?\n OUI=1 ?\t NON=0 ?\n");
@@ -172,7 +172,7 @@ void choix(Annuaire annu,FILE*f){
     }
 }
 
-void modif_annuaire(Annuaire annu,Personne p, FILE*f){
+Annuaire modif_annuaire(Annuaire annu,Personne p, FILE*f){
      int j=annu->size;
      Elementa current_a=annu->head;
      for (i=0;i<j;i++){
@@ -181,31 +181,27 @@ void modif_annuaire(Annuaire annu,Personne p, FILE*f){
             int n=pers_existing (annu,current->a->p);
             if(n!==0){
                 switch (n){
-                    case 0 :
-                    printf("Modification effectuée avec succès\n");
-                    return annu;
                     case 1:
                     printf("Identifiant déjà utilisé.Veuillez en changer\n");
                     modif_pers(current->a->p,f);
-    case 2:
-        print("Cet utilisateur existe déjà");
-        modif_name(pers);
-        modif_prenom(pers);
-        modif_naiss(pers);
-        add_pers(annu,pers);
-
-    case 3:
-        printf("Cette adresse mail est déjà liée à un compte. Veuillez en choisir une autre\n");
-        modif_mail(pers);
-        add_pers(annu,pers);
-    case 4:
-        printf("Ce numéro de téléphone est déjà lié à un compte. Veuillez en utiliser un autre\n");
-        modif_tel(pers);
-        add_pers(annu,pers);
-    default:
-        break;
-    }
+                    case 2:
+                    print("Cet utilisateur existe déjà\n");
+                    affich_pers(current->a->p);
+                    modif_pers(current->a->p,f);
+                    return annu;
+                    case 3:
+                    printf("Cette adresse mail est déjà liée à un compte. Veuillez en choisir une autre\n");
+                    modif_pers(current->a->p,f);
+                    case 4:
+                    printf("Ce numéro de téléphone est déjà lié à un compte. Veuillez en utiliser un autre\n");
+                    modif_pers(current->a->p,f);
+                    default:
+                    break;
+                }
             }
+            printf("Modification effectuée avec succès\n");
+            affich_pers(current->a->p);
+            return annu;
          }
          current_a=current_a->next;
      }

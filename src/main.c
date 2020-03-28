@@ -17,7 +17,7 @@ typedef enum connexion{
     CONNECT_USER;
 }Connexion;
 
- void gestmenu(FILE *f, Annuaire annu, Personne p){
+ void gestmenu(FILE *f,FILE*g, Annuaire annu, Personne p){
     Connexion c=0;
     printf("Bienvenue dans le menu de notre base de données !\n");
     printf("Que souhaitez-vous faire ?\n Se connecter=0\t Creer un compte=1\n");
@@ -37,20 +37,13 @@ typedef enum connexion{
             switch (i)
             {
             case CONNECT_ADMIN:
-                 get_adm(f,p);
+                 get_adm(f,g,annu,p);
             
             case  CONNECT_USER:
                 get_user(annu,p);
             default:
                 printf("ERROR--Vous allez être redirigé\n\n");
                 gestmenu(f,annu,p);
-            }
-            if (i==3){
-               
-            }
-           
-
-
         }
 
     char *pwd;
@@ -64,30 +57,6 @@ typedef enum connexion{
     free(pwd);
     free(crypted);
    
-
-
-
-
-
-
-
-
-        break;
-    case CREATE_ PERS:
-        p=create_pers(f);
-        add_pers(annu,p);
-        gestmenu(f,annu,p);
-    default:
-        break;
-    }
-    )
-    
-
-
-
-
-
-
 int main ( int argc, char *argv []){
     FILE *f=NULL;
     FILE *g=NULL;

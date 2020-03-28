@@ -1,11 +1,14 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <crypt.h>
+#include <unistd.h>
+#include "../include/user.h"
+#include "../include/chiffrement.h"
 #include "../include/personne.h"
 #include "../include/ressources.h"
 
-//structure pour compte users. Si compte commun , mettre un int qui dit si oui ou non on est admin.
+/*//structure pour compte users. Si compte commun , mettre un int qui dit si oui ou non on est admin.
 typedef struct compte_u{
         char nom[32];
         char prenom[32]
@@ -95,8 +98,55 @@ user changer_donnees(user u, int choix){
 	}
 
 }
-
-
 void suppr_compte(user u){
 //permet de supprimer le compte d'un utilisateur après avoir supprimer les ressources
+}*/
+
+void get_user(Annuaire annu,Liste ls,Personne p){
+	char*mdp;;
+  mdp=(char*)malloc(sizeof(char)*65);
+  printf("Veuillez entrer votre mot de passe :\n");
+	scanf("%65s",mdp);
+  mdp=chiffrementMdp(mdp);
+	int n=strcmp(mdp,p->pwd);
+  if (n=0){
+		printf("Bienvenue %s %s dans le menu administrateur!\n",get_name(p),get_prenom(p));
+		printf("Que voulez-vous faire ?\n");
+    printf("Rechrcher une ressource: 1\n Modifier vos données personnelles: 2\n Supprimer une ressoure: 3\n");printf("Ajouter une ressource: 4\n Afficher la liste des usagers:5\n Quitter: 0\n");       
+		choix_user(annu,ls,p);
+    return 0;
+
+	}
+	int i;
+    printf("Mot de passe incorrect. Réessayez?\n")
+    printf("OUI= 1 ?\t NON=0 ?\n");
+    scanf("%d",&i);
+    if(i=1){
+        get_mdp(f,p);
+    }
+}
+void choix_user(Annuaire annu,Liste ls,Personne p){
+      int d;
+      printf("Saisissez votre choix : \n");
+      scanf("%d",&d);
+      switch(d){
+          case 0:
+              printf("Vous allez être redirigé\n");
+              break;
+          case 1:
+              break;
+
+          case 2:
+
+          case 3:
+          
+          case 4:
+         
+          case 5:
+            
+
+          default :
+           
+            break;
+    }
 }
