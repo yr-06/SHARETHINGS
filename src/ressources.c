@@ -16,13 +16,13 @@
 
 //Ressouce
  struct s_ressource {
-    char *type;//type de ressouces: livre, bouteilles,CD,magazines,etc...
+    char type[32];//type de ressouces: livre, bouteilles,CD,magazines,etc...
     char nom[32];//nom de la ressource
     char ID[64];//= ID de la ressource
-    char *takenBy;// = ID de l'utilisateur qui a pris la ressource.
-    char *dropBy;// = ID de l'utilisateur qui a déposé la ressource.
-    char *date_d;//date de debut du pret 
-    char *date_f;//date de fin du pret
+    char takenBy[32];// = ID de l'utilisateur qui a pris la ressource.
+    char dropBy[32];// = ID de l'utilisateur qui a déposé la ressource.
+    char date_d[9];//date de debut du pret 
+    char date_f[9];//date de fin du pret
 };
 
 //Element d'une liste
@@ -31,8 +31,6 @@ struct s_elementl{
     Ressource r;
     s_elementl *previous;
     s_elementl *next;
-
-
 };
 //Liste
 struct s_liste {
