@@ -86,10 +86,11 @@ void modif_ress(){};
 
 void modif_pers(Personne p,FILE*f){
     int i;
-    printf("Modifier nom: 1\n Modifier prenom: 2\n Modifier date de naissance: 3\n");
-    printf("Modifier identifiant: 4\n Modifier mot de passe: 5\n Modifier adresse mail: 6\n");
-    printf("Modifier numéro de téléphone: 7\n Modifier habilitation: 8\n Quitter: 0\n");
-    printf("Saisissez votre choix : \n");
+    printf("\n\n Que voulez-vous modifier ?\n")
+    printf(" Modifier nom: 1\n Modifier prenom: 2\n Modifier date de naissance: 3\n");
+    printf(" Modifier identifiant: 4\n Modifier mot de passe: 5\n Modifier adresse mail: 6\n");
+    printf(" Modifier numéro de téléphone: 7\n Modifier habilitation: 8\n Quitter: 0\n");
+    printf(" Saisissez votre choix : \n");
     scanf("%d",&i);
     switch (i)
     {
@@ -97,20 +98,28 @@ void modif_pers(Personne p,FILE*f){
         break;
     case 1:
         modif_name(p);
+        break;
     case 2:
         modif_prenom(p);
+        break;
     case 3:
         modif_naiss(p);
+        break;
     case 4:
        modif_id(p);
+       break;
     case 5:
         modif_pwd(p);
+        break;
     case 6:
         modif_mail(p);
+        break;
     case 7:
         modif_tel(p);
+        break;
     case 8:
         set_autor(p,f);
+        break;
     
     default:
         break;
@@ -119,7 +128,7 @@ void modif_pers(Personne p,FILE*f){
     printf("Continuer ?\n OUI=1 ?\t NON=0 ?\n");
     scanf("%d",&u);
     if(u==1){
-        modif_per(p,f);
+        modif_pers(p,f);
     }
 }
 

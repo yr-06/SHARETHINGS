@@ -42,6 +42,9 @@ struct s_liste {
 
 //getters :
 //recuperer les informations liees a la ressource
+char*getType(Ressource r){
+    return(r->type);
+}
 char * getID(Ressource r){
 	return(r->ID);
 }
@@ -197,4 +200,16 @@ Ressource getRessource(int index, Liste l){
 		current=current->next;
 	}
 	return current->r;
+}
+
+void search_ress_type(Liste ls,char*type){
+    Elementl current_l=ls->head;
+    int i;
+    int j=ls->size;
+    for (i = 0; i<j; i++){
+        if(strcmp(type,current_l->r->type)==0){
+            printf("Type:%s\t Nom:%s\t Id:%s\t Takenby:%s",getType(current_l->r),getNom(current_l->r),getID(current_l->r),getTakenBy(current_l->r));
+        }
+        current_l=current_l->next;
+    }
 }
