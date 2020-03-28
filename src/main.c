@@ -46,17 +46,6 @@ typedef enum connexion{
                 gestmenu(f,annu,p);
         }
 
-    char *pwd;
-    char *crypted;
-    pwd=(char*)malloc(sizeof(char)*65);
-    crypted=(char*)malloc(sizeof(char)*65);
-    printf("Veuillez entrer votre mot de passe:\n");
-    scanf("%65s",pwd);
-    crypted=chiffrementMdp(pwd);
-    set_pwd(pers,crypted);
-    free(pwd);
-    free(crypted);
-   
 int main ( int argc, char *argv []){
     FILE *f=NULL;
     FILE *g=NULL;
