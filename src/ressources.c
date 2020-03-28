@@ -39,39 +39,31 @@ struct s_liste {
     Elementl head;
     Elementl tail;
 };
-
-
+ 
 //getters :
 //recuperer les informations liees a la ressource
 char*getType(Ressource r){
     return(r->type);
-}
-char * getID(Ressource r){
-	return(r->ID);
-}
-
-char * getDropBy(Ressource r){
-	return(r->dropBy);
-}
-
-char * getTakenBy(Ressource r){
-	return(r->takenBy);
-}
-
-Ressource getNextRessource(Ressource r){
-	return(r->next);
 }
 
 char * getNom(Ressource r) {
 	return(r->nom);
 }
 
-//permet de savoir par qui la ressource est empruntee
-char * getRessourceDispo(Ressource r){
-        if(isDispo(r) == 1){
-           return "La ressource est disponible."
-       }
-        return getTakenBy(r);//return l'ID de celui qui l'a emprunté.
+int getDispo(Ressource r){
+    return(r->a);
+}
+
+char * getID(Ressource r){
+	return(r->ID);
+}
+
+char * getTakenBy(Ressource r){
+	return(r->takenBy);
+}
+
+char * getDropBy(Ressource r){
+	return(r->dropBy);
 }
 
 char * getDateDebut(Ressource r){
@@ -82,26 +74,53 @@ char * getDateFin(Ressource r){
 	return(r->date_f);
 }
 
+/*Ressource getNextRessource(Ressource r){
+	return(r->next);
+}
 
+//permet de savoir par qui la ressource est empruntee
+char * getRessourceDispo(Ressource r){
+        if(isDispo(r) == 1){
+           return "La ressource est disponible."
+       }
+        return getTakenBy(r);//return l'ID de celui qui l'a emprunté.
+}*/
 
 //setters:
+void setType(Ressource r,char*type){
+    strcpy(r->type,type);
+}
 void setName(Ressource r,char*name){
     strcpy(r->nom,name);
-
+}
+void setDispo(Ressource r, int d){
+    r->a=d;
+}
+void setID(Ressource r,char*id){
+    strcpy(r->ID,id);
 }
 void setTakenBy(Ressource r, char * takenBy){
 	strcpy(r->takenBy, takenBy);
 }
-
+void setDropBy(Ressource r, char * dropBy){
+	strcpy(r->dropBy,);
+}
 void setDateDebut(Ressource r, char * date_d){
 	strcpy(r->date_d, date_d);
 }
-
 void setDateFin(Ressource r, char * date_f){
 	strcpy(r->date_f, date_f);
 }
 
 //modifyer
+void modifType(Ressource r){
+    char *type;
+    type=(char*)malloc(sizeof(char)*33);
+    printf("Veuillez entrer le type de cette ressource:\n");
+    scanf("%33s",type);
+    setType(r,type);
+    free(type);
+}
 void modifNom(Ressource r){
         char *name;
         name=(char*)malloc(sizeof(char)*33);
@@ -110,14 +129,20 @@ void modifNom(Ressource r){
         setName(r,name);
         free(name);
 }
-
-void modifType(Ressource r){
-    char *type;
-    type=(char*)malloc(sizeof(char)*33);
-    printf("Veuillez entrer le type de cette ressource:\n");
-    scanf("%33s",type);
-    setType(r,type);
-    free(prenom);
+void modifDispo(Ressource r){
+        int dis;
+        //printf("Veuillez entrer un nom pour cette ressource:\n");
+        scanf("%d",dis);
+        setDispo(r,dis);
+        free(dis);
+}
+void modifTakenBy(Ressource r){
+        char *tkb;
+        tkb=(char*)malloc(sizeof(char)*33);
+        printf("Veuillez entrer votre identifiant :\n");
+        scanf("%33s",tkb);
+        setTakenBy(r,tkb);
+        free(tkb);
 }
 
 void modifDate_Deb(Ressource r){
@@ -136,39 +161,6 @@ void modifDate_Fin(Ressource r){
     scanf("%16s",date);
     setDateFin(r,date);
     free(date);
-}
-
-
-
-void modif_pwd(Personne p){
-    char *pwd;
-    char *crypted;
-    pwd=(char*)malloc(sizeof(char)*65);
-    crypted=(char*)malloc(sizeof(char)*65);
-    printf("Veuillez entrer votre mot de passe:\n");
-    scanf("%65s",pwd);
-    crypted=chiffrementMdp(pwd);
-    set_pwd(p,crypted);
-    free(pwd);
-    free(crypted);
-   
-}
-void modif_mail(Personne p){
-    char *mail;
-    mail=(char*)malloc(sizeof(char)*33);
-    printf("Veuillez entrer votre adresse mail :\n");
-    scanf("%32s",mail);
-    set_mail(p,mail);
-    free(mail);
-}
-
-void modif_tel(Personne p){
-    char *tel;
-    tel=(char*)malloc(sizeof(char)*16);
-    printf("Veuillez entrer un numéro de téléphone :\n");   
-    scanf("%16s",tel);
-    set_tel(p,tel);
-    free(tel);   
 }
 
 
@@ -261,6 +253,23 @@ Liste remove_at(int i,Liste ls){
     }
 
 }
+int ress_existing (Liste ls, Ressource r){
+    Elementl current_l=ls->head;
+    int j=ls->size;
+    int i;
+    for (i=0;i<j;i++){
+        if(strcmp(r->ID,current_l->r->ID)==0){
+            return 1;
+         }
+         if(strcmp(r->type,current_l->r->type)==0){
+             if (strcmp(r->nom,current_l->r->nom)==0){
+                 return 2;
+             }
+         }
+         current_l=current_l->next;
+    }
+    return 0;
+}//permet de vérifier si les données de la ressources saisies correspondent à une ressource déjà existante
 
 //getters sur les listes:
 
