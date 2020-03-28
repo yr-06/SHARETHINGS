@@ -253,6 +253,9 @@ Liste remove_at(int i,Liste ls){
     }
 
 }
+
+
+
 int ress_existing (Liste ls, Ressource r){
     Elementl current_l=ls->head;
     int j=ls->size;
@@ -271,6 +274,24 @@ int ress_existing (Liste ls, Ressource r){
     return 0;
 }//permet de vérifier si les données de la ressources saisies correspondent à une ressource déjà existante
 
+void affich_ress(Ressource r){
+    printf("\nVoici le récapitulatif des données liées à cette ressource:\n");
+    printf("Type :%s\n", getType(r));
+    printf("Nom :%s\n", getName(r));
+    printf("ID:%s\n", getID(r));
+    printf("Propriétaire :%s\n",getDropBy(r));
+    printf("\n");
+   
+    if(get_status(r)==1){
+        printf("Statut : Emprunté\n");
+        printf("Emprunté par :%s\n", getTakenBy(r));
+        printf("Date de début du pret:%s\n", getDateDebut(r));
+        printf("Date de fin du pret:%s\n", getDateFin(r));
+    }else{
+         printf("Statut : Occupé\n");
+    }
+    printf("\n");
+}
 //getters sur les listes:
 
 //fonction qui récupère l'indice d'une ressource dans une liste de ressources.

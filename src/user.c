@@ -160,11 +160,11 @@ void modif_pers_user(Personne p){
         modif_pers_user(p);
     }
 }
-void modif_ress(Ressource r,Personne p){
+void modif_ress(Ressource r){
     int i;
     printf("\n\n Que voulez-vous modifier ?\n")
-    printf(" Modifier identifiant: 1\n Modifier mot de passe: 2\n Modifier adresse mail: 3\n");
-    printf(" Modifier numéro de téléphone: 4\n Quitter: 0\n");
+    printf(" Modifier type: 1\n Modifier nom: 2\n");
+    printf(" Quitter: 0\n");
     printf(" Saisissez votre choix : \n");
     scanf("%d",&i);
     switch (i)
@@ -172,16 +172,11 @@ void modif_ress(Ressource r,Personne p){
     case 0:
         break;
     case 1:
-       modif_id(p);
-       break;
+        modifType(r);
+        break;
+
     case 2:
-        modif_pwd(p);
-        break;
-    case 3:
-        modif_mail(p);
-        break;
-    case 4:
-        modif_tel(p);
+       modifNom(r);
         break;
     default:
         break;
@@ -190,7 +185,8 @@ void modif_ress(Ressource r,Personne p){
     printf(" Continuer les modifications ?\n OUI=1 ?\t NON=0 ?\n");
     scanf("%d",&u);
     if(u==1){
-        modif_pers_user(p);
+        modif_ress(r);
+       
     }
 }
 void choix_user(Annuaire annu,Liste ls,Personne p){
@@ -271,4 +267,33 @@ Annuaire modif_annuaire_user(Annuaire annu,Personne p,){
          current_a=current_a->next;
 }
 
+Liste modif_liste(Liste ls,Ressource r){
+        int i;
+        int j=ls->size;
+        Elementl current_l=ls->head;
+        for (i=0;i<j;i++){
+         if(strcmp(r->ID,current_l->r->ID)==0){
+            modif_ress(current_l->r);
+            int n=ress_existing (ls,current_l->r);
+             switch (n){
+                    case 0:
+                        printf("Modification effectuée avec succès\n");
+                        affich_ress(current_l->r);
+                        return ls;
+                    case 1:
+                        printf("Identifiant déjà utilisé.Veuillez en changer\n");
+                        modif_ress(current_l->r);
+                        break;
+                    case 2:
+                        print("Cette ressource existe déjà\n");
+                        affich_ress(current_l->r);
+                        modif_ress(current_l->r);
+                        break;
+                    default:
+                        break;
+                }
+         current_a=current_a->next;
+     }
+
+}
 
