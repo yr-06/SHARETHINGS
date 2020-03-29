@@ -7,6 +7,14 @@
 #include "../include/chiffrement.h"
 #include "../include/personne.h"
 #include "../include/ressources.h"
+/*-tester fonctions
+-modifier .h
+-faire une fonction pour transférer pret--> fair une option dans choix_user
+-faire une option pour supprimer compte (si pas d'emprunt en cours)
+-consulter liste des opérations sur une période choisi ?--> cmmt faire ?*/
+
+
+
 
 /*//structure pour compte users. Si compte commun , mettre un int qui dit si oui ou non on est admin.
 typedef struct compte_u{
@@ -102,7 +110,7 @@ void suppr_compte(user u){
 //permet de supprimer le compte d'un utilisateur après avoir supprimer les ressources
 }*/
 
-int get_user(Annuaire annu,Liste ls,Personne p){
+int get_user(Annuaire annu,Liste ls,Personne p,FILE*f){
         char*mdp;
         mdp=(char*)malloc(sizeof(char)*65);
         printf("Veuillez entrer votre mot de passe :\n");
@@ -189,7 +197,7 @@ void modif_ress(Ressource r){
        
     }
 }
-void choix_user(Annuaire annu,Liste ls,Personne p){
+void choix_user(Annuaire annu,Liste ls,Personne p,FILE*f){
       int d;
       printf("Saisissez votre choix : \n");
       scanf("%d",&d);
@@ -207,28 +215,59 @@ void choix_user(Annuaire annu,Liste ls,Personne p){
 
           case 2:
             affich_pers(p);
-            modif_annuaire_user(annu,p);
+            annu=modif_annuaire_user(annu,p);
             break;
           case 3:
-                //supprimer une ressource
-                break;
+            char*s;
+            s=(char*)malloc(sizeof(char)*33);
+            printf("Veuillez entrer l'identifiant de la ressource que vous souhaitez supprimer:\n");
+            scanf("%33s",s);
+            Ressource r=search_ress(ls,s);
+            if(strcmp(getDropby(r),p->id)==0 && getDispo(r)==0){
+                printf("Cette ressource va être supprimé\n");
+                ls=remove_ress(ls,r);
+            }else{
+                printf("Vous ne pouvez pas supprimer cette ressource\ncar vous ne la posséder pas ou qu'elle est momentanément indisponible\n");
+            }
+            break;
           case 4:
-                //ajouter une ressource
+                Ressource c=create_ress();
+                ls=add_ress(ls,c);
                 break;
           case 5 :
-                //modifier une ressource
+                char*z;
+                z=(char*)malloc(sizeof(char)*33);
+                printf("Veuillez entrer l'identifiant de la ressource que vous souhaitez emprunter:\n");
+                scanf("%33s",z);
+                Ressource rit=search_ress(ls,z);
+                p=emprunt_ress(ls,p,rit);
                 break;
-
-        
-         
+          case 6 : 
+            char*s;
+            s=(char*)malloc(sizeof(char)*33);
+            printf("Veuillez entrer l'identifiant de la ressource que vous souhaitez modifier:\n");
+            scanf("%33s",s);
+            Ressource rat=search_ress(ls,s);
+            if(strcmp(getDropby(r),p->id)== getDispo(rat)==0){
+                 ls=modif_liste(ls,rat);
+            }else{
+                printf("Vous ne pouvez pas modifier cette ressource\ncar vous ne la posséder pas ou qu'elle est momentanément indisponible\n")
+            }
+            break; 
           default :
             int i;
             printf("Choix invalide.Réessayer ?\n OUI=1 ?\t NON=0 ?\n");
             scanf("%d",&i);
             if(i=1){
-                 choix_user(annu,ls,p);
+                 choix_user(annu,ls,p,f);
             }
             break;
+    }
+    int u;
+    printf("Exécuter une autre action ?\n OUI=1 ?\t NON=0 ?\n");
+    scanf("%d",&u);
+    if(u==1){
+        choix_user(annu,ls,p,f);
     }
 }
 
@@ -292,8 +331,22 @@ Liste modif_liste(Liste ls,Ressource r){
                     default:
                         break;
                 }
-         current_a=current_a->next;
+         current_l=current_l->next;
      }
 
+}
+
+Personne emprunt_ress(Liste ls, Personne p,Ressource r){
+    if(getDispo(r)==0 && strcmp(r->DropBy,p->id)){
+        setTakenBy(r,p->id);
+        modifDateDeb(r);
+        modifDateFin(r);
+        setDispo(r,1);
+        p->emprunt=add_ress(p->emprunt,r);
+        printf("Votre emprunt a été enregistré avec succès\n");
+        printf("Vous avez actuellement %d emprunt\n",nb_emprunt(p));
+    }
+    printf("Vous ne pouvez pas emprunter cette ressource\n");
+    return p;
 }
 

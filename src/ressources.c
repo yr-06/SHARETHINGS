@@ -163,47 +163,52 @@ void modifDate_Fin(Ressource r){
     free(date);
 }
 
-
-
-
-char ressource_dispo(Ressource r){
+/*char ressource_dispo(Ressource r){
 //permet de savoir si une ressource est disponible
-
-
+ return c
+}
 int nb_emprunt(Personne p){
 //consulter le nombre d'emprunt
+    return i;
 }
-
 void rappel_finEmprunt(Ressources r){
 //va afficher un message de rappel quand ce sera la fin de l'emprunt
 }
+*/
 
-
-
-
-
-
-
-
+//Fonction sur les Listes
+Liste create_liste(){
+    Liste ls=(ls)malloc(sizeof(struct s_liste ));
+    ls->size=0;
+    ls->head=(Elementl)malloc(sizeof(struct s_elementl));
+    ls->tail=(Elementl)malloc(sizeof(struct s_elementl));
+    ls->head->r=(Ressource)malloc(sizeof(struct s_ressource));
+    ls->head->i=0;
+    ls->head->previous=NULL;
+    ls->head->next=ls->tail;
+    ls->tail->previous=ls->head;
+    ls->tail->next=NULL;
+    return ls;
+}
 
 /*
 Liste push_bl(Liste ls,int i, Elementl l){
-
+ return ls;
 }//push un element ds le next de l'element à l'indice i (est utilisé pour insert_at)
 
 Liste push_fl(Liste ls,Elementl l){
+    return ls;
 
 }//push un element ds le previous de l'element à l'indice i (est utilisé pour insert_at)
 
 
 Liste pop_fl(Liste ls){
-
+    return ls;
 }//pop un element ds le previous de l'element à l'indice i (est utilisé pour remove_at)
 
 Liste pop_bl(Liste ls){
-
+    return ls;
 }//pop un element ds le next de l'element à l'indice i (est utilisé pour remove_at)
-
 */
 
 //permet d'ajouter une ressource à un indice précis dans une liste
@@ -256,6 +261,167 @@ Liste remove_at(int i,Liste ls){
 
 
 
+//Fonction sur les manipulations de Ressources
+Ressource create_ress(){
+    Ressource r=(Ressource)malloc(sizeof(struct s_ressource));
+
+    char *type;
+    type=(char*)malloc(sizeof(char)*33);
+    printf("Veuillez entrer le type de cette ressource:\n");
+    scanf("%33s",type);
+    setType(r,type);
+    free(type);
+
+    char *name;
+    name=(char*)malloc(sizeof(char)*33);
+    printf("Veuillez entrer un nom pour cette ressource:\n");
+    scanf("%33s",name);
+    setName(r,name);
+    free(name);
+
+    char *id;
+    id=(char*)malloc(sizeof(char)*33);
+    printf("Veuillez entrer un identifiant pour cette ressource:\n");
+    scanf("%33s",id);
+    setName(r,id);
+    free(id);
+
+    setDispo(r,0);
+
+    char *tkb;
+    tkb=(char*)malloc(sizeof(char)*33);
+    printf("Veuillez entrer votre identifiant :\n");
+    scanf("%33s",tkb);
+    setTakenBy(r,tkb);
+    setDropBy(r,tkb);
+    free(tkb);
+
+    char *dated;
+    dated=(char*)malloc(sizeof(char)*16);
+    printf("Veuillez entrer une date de début de prêt JJ-MM-AAAA:\n");
+    printf("(Entrez la date du jour si vous créez cette ressource )\n");
+    scanf("%16s",dated);
+    setDateDebut(r,dated);
+    free(dated);
+
+    char *datef;
+    datef=(char*)malloc(sizeof(char)*16);
+    printf("Veuillez entrer une date de fin de prêt au format JJ-MM-AAAA:\n");
+    printf("(Entrez la date du jour si vous créez cette ressource )\n");
+    scanf("%16s",datef);
+    setDateFin(r,datef);
+    free(datef);
+
+}//permet d'initialiser les champs de la structure Ressource
+void affich_ress(Ressource r){
+    printf("\nVoici le récapitulatif des données liées à cette ressource:\n");
+    printf("Type :%s\n", getType(r));
+    printf("Nom :%s\n", getName(r));
+    printf("ID:%s\n", getID(r));
+    printf("Propriétaire :%s\n",getDropBy(r));
+    printf("\n");
+   
+    if(getDispo(r)==1){
+        printf("Statut : Emprunté\n");
+        printf("Emprunté par :%s\n", getTakenBy(r));
+        printf("Date de début du pret:%s\n", getDateDebut(r));
+        printf("Date de fin du pret:%s\n", getDateFin(r));
+    }else{
+         printf("Statut : Occupé\n");
+    }
+    printf("\n");
+}
+void affich_list_ress(Liste ls,FILE*f){
+     int i;
+     int j=ls->size;
+     Elementl current_l=ls->head;
+     for (i=0;i<j;i++){
+        fprintf(f,"Type :%s\t", getType(current_l->r))
+        fprintf(f,"Nom :%s\t", get_name(current_l->r));
+        fprintf(f,"Identifiant :%s\n", get_id(current_a->p));
+        fprintf(f,"Prenom :%s\t", get_prenom(current_a->p));
+        fprintf(f,"Date de naissance :%s\t",get_naiss(current_a->p));
+        current_a=current_a->next;
+    } 
+}
+
+Liste add_ress(Liste ls,Ressource ress){
+    int n=ress_existing(ls,ress);
+    switch (n)
+    {
+    case 0 :
+        print("Le compte a été créé avec succès\n");
+        int i=ls->size-1;
+        affich_ress(ress);
+        ls= insert_at(i,ress,ls);
+        return ls;
+    case 1:
+        printf("Identifiant déjà utilisé.Veuillez en changer\n");
+        modifID(ress);
+        add_ress(ls,ress);
+    case 2:
+        print("Cette ressource existe déjà");
+        modifNom(ress);
+        add_ress(ls,ress);
+        break;
+    default:
+        break;
+    }
+}//permet d'ajouter une Ressource n'existant pas encore à la Liste
+Liste remove_ress(Liste ls, Ressource ress){
+    int i= getIndex(ls, ress);
+    ls=remove_at(ls,ress);
+    return ls;
+}//permet de supprimer une Ressource de la Liste
+
+Ressource search_ress(Liste ls, char * id){
+    Ressource ress=(Ressource)malloc(sizeof(struct s_ressource));
+     int i;
+     int j=annu->size;
+     Elementl current_l=ls->head;
+     for (i=0;i<j;i++){
+         if(strcmp(id,current_a->p->id)==0){
+            ress=current_l->r;
+         }
+         current_a=current_a->next;
+     }
+     return pers;
+}//permet de rechercher une personne ds une Liste à partir de son id 
+
+//fonction qui récupère l'indice d'une ressource dans une liste de ressources.
+int getIndex(Liste l,Ressource r){
+	int pos;
+	Elementl current = l->head;
+	for(int i = 0; i<(l->size);i++){
+		if(strcmp(r->ID,current->r->ID)){
+			pos = i;
+		}
+		current=current->next;
+	}
+	return pos;
+}
+//fonction qui récupère une ressource à partir d'un indice dans une liste de ressources.
+Ressource getRessource(int index, Liste l){
+	Elementl current = l->head;
+	for(int i = 0;i<index; i++){
+		current=current->next;
+	}
+	return current->r;
+}//-> fonction casse-gueule car l'index n'est pas fixe
+
+void search_ress_type(Liste ls,char*type){
+    Elementl current_l=ls->head;
+    int i;
+    int j=ls->size;
+    for (i = 0; i<j; i++){
+        if(strcmp(type,current_l->r->type)==0){
+            printf("Type\t Nom\t Identifiant\t Takenby\n\n");
+            printf("%s\t %s\t %s\t %s\n",getType(current_l->r),getNom(current_l->r),getID(current_l->r),getTakenBy(current_l->r));
+        }
+        current_l=current_l->next;
+    }
+}//affiche les toutes les Ressources de la Liste du type choisi
+
 int ress_existing (Liste ls, Ressource r){
     Elementl current_l=ls->head;
     int j=ls->size;
@@ -274,57 +440,5 @@ int ress_existing (Liste ls, Ressource r){
     return 0;
 }//permet de vérifier si les données de la ressources saisies correspondent à une ressource déjà existante
 
-void affich_ress(Ressource r){
-    printf("\nVoici le récapitulatif des données liées à cette ressource:\n");
-    printf("Type :%s\n", getType(r));
-    printf("Nom :%s\n", getName(r));
-    printf("ID:%s\n", getID(r));
-    printf("Propriétaire :%s\n",getDropBy(r));
-    printf("\n");
-   
-    if(get_status(r)==1){
-        printf("Statut : Emprunté\n");
-        printf("Emprunté par :%s\n", getTakenBy(r));
-        printf("Date de début du pret:%s\n", getDateDebut(r));
-        printf("Date de fin du pret:%s\n", getDateFin(r));
-    }else{
-         printf("Statut : Occupé\n");
-    }
-    printf("\n");
-}
-//getters sur les listes:
 
-//fonction qui récupère l'indice d'une ressource dans une liste de ressources.
-int getIndex(Ressource r, Liste l){
-	int pos = 0;
-	Elementl current = l->head;
-	for(int i = 0; i<(l->size);i++){
-		if(r == current->r){
-			pos = i;
-		}
-		current=current->next;
-	}
-	return pos;
-}
 
-//fonction qui récupère une ressource à partir d'un indice dans une liste de ressources.
-Ressource getRessource(int index, Liste l){
-	Elementl current = l->head;
-	for(int i = 0;i<index; i++){
-		current=current->next;
-	}
-	return current->r;
-}
-
-void search_ress_type(Liste ls,char*type){
-    Elementl current_l=ls->head;
-    int i;
-    int j=ls->size;
-    for (i = 0; i<j; i++){
-        if(strcmp(type,current_l->r->type)==0){
-            printf("Type\t Nom\t Identifiant\t Takenby\n\n");
-            printf("%s\t %s\t %s\t %s\n",getType(current_l->r),getNom(current_l->r),getID(current_l->r),getTakenBy(current_l->r));
-        }
-        current_l=current_l->next;
-    }
-}

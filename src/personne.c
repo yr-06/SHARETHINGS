@@ -302,6 +302,7 @@ Personne create_pers(FILE *f){
     scanf("%33s",name);
     set_name(pers,name);
     free(name);
+    
 
     char *prenom;
     prenom=(char*)malloc(sizeof(char)*33);

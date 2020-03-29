@@ -1,3 +1,4 @@
+#ifndef __USER__H
 #define __USER_H__
 
 
@@ -24,4 +25,12 @@ void suppr_compte(user u);//supprime le compte d'un utilisateur
 */
 void get_user(Annuaire annu,Liste ls,Personne p)
 void choix_user(Annuaire annu,Liste ls,Personne p)
+int get_user(Annuaire annu,Liste ls,Personne p,FILE*f)
+void modif_pers_user(Personne p)
+void modif_ress(Ressource r)
+void choix_user(Annuaire annu,Liste ls,Personne p,FILE*f)
+Annuaire modif_annuaire_user(Annuaire annu,Personne p,)
+Liste modif_liste(Liste ls,Ressource r)
+Personne emprunt_ress(Liste ls, Personne p,Ressource r)
+#endif
 
