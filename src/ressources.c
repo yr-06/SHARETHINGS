@@ -28,8 +28,8 @@ struct s_ressource {
 struct s_elementl{
     int i;
     Ressource r;
-    s_elementl *previous;
-    s_elementl *next;
+    struct s_elementl *previous;
+    struct s_elementl *next;
 };
 
 //Liste
@@ -62,6 +62,7 @@ char * getNom(Ressource r) {
 	return(r->nom);
 }
 
+
 //permet de savoir par qui la ressource est empruntee
 char * getRessourceDispo(Ressource r){
         if(isDispo(r) == 1){
@@ -79,12 +80,33 @@ char * getDateFin(Ressource r){
 }
 
 
+//Liste/char * get operationsWhen(Ressource r);
+
+//fonction qui permet de récupérer la liste des opérations sur une 
+//période donnée
+
+
 
 //setters:
+void setType(Ressource r, char *type){
+	strcpy(r->type, type);
+}
+
+void setNom(Ressource r , char * nom){
+	strcpy(r->nom, nom);
+}
+
+void setID(Ressource r, char * ID){
+	strcpy(r->ID, ID);
+}
+
 void setTakenBy(Ressource r, char * takenBy){
 	strcpy(r->takenBy, takenBy);
 }
 
+void setDropBy(Ressource r, char * dropBy){
+	strcpy(r->dropBy, dropBy);
+}
 void setDateDebut(Ressource r, char * date_d){
 	strcpy(r->date_d, date_d);
 }
@@ -111,7 +133,7 @@ Ressource initRessource(){
 
 //permet de savoir si une ressource est disponible
 int isDispo(Ressource r){
-        if(getTakenBy(r) == '0'){
+        if(strcmp(getTakenBy(r), "0") == 0) {
                 return 1;
         }
         return 0;
@@ -144,7 +166,6 @@ Liste pop_fl(Liste ls){
 Liste pop_bl(Liste ls){
 
 }
-à quoi servent ces fonctions. Peux-tu mettre un commentaire dans chacune d'elle stp :)
 */
 
 
@@ -218,4 +239,5 @@ Ressource getRessource(int index, Liste l){
 		current=current->next;
 	}
 	return current->r;
+
 }
