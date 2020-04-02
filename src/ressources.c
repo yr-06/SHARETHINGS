@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stlib.h>
 #include <assert.h>
@@ -6,13 +5,7 @@
 #include "../include/ressources.h"
 
 
-//le takenBy fait office de boolean mais en chaine de caractères. Tout simplement, si une ressource
-//qu'on veut emprunter est disponible, alors la valeur de takenBy vaudra 0 ou ' '.
-// Si elle ne l'est pas, ce sera remplacé non pas par 1 mais pas l'identifiant de celui qui l'a pris.
-//Cela permet de savoir qui a emprunté la ressource. Ce char nous aide aussi pour la fonction "dispo".
-//Pour le dropBy, en effet ca n'avait rien à voir. J'espère que tu comprendras mieux avec les nvx coms. 
 //structures:
-
 //Ressouce
 struct s_ressource {
     char *type;//type de ressouces: livre, bouteilles,CD,magazines,etc...
@@ -61,8 +54,6 @@ char * getTypeRessource(Ressource r){
 char * getNom(Ressource r) {
 	return(r->nom);
 }
-
-
 //permet de savoir par qui la ressource est empruntee
 char * getRessourceDispo(Ressource r){
         if(isDispo(r) == 1){
@@ -78,6 +69,7 @@ char * getDateDebut(Ressource r){
 char * getDateFin(Ressource r){
 	return(r->date_f);
 }
+
 
 
 //Liste/char * get operationsWhen(Ressource r);
@@ -116,7 +108,6 @@ void setDateFin(Ressource r, char * date_f){
 }
 
 
-
 //fonctions sur Ressource:
 //permet d'initialiser une ressource 
 Ressource initRessource(){
@@ -142,13 +133,16 @@ int isDispo(Ressource r){
 
 
 //Fonctions sur Liste de Ressources:
-
 //permet de supprimer une ressource grace à l'indice dans une liste
 void removeRessource(Ressource r,Liste l){
 	remove_at(getIndex(r,l), l);
 }
 
-
+void retirerRessource(Ressource r, Personne p){
+	if(strcmp(getID(p) , getDropBy(r)) == 0 && isDispo == 1){
+		removeRessource(r, getListeEmprunt(p));
+	}
+}
 
 /*
 Liste push_bl(Liste ls,int i, Elementl l){

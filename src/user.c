@@ -97,14 +97,17 @@ user changer_donnees(user u, int choix){
 				printf("Erreur. Recommencez !\n");
 				return changer_donnees(user u, int choix);
 			}
+			break;
 		case 2:
 			printf("Vous avez choisi de changer le mail associé à votre compte.");
 			printf("Entrez le nouveau mail:\n");
 			scanf("%s",newMail);
+			break;
 		case 3:
 			printf("Vous avez choisi de changer le numéro de téléphone associé à votre compte.");
 			printf("Entrez le nouveau numéro:\n");
 			scanf("%s",newTel);
+			break;
 
 	}
 

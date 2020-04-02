@@ -52,38 +52,43 @@ char*get_name(Personne p){
     return p->nom;
 }
 
-char*get_prenom(Personne p){
-    return p->prenom;
+char * getPrenom(Personne p){
+    return (p->prenom);
 }
-char*get_naiss(Personne p){
-    return p->date_naiss;
-}
-
-char*get_id(Personne p){
-    return p->id;
+char * getNaiss(Personne p){
+    return (p->date_naiss);
 }
 
-char*get_pwd(Personne p){
-    return p->pwd;
+char * getID(Personne p){
+    return (p->id);
 }
 
-char*get_mail(Personne p){
-    return p->mail;
+char * getPwd(Personne p){
+    return (p->pwd);
+}
+
+char * getMail(Personne p){
+    return (p->mail);
 }   
 
-char*get_tel(Personne p){
-    return p->tel;
+char * getTel(Personne p){
+    return (p->tel);
 }
 
-int get_nb_pret(Personne p){
+char * getListeEmprunt(Personne p){
+	return (p->emprunt);
+
+int getNbPret(Personne p){
 	return(p->emprunt->size);
 }//consulter le nombre de pret
 
+
+
  //setters
-void set_num_account(Personne p, int i){
+void setNumAccount(Personne p, int i){
    strcpy( p->num_account,i);
 } 
-void set_autor(Personne p,FILE*f){
+void setAutor(Personne p,FILE*f){
     int a;
     char*mdp_admin;
     fscanf(f,"%s",mdp_admin);
@@ -117,31 +122,31 @@ void set_autor(Personne p,FILE*f){
     }  
 }
 
-void set_name(Personne p,char*name){
+void setName(Personne p,char * name){
     strcpy(p->nom,name);
 }
 
-void set_prenom(Personne p,char*prenom){
+void setPrenom(Personne p,char * prenom){
     strcpy(p->prenom,prenom);
 }
 
-void  set_naiss(Personne p, char*date){
+void  setNaiss(Personne p, char * date){
     strcpy(p->date_naiss,date);
 }
 
-void set_id(Personne p,char*id){
+void setId(Personne p,char * id){
    strcpy(p->id,id);
 }
 
-void set_pwd(Personne p,char*pwd){
+void setPwd(Personne p,char * pwd){
     strcpy(p->pwd,pwd);
 }
 
-void set_mail(Personne p,char*mail){
+void setMail(Personne p,char * mail){
     strcpy(p->mail,mail);
 }   
 
-void set_tel(Personne p,char*tel){
+void setTel(Personne p,char * tel){
     strcpy(p->tel,tel);
 }
 
