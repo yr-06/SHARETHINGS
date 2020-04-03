@@ -7,16 +7,17 @@
 #include "../include/chiffrement.h"
 #include "../include/personne.h"
 #include "../include/ressources.h"
-/*-tester fonctions
+/*
+-tester fonctions
 -modifier .h
 -faire une fonction pour transférer pret--> fair une option dans choix_user
 -faire une option pour supprimer compte (si pas d'emprunt en cours)
--consulter liste des opérations sur une période choisi ?--> cmmt faire ?*/
+-consulter liste des opérations sur une période choisi ?--> cmmt faire ?
 
 
 
 
-/*//structure pour compte users. Si compte commun , mettre un int qui dit si oui ou non on est admin.
+//structure pour compte users. Si compte commun , mettre un int qui dit si oui ou non on est admin.
 typedef struct compte_u{
         char nom[32];
         char prenom[32]
@@ -27,6 +28,8 @@ typedef struct compte_u{
         //ressource à afficher : struct ressource_user* ressource; livres empruntes/deposes
 
 }user;
+*/
+
 
 //getters : permet de recuperer les differentes variables
 char * getNom(user u){
@@ -94,21 +97,28 @@ user changer_donnees(user u, int choix){
 				printf("Erreur. Recommencez !\n");
 				return changer_donnees(user u, int choix);
 			}
+			break;
 		case 2:
 			printf("Vous avez choisi de changer le mail associé à votre compte.");
 			printf("Entrez le nouveau mail:\n");
 			scanf("%s",newMail);
+			break;
 		case 3:
 			printf("Vous avez choisi de changer le numéro de téléphone associé à votre compte.");
 			printf("Entrez le nouveau numéro:\n");
 			scanf("%s",newTel);
+			break;
 
 	}
 
 }
+
+
 void suppr_compte(user u){
 //permet de supprimer le compte d'un utilisateur après avoir supprimer les ressources
-}*/
+}
+
+/*
 
 int get_user(Annuaire annu,Liste ls,Personne p,FILE*f){
         char*mdp;
@@ -349,4 +359,4 @@ Personne emprunt_ress(Liste ls, Personne p,Ressource r){
     printf("Vous ne pouvez pas emprunter cette ressource\n");
     return p;
 }
-
+*/
