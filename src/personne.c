@@ -15,11 +15,11 @@ struct s_pers {
     int a;//int qui definit autorisation ou non d'entrer ds le menu admin
     char nom[32];//nom de la personne
     char prenom[32];//prenom de la personne
-    char date_naiss[13];//date de naissance
+    char date_naiss[15];//date de naissance
     char id[32];//identifiant de son compte
     char pwd[64];//mot de passe lié au compte
     char mail[32];//mail de la personne
-    char tel[15];//numero de telephone de la personne
+    char tel[20];//numero de telephone de la personne
     Liste emprunt;//Liste de Ressources empruntées actuellement par la personne
     //Liste possession;--> liste des ressources dont la personne est proprio --> necessaire?
 };
@@ -150,7 +150,7 @@ void modif_name(Personne p){
         char *name;
         name=(char*)malloc(sizeof(char)*33);
         printf("Veuillez entrer un nom:\n");
-        scanf("%33s",name);
+        scanf("%[^\n]%*c",name); 
         set_name(p,name);
         free(name);
 }
@@ -159,16 +159,17 @@ void modif_prenom(Personne p){
     char *prenom;
     prenom=(char*)malloc(sizeof(char)*33);
     printf("Veuillez entrer un prénom:\n");
-    scanf("%33s",prenom);
+    scanf("%[^\n]%*c",prenom); 
     set_prenom(p,prenom);
     free(prenom);
 }
 
 void modif_naiss(Personne p){
     char *naiss;
-    naiss=(char*)malloc(sizeof(char)*13);
+    naiss=(char*)malloc(sizeof(char)*15);
     printf("Veuillez entrer une date de naissance:\n");
-    scanf("%13s",naiss);
+    scanf("%[^\n]%*c",naiss); 
+    //scanf("%13s",naiss);
     set_naiss(p,naiss);
     free(naiss);
 }
@@ -206,9 +207,10 @@ void modif_mail(Personne p){
 
 void modif_tel(Personne p){
     char *tel;
-    tel=(char*)malloc(sizeof(char)*16);
+    tel=(char*)malloc(sizeof(char)*21);
     printf("Veuillez entrer un numéro de téléphone :\n");   
-    scanf("%16s",tel);
+    scanf("%[^\n]%*c",tel); 
+    //scanf("%21s",tel);
     set_tel(p,tel);
     free(tel);   
 }

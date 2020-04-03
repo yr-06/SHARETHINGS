@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <stlib.h>
+#include <string.h>
 #include <assert.h>
 #include <crypt.h>
 #include "../include/chiffrement.h"
@@ -118,6 +119,7 @@ void modifType(Ressource r){
     type=(char*)malloc(sizeof(char)*33);
     printf("Veuillez entrer le type de cette ressource:\n");
     scanf("%33s",type);
+   // scanf("%[^\n]%*c",type); 
     setType(r,type);
     free(type);
 }
@@ -126,6 +128,7 @@ void modifNom(Ressource r){
         name=(char*)malloc(sizeof(char)*33);
         printf("Veuillez entrer un nom pour cette ressource:\n");
         scanf("%33s",name);
+        //scanf("%[^\n]%*c",name); 
         setName(r,name);
         free(name);
 }
