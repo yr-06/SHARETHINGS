@@ -34,12 +34,9 @@ int get_mdp_admin(FILE*f,FILE*g,Annuaire annu,Personne p){
     scanf("%65s",c);
     c=chiffrementMdp(c);
     int n=strcmp(mdp,c);
-  if (n=0){
-        printf("Bienvenue %s %s dans le menu administrateur!\n",get_name(p),get_prenom(p));
-        printf("Que voulez-vous faire ?\n");
-        printf("Ajouter un usager: 1\n Modifier les données d'un usager: 2\n Supprimer un usager: 3\n");
-        printf("Afficher les données d'un usager: 4\n Afficher la liste des usagers:5\n Quitter: 0\n");
-        choix_admin(annu,f,g);
+  if (n==0){
+      welcomeAdmin(p);
+      choix_admin(annu,f,g);
         return 0;
     }
     int i;
@@ -56,8 +53,9 @@ int get_mdp_admin(FILE*f,FILE*g,Annuaire annu,Personne p){
 
 void init_mtp_admin(FILE *f){
     char*pwd;
+    pwd=(char*)malloc(sizeof(char)*65);
     printf("Veuillez initialiser le mot de passe administrateur:");
-    scanf("%s",&pwd);
+    scanf("%65s",pwd);
     fprintf(f,"%s",chiffrementMdp(pwd));
 }// intitialise mot de passe administrateur si f=NULL
 
@@ -70,9 +68,9 @@ void add_ress(Personne p, Liste base){
     ress->nom_proprio=p->nom;
     ress->prenom_proprio=p->prenom_proprio;
     printf("Veuillez entrer le type de votre ressource :");
-    scanf(%s,&type);
+    scanf("%s",&type);
     printf("\nVeuillez entrer le nom de votre ressource :");
-    scanf(%s,&name);
+    scanf("%s",&name);
     ress->nom=name;
     ress->type=type;
     r->t=0;
@@ -83,7 +81,7 @@ void add_ress(Personne p, Liste base){
     push_bl(base,i,lr);
 }
    
-void modif_ress(){}; 
+
 
 void modif_pers(Personne p,FILE*f){
     int i;

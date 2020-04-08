@@ -147,11 +147,11 @@ void modifTakenBy(Ressource r){
 //permet d'initialiser une ressource 
 Ressource initRessource(){
 	Ressource r = (Ressource)malloc(sizeof(struct s_ressource));
-	(r->type) = (char*)malloc(sizeof(char)*16);
-	(r->takenBy) = (char*)malloc(sizeof(char)*16);
-	(r->dropBy) = (char*)malloc(sizeof(char)*16);
-	(r->date_d) = (char*)malloc(sizeof(char)*16);
-	(r->date_f) = (char)*malloc(sizeof(char)*16);
+	(r->type) = (char*)malloc(sizeof(char)*33);
+	(r->takenBy) = (char*)malloc(sizeof(char)*33);
+	(r->dropBy) = (char*)malloc(sizeof(char)*33);
+	(r->date_d) = (char*)malloc(sizeof(char)*21);
+	(r->date_f) = (char)*malloc(sizeof(char)*21);
 
 	return r;
 }//la définir ici permet d'éviter les erreurs

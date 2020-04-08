@@ -52,7 +52,7 @@ int main ( int argc, char *argv []){
     FILE *h=NULL;
     f=fopen("mtp_amin.txt", "a+");
     g=fopen("Users.json", "a+");
-    h=fopen("Ressources.json",a+);
+    h=fopen("Ressources.json","a+");
     gestmenu(f,g);
 
 }
