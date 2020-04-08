@@ -165,6 +165,12 @@ int isDispo(Ressource r){
         return 0;
 }
 
+int haveRessource(Personne p){
+	//vérifier si une ressource appartient bien à la personne
+}
+
+
+
 
 
 //Fonctions sur Liste de Ressources:
@@ -179,24 +185,77 @@ void retirerRessource(Ressource r, Personne p){
 	}
 }
 
-/*
-Liste push_bl(Liste ls,int i, Elementl l){
-
+//ajoute un élément en début de liste
+Liste push_bl(Liste l, Ressource){
+	Elementl e = (Elementl)malloc(sizeof(struct s_element));
+	e->r = r;
+	e->previous = l->tail;
+	e->next = NULL;
+	//cas liste vide
+	if(l->size == 0){
+		l->head = e;
+		l->tail = e;
+	}
+	else{
+		(l->tail)->next = e;
+		(l->tail) = e;
+	}
+	l->size++;
+	return l;
+}
+//ajoute un élément en fin de liste
+Liste push_fl(Liste l, Ressource r){
+	Elementl e = (Elementl)malloc(sizeof(struct s_elementl));
+	e->r = r;
+	e->previous = NULL;
+	e->next = l->head;
+	//cas liste vide
+	if(l->size == 0){
+		l->head = e;
+		l->tail = e;
+	}
+	else{
+		(l->head)->previous = e;
+		(l->head) = e;
+	}
+	l->size++;
+	return l;
 }
 
-Liste push_fl(Liste ls,Elementl l){
+//supprime un élement en début de liste
+Liste pop_fl(Liste l){
+	if(l->size == 0){
+		return l;
+	}
 
+	if(l->size > 1){
+		l->head = (l->head)->next;
+		(l->head)->previous = NULL;
+	}
+	else{
+		l->head = NULL;
+		l->tail = NULL;
+	}
+	l->size--;
+	return l;
 }
 
-Liste pop_fl(Liste ls){
-
+//supprime un élément en fin de liste
+Liste pop_bl(Liste l){
+	if(l->size == 0){
+		return l;
+	}
+	if(l->size > 1){
+		l->tail = (l->tail)->previous;
+		(l->tail)->next = NULL;
+	}
+	else{
+		l->head = NULL;
+		l->tail = NULL;
+	}
+	l->size--;
+	return l;
 }
-
-Liste pop_bl(Liste ls){
-
-}
-*/
-
 
 //permet d'ajouter une ressource à un indice précis dans une liste
 Liste insert_at(int i,Ressource ress,Liste ls){
@@ -243,8 +302,10 @@ Liste remove_at(int i,Liste ls){
             ls->size--;
             return ls;
     }
-
 }
+
+
+
 
 //getters sur les listes:
 
