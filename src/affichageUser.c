@@ -7,6 +7,11 @@
 #include "../include/chiffrement.h"
 #include "../include/personne.h"
 #include "../include/ressources.h"
+
+#ifndef COLOR
+    #define color(param) printf("\033[%sm",param)
+#endif
+
 /*
 -tester fonctions
 -modifier .h
@@ -89,35 +94,54 @@ void suppr_compte(user u){
 //ou alors seulement si elle nous appartient!
 */
 
+//recupere une phrase entiere car le scanf sinon ne lit qu'un seul caractère sans espace
+char * getString(int size, char * request) {
+  char * phrase = (char*)malloc(sizeof(char)*size);
+  strcpy(phrase, "");
+  char c = ' ';
+
+  printf("%s", request);
+  while(strlen(phrase)<size && c != '\n'){
+    scanf("%c", &c);
+    if(c!='\n'){
+      sprintf(phrase, "%s%c", phrase, c);
+    }
+  }
+  return phrase;
+}
+
+
+void viderBuffer() {
+    int c = 0;
+    while (c != '\n' && c != EOF) {
+        c = getchar();
+    }
+}
+
+ 
+
 void modifRessource(Ressource r){
   //ne pas oublier de faire une condition pour vérifier si la ressource nous appartient bien
   color("35;1");
   int choix;
-  char newName[32];
-  char * newType;
   printf("Voulez-vous changer une information sur votre ressource ?\n");
   printf("(1) Changer le nom.\n");
   printf("(2) Changer le type.\n");
   printf("(3) Quitter.\n");
   scanf("%d", &choix);
-  switch(choix){
+  viderBuffer();
+  switch(choix) {
     case 1:
-      printf("Entrer la modification sur le nom de votre ressource : \n");
-      scanf("%s", newName);
-      setNom(r, newName);
+      setNom(r, getString(32, "Entrer la modification sur le nom de votre ressource:\n"));
       break;
-    case 2:
-      printf("Entre la modification sur le type de votre ressource : \n");
-      scanf("%s", newType);
-      setType(r, newType);
+    case 2 :
+      setType(r , getString(32, "Entrer la modification sur le type de votre ressource:\n"));
       break;
-    case 3: 
+    case 3 :
       messAurevoir();
+      break;
   }
 }
-
-
-
 
 
 void choix_user(Annuaire annu,Liste ls,Personne p,FILE*f){
