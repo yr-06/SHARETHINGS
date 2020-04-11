@@ -7,7 +7,7 @@
 
 
 //structures:
-//Ressouce
+//Ressource
 struct s_ressource {
     char *type;//type de ressouces: livre, bouteilles,CD,magazines,etc...
     char nom[32];//nom de la ressource
