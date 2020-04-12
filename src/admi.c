@@ -7,6 +7,7 @@
 #include "../include/chiffrement.h"
 #include "../include/personne.h"
 #include "../include/ressources.h"
+
 /*modif_pers opérationnel*/
 
 void get_adm(FILE *f,FILE*g,Annuaire annu,Personne p){

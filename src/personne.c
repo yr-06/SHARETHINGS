@@ -38,12 +38,6 @@ struct s_annuaire {
     Elementa tail;
 };
 
-//Définition d'un Booléen 
-typedef enum{
-    false,
-    true
-}Bool;
-
 //getters
 
 int getNumAccount(Personne p){
