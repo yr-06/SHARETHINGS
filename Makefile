@@ -1,10 +1,10 @@
 CC= gcc
 CFLAGS= -Wall -g #-std=c11
-LIB= ../lib
-LIDFLAGS= -lcrypt
-INC= ../include
-EXEC= main.exe
-SRC= main.c
+LIB=lib/
+LDFLAGS= -lcrypt -lm
+INC=include/
+EXEC= src/main.exe
+SRC= src/main.c
 OBJ= $(SRC:.c=.o)
 
 all : $(EXEC)

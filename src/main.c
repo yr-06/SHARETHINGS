@@ -8,6 +8,9 @@
 #include "../include/personne.h"
 #include "../include/annuaire.h"
 #include "../include/ressources.h"
+#ifndef CLEAR_STDIN
+    #define CLEAR_STDIN { int c; while((c = getchar()) != '\n' && c != EOF); }
+#endif
 
 // gestion des menus
  void gestmenu(FILE *f,FILE*g, Annuaire annu,Liste ls,Personne p){
@@ -53,13 +56,11 @@
  }
 
 int main ( int argc, char *argv []){
-    FILE *f=NULL;
     FILE *g=NULL;
     FILE *h=NULL;
-    f=fopen("mtp_amin.txt", "a+");
-    g=fopen("Users.json", "a+");
-    h=fopen("Ressources.json","a+");
-    
+    FILE *f=fopen("Mtdp_admin.txt", "r");
+    g=fopen("Annuaire.json", "w");
+    h=fopen("Liste.json","w");
     Personne p=initPers();
     Annuaire annu=new_annu();
     Liste ls=new_list();

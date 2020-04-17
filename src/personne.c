@@ -22,8 +22,8 @@ struct s_pers {
     char *pwd;//mot de passe lié au compte
     char *mail;//mail de la personne
     char *tel;//numero de telephone de la personne
+    int possess; //nbre de ressources dont la personne est proprio 
     //Liste emprunt;//Liste de Ressources empruntées actuellement par la personne
-    //int possess; nbre de ressources dont la personne est proprio 
 };
 
 struct s_elementa{
@@ -86,10 +86,10 @@ void setNumAccount(Personne p, int i){
 } 
 /*----------------------------------------------------------------*/
 void setAutor(Personne p,FILE*f){
+    CLEAR_STDIN
     printf("\nVous allez être invité à choisir l'habilitation de votre compte\n");
     int i;
     char *cmp;
-    
     char *mdp_admin;
     mdp_admin=(char *)malloc(sizeof(char)*21);
     fgets(mdp_admin,21,f);
@@ -107,16 +107,18 @@ void setAutor(Personne p,FILE*f){
             getAutor(p);
             printf("Vous aves choisi d'être USER\n");
             free(mdp_admin);
-
+            mdp_admin=NULL;
+            cmp=NULL;
+            i=0;
             break;
         case 2:
             CLEAR_STDIN
-            cmp=(char *)malloc(sizeof(char)*21);
+            cmp=(char *)malloc(sizeof(char)*65);
             printf("Veuillez entrer le mot de passe administrateur :\n");
-            fgets(cmp,21,stdin);
+            fgets(cmp,65,stdin);
             //cmp=chiffrementMdp(cmp);
-            printf("cmp=%s\n",cmp);
-            printf("strcmp=%d\n",strcmp(mdp_admin,cmp));
+            printf("cmp=%s\n",cmp);// à utiliser pour tester fct°
+            printf("strcmp=%d\n",strcmp(mdp_admin,cmp));// à utiliser pour tester fct°
             
             if(strcmp(mdp_admin,cmp)==0){
                 p->a=1;
@@ -124,12 +126,31 @@ void setAutor(Personne p,FILE*f){
                 printf("Vous êtes habilité en tant qu'administrateur\n");
                 free(mdp_admin);
                 free(cmp);
-            }//pb avec strcmp
-
+                mdp_admin=NULL;
+                cmp=NULL;
+                i=0;
+            }//pb avec strcmp-->initialiser le mot de passe ds le fichier
+            else{
+                CLEAR_STDIN
+                printf("\nERRROR\n");
+                printf("Vous allez être redirigé\n");
+                i=0;
+                free(mdp_admin);
+                free(cmp);
+                mdp_admin=NULL;
+                cmp=NULL;
+                setAutor(p,f);
+            }
             break;
         default:
             CLEAR_STDIN
-            printf("ERRROR\n");
+            printf("\nERRROR\n");
+            printf("Vous allez être redirigé\n");
+            i=0;
+            free(mdp_admin);
+            free(cmp);
+            mdp_admin=NULL;
+            cmp=NULL;
             setAutor(p,f);
             break;
     }  

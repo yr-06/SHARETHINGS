@@ -33,7 +33,7 @@ int get_mdp_admin(FILE*f,FILE*g,Annuaire annu,Personne p){
     c=(char*)malloc(sizeof(char)*65);
     fscanf(f,"%65s",mdp);
     printf("Veuillez entrer le mot de passe administrateur :\n");
-    scanf("%65s",c);
+    fgets(c,65,stdin);
     c=chiffrementMdp(c);
     int n=strcmp(mdp,c);
   if (n==0){
@@ -135,56 +135,56 @@ void modif_pers(Personne p,FILE*f){
 }*/
 
 void choix_admin(Annuaire annu,FILE*f,FILE*g){
-      int d;
-      printf("Saisissez votre choix : \n");
-      scanf("%d",&d);
-      switch(d){
-          case 0:
-              printf("Vous allez être redirigé\n");
-              break;
-          case 1:
-                annu=createAccount(annu,f);
-              break;
+    int d;
+    printf("Saisissez votre choix : \n");
+    scanf("%d",&d);
+    switch(d){
+    case 0:
+        printf("Vous allez être redirigé\n");
+        break;
+    case 1:
+        annu=createAccount(annu,f);
+        break;
 
-          case 2:
-            char*m;
-            m=(char*)malloc(sizeof(char)*33);
-            printf("Veuillez entrer l'identifiant du compte que vous souhaitez modifier:\n");
-            fgets(m,33,stdin);
-            Personne pat=search_pers(annu,m);
-            affich_pers(pat);
-            modif_annuaireAdmin(annu,pat,f);
+    case 2:
+        char*m;
+        m=(char*)malloc(sizeof(char)*33);
+        printf("Veuillez entrer l'identifiant du compte que vous souhaitez modifier:\n");
+        fgets(m,33,stdin);
+        Personne pat=search_pers(annu,m);
+        affich_pers(pat);
+        modif_annuaireAdmin(annu,pat,f);
+        break;
 
-            break;
-          case 3:
-            char*m;
-            m=(char*)malloc(sizeof(char)*33);
-            printf("Veuillez entrer l'identifiant du compte que vous souhaitez supprimer:\n");
-            scanf("%33s",m);
-            Personne pat=search_pers(annu,m);
-            remove_pers(annu,pat);
-            break;
+    case 3:
+        char*m;
+        m=(char*)malloc(sizeof(char)*33);
+        printf("Veuillez entrer l'identifiant du compte que vous souhaitez supprimer:\n");
+        fgets(m,33,stdin);
+        Personne pat=search_pers(annu,m);
+        remove_pers(annu,pat);
+        break;
           
-          case 4:
-            char*m;
-            m=(char*)malloc(sizeof(char)*33);
-            printf("Veuillez entrer l'identifiant du compte que vous souhaitez afficher:\n");
-            fgets(m,33,stdin);
-            Personne pat=search_pers(annu,m);
-            affichPers(pat);
+    case 4:
+        char*m;
+        m=(char*)malloc(sizeof(char)*33);
+        printf("Veuillez entrer l'identifiant du compte que vous souhaitez afficher:\n");
+        fgets(m,33,stdin);
+        Personne pat=search_pers(annu,m);
+        affichPers(pat);
+        break;
 
-            break;
-          case 5:
-            affich_list_pers(annu,g);
-            break;
-          default :
-            int i;
-            printf("Choix invalide.Réessayer ?\n OUI=1 ?\t NON=0 ?\n");
-            scanf("%d",&i);
-            if(i=1){
-                 choix_admin(annu,f,g);
-            }
-            break;
+    case 5:
+        affichAnnuaire(annu,g);
+        break;
+    default :
+        int i;
+        printf("Choix invalide.Réessayer ?\n OUI=1 ?\t NON=0 ?\n");
+        scanf("%d",&i);
+        if(i=1){
+            choix_admin(annu,f,g);
+        }
+        break;
     }
 }
 

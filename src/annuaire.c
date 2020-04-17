@@ -462,19 +462,25 @@ Annuaire modifAnnuaireUser(Annuaire annu,Personne p){
 
 }//à peaufiner
 /*----------------------------------------------------------------*/
-Annuaire createAccount(Annuaire annu,FILE*f){
-    Personne p=create_pers();
+Annuaire createAccount(Annuaire annu,FILE*f,FILE*g){
+    Personne p=create_pers(f);
     affich_pers(p);
     int i;
-    printf("Etes-vous satisfait des données enregistrées ?\nOUI=1\tNON=0\n");
+    printf("\n\nEtes-vous satisfait des données enregistrées ?\nOUI=1\tNON=0\n");
     scanf("%d",&i);
     switch(i){
       case 0:
-        modif_persAdmin(p);
-        printf("\nSi vous rencontrez des problèmes avec votre compte veuillez vous refferer à un administrateur\n");
+        CLEAR_STDIN  
+        modif_persAdmin(p,f);
+        printf("\nSi vous rencontrez des problèmes avec votre compte veuillez vous réfferer à un administrateur\n");
         affich_pers(p);
-        annu=add_pers(annu,p);
+        annu=add_pers(annu,g,p);
+        return annu;
       case 1:
-        annu=add_pers(annu,p);
+        annu=add_pers(annu,g,p);
+        return annu;
+      default:
+        printf("\nERROR--Vous allez être redirigé\n");
+        createAccount(annu,f,g);
     }
-}
+}//fonctionne
