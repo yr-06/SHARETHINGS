@@ -5,19 +5,19 @@
 #include <unistd.h>
 #include "../include/admi.h"
 #include "../include/chiffrement.h"
-#include "../include/personne.h"
 #include "../include/annuaire.h"
-#include "../include/ressources.h"
+
 #ifndef CLEAR_STDIN
     #define CLEAR_STDIN { int c; while((c = getchar()) != '\n' && c != EOF); }
 #endif
 
 // gestion des menus
- void gestmenu(FILE *f,FILE*g, Annuaire annu,Liste ls,Personne p){
+ void gestmenu(FILE *f,FILE*g,FILE*h,Annuaire annu,Liste ls,Personne p){
+    CLEAR_STDIN
     int c;
     char*s;
     printf("Bienvenue dans le menu de notre base de données !\n");
-    printf("Que souhaitez-vous faire ?\n Se connecter=0\t Creer un compte=1\n");
+    printf("Que souhaitez-vous faire ?\n Se connecter=0\t Creer un compte=1\t Quitter=2\n");
     scanf("%d",&c);
     switch (c)
     {
@@ -31,40 +31,48 @@
             scanf("%d",&i);
             switch (i)
             {
-            case 1:
-                 get_adm(f,g,annu,p);
-            
             case 0:
                 get_user(annu,p);
+                break;
+            case 1:
+                get_adm(f,g,h,annu,ls,p);
+                break;
             default:
                 printf("ERROR--Vous allez être redirigé\n\n");
-                gestmenu(f,annu,ls,p);
-        }else{
-
+                gestmenu(f,g,h,annu,ls,p);
+                break;
+            }
         }
         break;
     case 1:
         printf("Excellent choix !\n");
-        printf("Vous allez maintenant créer votre compte, veuillez suivre les étapes sur l'écran\n");
+        printf("Vous allez maintenant créer votre compte, veuillez suivre les étapes à l'écran\n");
         annu=createAccount(annu,f);
-        gestmenu(f,g,annu,p);
+        gestmenu(f,g,h,annu,ls,p);
         break;
+    case 2:
+        printf("Au revoir !\n");
+        return;
+        
     default:
-        gestmenu(f,g,annu,p);
+        
+       
         break;
     }
- }
+
+}
+ 
 
 int main ( int argc, char *argv []){
-    FILE *g=NULL;
-    FILE *h=NULL;
-    FILE *f=fopen("Mtdp_admin.txt", "r");
-    g=fopen("Annuaire.json", "w");
-    h=fopen("Liste.json","w");
+
+    FILE *f=fopen("../data/Mtdp_admin.txt", "r+");
+    FILE *g=fopen("../data/Annuaire.json","w");
+    FILE *h=fopen("../data/Liste.json","w");
     Personne p=initPers();
     Annuaire annu=new_annu();
     Liste ls=new_list();
-    gestmenu(f,g,annu,ls,p);
+    gestmenu(f,g,h,annu,ls,p);
+    return 0;
 
 }
 
