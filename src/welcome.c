@@ -10,12 +10,13 @@
 #endif
 
 
-void messBienvenue(){                                                   
+void messBienvenue(){
   color("34;1");
-  printf("   ***       BIENVENUE SUR SHARETHINGS       ***   \n");  
+  printf("   ***       BIENVENUE SUR SHARETHINGS       ***   \n");
 }                                                                                                                                              void messAurevoir(){
-  printf("   ***       A BIENTOT !     *** ");                          exit(0);
-}                                                                        
+  printf("   ***       A BIENTOT !     *** ");
+  exit(0);
+}
 
 void connexionPersonne(){
   char email[32];
