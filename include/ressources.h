@@ -41,6 +41,7 @@ int isDispo(Ressource r);
 Ressource initRessource();
 int haveRessource(Personne p, Ressource r);
 char * generateID(Liste ressources);
+void gererDropRessource(Personne p, Liste l);
 
 //fonctions sur Liste :
 int getIndex(Ressource r, Liste l);
@@ -59,7 +60,7 @@ Liste insert_at_l(int i,Ressource r, Liste ls);
 Liste remove_at_l(int i,Liste ls);
 int ress_existing(Liste ls, Ressource r);
 void removeRessource(Ressource r,Liste l);
-void retirerRessource(Ressource r, Personne p);
+void takeRessource(Personne p, Liste l);
 
 //getters sur les listes
 Ressource getRessource(int index, Liste l);
