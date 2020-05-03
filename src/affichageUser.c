@@ -48,7 +48,7 @@ void modifDonneesPers(Personne p){
 	printf("(2) Changer le mail.\n");
 	printf("(3) Changer le numéro de téléphone.\n");
 	scanf("%d", &choix);
-  viderBuffer();
+  	viderBuffer();
 
 	switch(choix){
 		case 1:
@@ -76,14 +76,11 @@ void modifDonneesPers(Personne p){
 			break;
 
 	}
-
 }
 
 
-//fonction qui permet de modifier une ressource si elle nous appartient 
-void modifRessource(Personne p , Ressource r){
-  
-  color("35;1");
+void modifRessource(Personne p , Ressource r, Liste l){
+  color("36;1");
   if(haveRessource(p, r) == 0){
     printf("Cette ressource ne vous appartient pas, vous ne pouvez pas la modifier.\n");
 
@@ -93,24 +90,29 @@ void modifRessource(Personne p , Ressource r){
     printf("Voulez-vous changer une information sur votre ressource ?\n");
     printf("(1) Changer le nom.\n");
     printf("(2) Changer le type.\n");
-    printf("(3) Quitter.\n");
+    printf("(3) Supprimer la ressource. \n");
+    printf("(4) Revenir en arrière.\n");
+    
     scanf("%d", &choix);
     viderBuffer();
   
     switch(choix) {
       case 1:
         setNom(r, getString(32, "Entrer la modification sur le nom de votre ressource:\n"));
-      
         break;
-      case 2 :
+      case 2:
         setType(r , getString(32, "Entrer la modification sur le type de votre ressource:\n"));
        break;
-      case 3 :
-        messAurevoir();
+      case 3:
+        removeRessource(r, l);
+      case 4:
         break;
+    
     }
+    gererDropRessource(p, l);
   }
 }
+
 
 //ajoute une ressource à la liste de ressources
 void addRessourceAtListe(Personne p, Liste ressources){
@@ -124,14 +126,19 @@ void addRessourceAtListe(Personne p, Liste ressources){
 }
 
 
+
 void welcomeUser(Personne p, Liste ressources){
-  //systeme qui permet de sélectionner une ressource à modifier
+  color("35;1");
   int choix;
   printf("Bonjour %s", getPrenom(p));
   printf("Que voulez-vous faire ? \n");
   printf("(1) Créer une ressource. \n");
   printf("(2) Gérer les ressources déposées. \n");
-  printf("(3) Modifier une information personnelle.\n");
+  printf("(3) Emprunter une ressource. \n");
+  printf("(4) Gérer les ressources empruntées. \n");
+  printf("(5) Modifier une information personnelle.\n");
+  printf("(6) Voir les actions à un temps donné.\n");
+  printf("(7) Quitter.\n");
   scanf("%d", &choix);
   viderBuffer();
   switch(choix){
@@ -139,10 +146,16 @@ void welcomeUser(Personne p, Liste ressources){
       addRessourceAtListe(p, ressources);
       break;
     case 2:
-      modifRessource(p, getRessource(0, ressources));
+      gererDropRessource(p,ressources);
       break;
     case 3:
+      takeRessource(p, ressources);
+      break;
+    case 5:
       modifDonneesPers(p);
+      break;
+    case 7:
+      messAurevoir();
       break;
     default:
       break;
@@ -150,3 +163,4 @@ void welcomeUser(Personne p, Liste ressources){
       
   }
 }
+

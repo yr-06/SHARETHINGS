@@ -133,7 +133,7 @@ Ressource initRessource(){
 //fonctions sur ressource:
 //permet de savoir si une ressource est disponible avec un int
 int isDispo(Ressource r){
-        if(strcmp(getTakenBy(r), "0") == 0) {
+        if(strcmp(getTakenBy(r), "") == 0) {
                 return 1;
         }
         return 0;
@@ -165,12 +165,6 @@ char * generateID(Liste ressources){
 void removeRessource(Ressource r,Liste l){
 	remove_at(getIndex(r,l), l);
 }
-/*
-void retirerRessource(Ressource r, Personne p){
-	if(strcmp(getID(p) , getDropBy(r)) == 0 && isDispo == 1){
-		removeRessource(r, getListeEmprunt(p));
-	}
-}*/
 
 
 //getters sur les listes:
@@ -210,6 +204,62 @@ Ressource getRessource_ID (char * ID, Liste l){
     current = current ->next;
   }
   return NULL;
+}
+
+//permet de pouvoir sélectionner une ressource qui nous appartient
+void gererDropRessource(Personne p, Liste l){
+  color("34;1");
+  int choix;
+  Elementl current = l->head;
+  printf("Selectionnez un des numéros suivants. \n");
+  printf("(-1) Revenir en arrière.\n");
+  for(int i =0; i<list_size(l); i++){
+    if(haveRessource(p,current->r) == 1){
+      printf("( %d) %s\n",i,getNom(current->r));
+    } 
+    current = current ->next;
+  }
+  scanf("%d", &choix);
+  if(choix == -1){
+    welcomeUser(p, l);
+    return;
+  }
+  Ressource r = getRessource(choix, l);
+  if(r == NULL || haveRessource(p, r) == 0){
+    printf("Numéro incorrect. Réessayez!");
+    gererDropRessource(p, l);
+    return;
+  }
+  modifRessource(p, r,l);
+}
+
+//fonction pour emprunter une ressource
+void takeRessource(Personne p, Liste l){
+  color("34;1");
+  int choix;
+  Elementl current = l->head;
+  printf("Selectionnez un des numéros suivants. \n");
+  printf("(-1) Revenir en arrière.\n");
+  for(int i =0; i<list_size(l); i++){
+    if(isDispo(current-> r) == 1){
+      printf("( %d) %s\n",i,getNom(current->r));
+    } 
+    current = current ->next;
+  }
+  scanf("%d", &choix);
+  if(choix == -1){
+    welcomeUser(p, l);
+    return;
+  }
+  Ressource r = getRessource(choix, l);
+  if(r == NULL || isDispo(r) == 0){
+    printf("Numéro incorrect. Réessayez!");
+    takeRessource(p, l);
+    return;
+  }
+  printf("Vous venez d'emprunter le livre %s pour 2 semaines. \n", getNom(r));
+  setTakenBy(r, getID(p));
+  welcomeUser(p, l);
 }
 
 
