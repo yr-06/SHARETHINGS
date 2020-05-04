@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <string.h>
+#include <assert.h>
+#include <stdbool.h>
+#include <time.h>
 #include "../include/ressources.h"
-#ifndef CLEAR_STDIN
-    #define CLEAR_STDIN { int c; while((c = getchar()) != '\n' && c != EOF); }
-#endif
+#include "../include/personne.h"
+#include "../include/affichageUser.h"
 
 typedef int Bool ;  //définition du type booléen,
 
@@ -13,64 +14,98 @@ typedef int Bool ;  //définition du type booléen,
 
 #define true  1
 
+#ifndef COLOR
+    #define color(param) printf("\033[%sm",param)
+#endif
 
-//structures:
-//Ressource
-struct s_ressource {
-    char *type;//type de ressouces: livre, bouteilles,CD,magazines,etc...
+
+
+//structures
+struct s_ressource{                        
+    char *type;
     char nom[32];//nom de la ressource
-    char *ID;//= ID de la ressource
+    char *ID ;//= ID de la ressource
     char *takenBy;// = ID de l'utilisateur qui a pris la ressource.
     char *dropBy;// = ID de l'utilisateur qui a déposé la ressource.
-    char *date_d;//date de debut du pret 
+    char *date_d;//date de debut du pret
     char *date_f;//date de fin du pret
 };
 
-//Element d'une liste
 struct s_elementl{
-    Ressource r;
-    struct s_elementl *previous;
-    struct s_elementl *next;
+  int i;
+  Ressource r;
+  struct s_elementl *previous;
+  struct s_elementl *next;
 };
 
-//Liste
-struct s_liste {
-    int size;
-    Elementl head;
-    Elementl tail;
+struct s_liste{
+  int size;
+  Elementl head;
+  Elementl tail;
 };
 
+//fonctions :
+//setters
 
-//getters :
-char * getID_r(Ressource r){
-	return(r->ID);
+void setType(Ressource r, char * type){
+  strcpy(r->type,type);
 }
 
-char * getDropBy(Ressource r){
-	return(r->dropBy);
+void setNom(Ressource r , char * nom){
+  strcpy(r->nom, nom);
+}
+
+void setDateDeb(Ressource r, char * date_d){
+  strcpy(r->date_d, date_d);
+}
+
+
+void setTakenBy(Ressource r, char * takenBy){
+  strcpy(r->takenBy, takenBy);
+}
+
+void setDropBy(Ressource r, char * dropBy){
+  strcpy(r->dropBy, dropBy);
+}
+
+//getters
+
+char * getType(Ressource r){
+  return (r->type);
+}
+
+char * getNom(Ressource r){
+  return(r->nom);
+}
+
+char * getDateDeb(Ressource r){
+  return(r->date_d);
+}
+
+char * getDateFin(Ressource r){
+  return(r->date_f);
 }
 
 char * getTakenBy(Ressource r){
-	return(r->takenBy);
+  return(r->takenBy);
 }
 
-char * getTypeRessource(Ressource r){
-	return(r->type);
+char * getDropBy(Ressource r){
+  return(r->dropBy);
 }
 
-char * getNom(Ressource r) {
-	return(r->nom);
+char * getID_r(Ressource r){
+  return(r->ID);
 }
 
-//permet de savoir par qui la ressource est empruntee
+
 char * getRessourceDispo(Ressource r){
-        if(isDispo(r) == 1){
-           return "La ressource est disponible.";
-       }
-        return getTakenBy(r);//return l'ID de celui qui l'a emprunté.
+  if(isDispo(r) == 1){
+    return "La ressource est disponible";
+  }
+  return getTakenBy(r);
 }
 
-//permet de savoir si une ressoure nous appartient ou pas 
 char * getRessourceHave(Personne p , Ressource r){
   if(haveRessource(p, r)== 1){
     return "Cette ressource vous appartient. Vous pouvez la modifier.";
@@ -79,66 +114,28 @@ char * getRessourceHave(Personne p , Ressource r){
 }
 
 
-char * getDateDeb(Ressource r){
-	return(r->date_d);
+//fonctions liées à ressource
+//fonction d'initialisation
+Ressource initRessource(Liste ressources){
+  Ressource r = (Ressource)malloc(sizeof(struct s_ressource));
+  (r->type) =(char*)malloc(sizeof(char)*33);
+  (r->takenBy) =(char*)malloc(sizeof(char)*33);
+  (r->dropBy)=(char*)malloc(sizeof(char)*33);
+  (r->date_d)=(char*)malloc(sizeof(char)*33);
+  (r->date_f)=(char*)malloc(sizeof(char)*33);
+  r->ID = generateID(ressources);
+  push_bl(ressources, r);
+  return r;
 }
 
-char * getDateFin(Ressource r){
-	return(r->date_f);
-}
-
-
-//setters:
-void setType(Ressource r, char *type){
-	strcpy(r->type, type);
-}
-
-void setNom(Ressource r , char * nom){
-	strcpy(r->nom, nom);
-}
-
-void setID_r(Ressource r, char * ID){
-	strcpy(r->ID, ID);
-}
-
-void setTakenBy(Ressource r, char * takenBy){
-	strcpy(r->takenBy, takenBy);
-}
-
-void setDropBy(Ressource r, char * dropBy){
-	strcpy(r->dropBy, dropBy);
-}
-void setDateDeb(Ressource r, char * date_d){
-	strcpy(r->date_d, date_d);
-}
-
-void setDateFin(Ressource r, char * date_f){
-	strcpy(r->date_f, date_f);
-}
-
-//fonctions sur Ressource:
-//permet d'initialiser une ressource 
-Ressource initRessource(){
-	Ressource r = (Ressource)malloc(sizeof(struct s_ressource));
-	(r->type) = (char*)malloc(sizeof(char)*33);
-	(r->takenBy) = (char*)malloc(sizeof(char)*33);
-	(r->dropBy) = (char*)malloc(sizeof(char)*33);
-	(r->date_d) = (char*)malloc(sizeof(char)*21);
-	(r->date_f) = (char)*malloc(sizeof(char)*21);
-	r->ID = generateID(ressources);
-	push_bl(ressources, r);
-	return r;
-}//la définir ici permet d'éviter les erreurs
-
-//fonctions sur ressource:
-//permet de savoir si une ressource est disponible avec un int
 int isDispo(Ressource r){
-        if(strcmp(getTakenBy(r), "") == 0) {
-                return 1;
-        }
-        return 0;
+  if(strcmp(getTakenBy(r), "") == 0){
+    return 1;
+  }
+  return 0;
 }
-//permet de savoir si une ressource nous appartient avec un int
+
+
 int haveRessource(Personne p, Ressource r){
   if(strcmp(getID(p), getDropBy(r)) == 0){
     return 1;
@@ -161,109 +158,8 @@ char * generateID(Liste ressources){
   return newabc;
 }
 
-//permet de supprimer une ressource grace à l'indice dans une liste
-void removeRessource(Ressource r,Liste l){
-	remove_at(getIndex(r,l), l);
-}
 
-
-//getters sur les listes:
-//fonction qui récupère l'indice d'une ressource dans une liste de ressources.
-int getIndex(Ressource r, Liste l){
-	int pos = 0;
-	Elementl current = l->head;
-	for(int i = 0; i<(l->size);i++){
-		if(r == current->r){
-			pos = i;
-		}
-		current=current->next;
-	}
-	return pos;
-}
-
-//fonction qui récupère une ressource à partir d'un indice dans une liste de ressources.
-Ressource getRessource(int index, Liste l){
-	Elementl current = l->head;
-	if(index>=list_size(l) || index <0){
-    		return NULL;
-        }
-	for(int i = 0;i<index; i++){
-		current=current->next;
-	}
-	return current->r;
-}
-
-
-//fonction qui permet de récuperer une ressource avec un ID
-Ressource getRessource_ID (char * ID, Liste l){
-  Elementl current = l->head;
-  for(int i =0; i<list_size(l); i++){
-    if(strcmp(getID_r(current->r), ID) == 0){
-      return current->r;
-    } 
-    current = current ->next;
-  }
-  return NULL;
-}
-
-//permet de pouvoir sélectionner une ressource qui nous appartient
-void gererDropRessource(Personne p, Liste l){
-  color("34;1");
-  int choix;
-  Elementl current = l->head;
-  printf("Selectionnez un des numéros suivants. \n");
-  printf("(-1) Revenir en arrière.\n");
-  for(int i =0; i<list_size(l); i++){
-    if(haveRessource(p,current->r) == 1){
-      printf("( %d) %s\n",i,getNom(current->r));
-    } 
-    current = current ->next;
-  }
-  scanf("%d", &choix);
-  if(choix == -1){
-    welcomeUser(p, l);
-    return;
-  }
-  Ressource r = getRessource(choix, l);
-  if(r == NULL || haveRessource(p, r) == 0){
-    printf("Numéro incorrect. Réessayez!");
-    gererDropRessource(p, l);
-    return;
-  }
-  modifRessource(p, r,l);
-}
-
-//fonction pour emprunter une ressource
-void takeRessource(Personne p, Liste l){
-  color("34;1");
-  int choix;
-  Elementl current = l->head;
-  printf("Selectionnez un des numéros suivants. \n");
-  printf("(-1) Revenir en arrière.\n");
-  for(int i =0; i<list_size(l); i++){
-    if(isDispo(current-> r) == 1){
-      printf("( %d) %s\n",i,getNom(current->r));
-    } 
-    current = current ->next;
-  }
-  scanf("%d", &choix);
-  if(choix == -1){
-    welcomeUser(p, l);
-    return;
-  }
-  Ressource r = getRessource(choix, l);
-  if(r == NULL || isDispo(r) == 0){
-    printf("Numéro incorrect. Réessayez!");
-    takeRessource(p, l);
-    return;
-  }
-  printf("Vous venez d'emprunter le livre %s pour 2 semaines. \n", getNom(r));
-  setTakenBy(r, getID(p));
-  welcomeUser(p, l);
-}
-
-
-//fonctions sur les listes : 
+//fonctions sur les listes
 //fonction initialisation liste
 Liste new_list(){
   Liste l =(Liste)malloc(sizeof(struct s_liste));
@@ -272,7 +168,7 @@ Liste new_list(){
     exit(EXIT_FAILURE);
   }
   l->size= 0;
-	return l;
+  return l;
 }
 
 //permet de savoir si une liste est vide
@@ -314,12 +210,12 @@ void affich_ress(Ressource r){
 //permet d'afficher une liste
 void print_list(Liste l){
   if(is_empty_list(l)){
-      printf("Rien a afficher, la Liste est vide.\n");
+      	    printf("Rien a afficher, la Liste est vide.\n");
 	  return;
 	}
 	Elementl temp = l->head;
 	while(temp != NULL){
-      affich_ress(temp->r);
+  	    affich_ress(temp->r);
 	  temp = temp->next;
 	}
 	printf("\n");
@@ -327,27 +223,27 @@ void print_list(Liste l){
 
 //ajouter un élèment en bout de liste: 
 Liste push_bl(Liste l,Ressource r){
-	Elementl element = malloc(sizeof(struct s_elementl));
+  Elementl element = malloc(sizeof(struct s_elementl));
   if(element == NULL){
       fprintf(stderr, "Erreur : probleme allocation dynamique.\n");
-	  exit(EXIT_FAILURE);
-	}
-	
-	element->r=r;
-	element->next=NULL;
-	element->previous = NULL;
+     exit(EXIT_FAILURE);
+   }
+   
+   element->r=r;
+   element->next=NULL;
+   element->previous = NULL;
 
-	if(is_empty_list(l)){
-		l->head= element;
-		l->tail= element;
-	}
-	else{
-		l->tail->next = element;
-		element->previous = l->tail;
-		l->tail= element;
-	}
-  l->size++;
-  return l;
+   if(is_empty_list(l)){
+   l->head= element;
+   l->tail= element;
+   }
+   else{
+   l->tail->next = element;
+   element->previous = l->tail;
+   l->tail= element;
+   }
+   l->size++;
+   return l;
 }
 
 //ajoute un élèment en début de liste
@@ -358,20 +254,21 @@ Liste push_fl(Liste l,Ressource r){
 		exit(EXIT_FAILURE);
 	}
 
+	
 	element->r =r;
 	element->next = NULL;
 	element->previous = NULL;
 
 	if(is_empty_list(l)){   
-        l->head = element;
-		l->tail= element;
+     	    l->head = element;
+	    l->tail= element;
 	}
 	else{
-		l->head->previous = element;
-		element->next = l->head;
-		l->head=element;
+	    l->head->previous = element;
+	    element->next = l->head;
+	    l->head=element;
 	}
-  l->size++;
+        l->size++;
 	return l;
 }
 
@@ -384,8 +281,8 @@ Liste pop_bl(Liste l){
 
 	if(l->head == l->tail){
 		free(l);
-        l=new_list();
-        return l;
+        	l=new_list();
+        	return l;
 	}
 
 	Elementl temp = l->tail;
@@ -395,9 +292,9 @@ Liste pop_bl(Liste l){
 	temp->next = NULL;
 	temp->previous= NULL;
     
-    free(temp->r);
-    free(temp);
-	temp = NULL;
+        free(temp->r);
+        free(temp);
+        temp = NULL;
 
 	l->size--;
 
@@ -418,6 +315,7 @@ Liste pop_fl(Liste l){
 	}
 
 	Elementl temp = l->head;
+
 	l->head = l->head->next;
 	l->head->previous = NULL;
 	temp->next = NULL;
@@ -495,7 +393,7 @@ int ress_existing(Liste ls, Ressource r){
     int j=ls->size;
     int i;
     for (i=0;i<j;i++){
-        if(strcmp(getID(r),getID(current_l->r))==0){
+        if(strcmp(getID_r(r),getID_r(current_l->r))==0){
             return 1;
          }
          if(strcmp(getType(r),getType(current_l->r))==0){
@@ -509,24 +407,108 @@ int ress_existing(Liste ls, Ressource r){
          current_l=current_l->next;
     }
     return 0;
+}  
+
+//permet de supprimer une ressource grace à l'indice dans une liste
+void removeRessource(Ressource r,Liste l){
+	remove_at_l(getIndex(r,l), l);
+}
+
+//getters sur les listes
+
+//fonction qui récupère l'indice d'une ressource dans une liste de ressources.
+int getIndex(Ressource r, Liste l){
+	int pos = 0;
+	Elementl current = l->head;
+	for(int i = 0; i<(l->size);i++){
+		if(r == current->r){
+			pos = i;
+		}
+		current=current->next;
+	}
+	return pos;
 }
 
 //permet de pouvoir sélectionner une ressource qui nous appartient
 void gererDropRessource(Personne p, Liste l){
+  color("34;1");
   int choix;
   Elementl current = l->head;
+  printf("Selectionnez un des numéros suivants. \n");
+  printf("(-1) Revenir en arrière.\n");
   for(int i =0; i<list_size(l); i++){
-    if(strcmp(getID_r(current->r), getID(p)) == 0){
-      printf("(%d) %s",i,getNom(current->r));
+    if(haveRessource(p,current->r) == 1){
+      printf("( %d) %s\n",i,getNom(current->r));
     } 
     current = current ->next;
   }
   scanf("%d", &choix);
+  if(choix == -1){
+    welcomeUser(p, l);
+    return;
+  }
   Ressource r = getRessource(choix, l);
-  if(r == NULL || strcmp(getDropBy(r), getID(p)) == 1){
+  if(r == NULL || haveRessource(p, r) == 0){
     printf("Numéro incorrect. Réessayez!");
     gererDropRessource(p, l);
     return;
   }
-  modifRessource(p, r);
+  modifRessource(p, r,l);
 }
+
+//fonction pour emprunter une ressource
+void takeRessource(Personne p, Liste l){
+  color("34;1");
+  int choix;
+  Elementl current = l->head;
+  printf("Selectionnez un des numéros suivants. \n");
+  printf("(-1) Revenir en arrière.\n");
+  for(int i =0; i<list_size(l); i++){
+    if(isDispo(current-> r) == 1){
+      printf("( %d) %s\n",i,getNom(current->r));
+    } 
+    current = current ->next;
+  }
+  scanf("%d", &choix);
+  if(choix == -1){
+    welcomeUser(p, l);
+    return;
+  }
+  Ressource r = getRessource(choix, l);
+  if(r == NULL || isDispo(r) == 0){
+    printf("Numéro incorrect. Réessayez!");
+    takeRessource(p, l);
+    return;
+  }
+  printf("Vous venez d'emprunter le livre %s pour 2 semaines. \n", getNom(r));
+  setTakenBy(r, getID(p));
+  welcomeUser(p, l);
+}
+
+
+//fonction qui récupère une ressource à partir d'un indice dans une liste de ressources.
+Ressource getRessource(int index, Liste l){
+	Elementl current = l->head;
+  if(index>=list_size(l) || index <0){
+    return NULL;
+  }
+	for(int i = 0;i<index; i++){
+		current=current->next;
+	}
+	return current->r;
+
+}
+
+//fonction qui permet de récuperer une ressource avec un ID
+Ressource getRessource_ID (char * ID, Liste l){
+  Elementl current = l->head;
+  for(int i =0; i<list_size(l); i++){
+    if(strcmp(getID_r(current->r), ID) == 0){
+      return current->r;
+    } 
+    current = current ->next;
+  }
+  return NULL;
+}
+
+

@@ -9,36 +9,30 @@ typedef int Bool ;  //définition du type booléen,
 
 #include "personne.h"
 
-
 //structures
 typedef struct s_ressource *Ressource;
 typedef struct s_elementl *Elementl;
 typedef struct s_liste *Liste;
 
-
 //setters
-void setType(Ressource r, char *type);
-void setNom(Ressource r , char * nom);
-void setID_r(Ressource r, char * ID);
+void setType(Ressource r, char * type);
+void setNom(Ressource r, char * nom);
+void setDateDeb(Ressource r, char * date_d);
 void setTakenBy(Ressource r, char * takenBy);
 void setDropBy(Ressource r, char * dropBy);
-void setDateDeb(Ressource r, char * date_d);
-void setDateFin(Ressource r, char * date_f);
 
 //getters
-char * getTypeRessource(Ressource r);
+char * getType(Ressource r);
 char * getNom(Ressource r);
-char * getID_r(Ressource r);
-char * getDropBy(Ressource r);
+char * getDateDeb(Ressource r);
+char * getDateFin(Ressource r);
 char * getTakenBy(Ressource r);
 char * getRessourceDispo(Ressource r);
-char * getDateDebut(Ressource r);
-char * getDateFin(Ressource r);
-
+char * getID_r(Ressource r);
 
 //fonctions sur Ressource
 int isDispo(Ressource r);
-Ressource initRessource();
+Ressource initRessource(Liste ressources);
 int haveRessource(Personne p, Ressource r);
 char * generateID(Liste ressources);
 void gererDropRessource(Personne p, Liste l);
@@ -62,8 +56,10 @@ int ress_existing(Liste ls, Ressource r);
 void removeRessource(Ressource r,Liste l);
 void takeRessource(Personne p, Liste l);
 
+
 //getters sur les listes
 Ressource getRessource(int index, Liste l);
 Ressource getRessource_ID(char * ID, Liste l);
+
 
 #endif
