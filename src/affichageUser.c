@@ -1,18 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <crypt.h>
-#include <unistd.h>
-#include "../include/affichgeUser.c"
-#include "../include/chiffrement.h"
-#include "../include/personne.h"
 #include "../include/ressources.h"
+#include "../include/welcome.h"
+#include "../include/affichageUser.h"
+#include "../include/personne.h"
+
 
 #ifndef COLOR
     #define color(param) printf("\033[%sm",param)
 #endif
 
-//fonction qui récupère une phrase entière car le scanf ne lit que des caractères collés
 char * getString(int size, char * request) {
   char * phrase = (char*)malloc(sizeof(char)*size);
   strcpy(phrase, "");
@@ -28,7 +26,6 @@ char * getString(int size, char * request) {
   return phrase;
 }
 
-//fonction qui vide le buffer
 void viderBuffer() {
     int c = 0;
     while (c != '\n' && c != EOF) {
@@ -36,49 +33,15 @@ void viderBuffer() {
     }
 }
 
-//fonction qui modifie les données persos de l'utilisateur
-void modifDonneesPers(Personne p){
-  	int choix;
-	char * newMdp;
-	char * checkNewMdp;
-	char * newMail;
-	char * newTel;
-  printf("Vous-vous changer une information personnelle ? \n");
-	printf("(1) Changer le mot de passe.\n");
-	printf("(2) Changer le mail.\n");
-	printf("(3) Changer le numéro de téléphone.\n");
-	scanf("%d", &choix);
-  	viderBuffer();
+//donne les infos sur les ressources empruntées
+void infoTakeRessource(Personne p, Ressource r, Liste ressources){
+  color("32;1");
+  affich_ress(r);
+  printf("Vous devez rendre %s demain\n", getNom(r));
 
-	switch(choix){
-		case 1:
-			printf("Entrez votre nouveau mot de passe: \n");
-			scanf("%s", newMdp);
-			printf("Veuillez confirmer votre mot de passe: \n");
-			scanf("%s", checkNewMdp);
-			if(strcmp(newMdp,checkNewMdp) == 0){ 
-				printf("Votre mot de passe a été changé avec succès !\n");
-        setPwd(p, newMdp);
-			}else{
-				printf("Erreur. Recommencez !\n");
-				return modifDonneesPers(p);
-			}
-			break;
-		case 2:
-			printf("Entrez le nouveau mail:\n");
-			scanf("%s",newMail);
-      setMail(p, newMail);
-			break;
-		case 3:
-			printf("Entrez le nouveau numéro:\n");
-			scanf("%s",newTel);
-      setTel(p, newTel);
-			break;
-
-	}
 }
-
-
+ 
+//fonction qui permet de modifier une ressource si elle nous appartient 
 void modifRessource(Personne p , Ressource r, Liste l){
   color("36;1");
   if(haveRessource(p, r) == 0){
@@ -87,6 +50,7 @@ void modifRessource(Personne p , Ressource r, Liste l){
   }
   else{
     int choix;
+    affich_ress(r);
     printf("Voulez-vous changer une information sur votre ressource ?\n");
     printf("(1) Changer le nom.\n");
     printf("(2) Changer le type.\n");
@@ -114,16 +78,61 @@ void modifRessource(Personne p , Ressource r, Liste l){
 }
 
 
-//ajoute une ressource à la liste de ressources
+
+void modifDonneesPers(Personne p){
+  int choix;
+	char * newMdp;
+	char * checkNewMdp;
+	char * newMail;
+	char * newTel;
+  affich_pers(p);
+  printf("\n Vous-vous changer une information personnelle ? \n");
+	printf("(1) Changer le mot de passe.\n");
+	printf("(2) Changer le mail.\n");
+	printf("(3) Changer le numéro de téléphone.\n");
+	scanf("%d", &choix);
+  viderBuffer();
+
+	switch(choix){
+		case 1:
+			printf("Entrez votre nouveau mot de passe: \n");
+			scanf("%s", newMdp);
+			printf("Veuillez confirmer votre mot de passe: \n");
+			scanf("%s", checkNewMdp);
+			if(strcmp(newMdp,checkNewMdp) == 0){ 
+				printf("Votre mot de passe a été changé avec succès !\n");
+        setPwd(p, newMdp);
+			}else{
+				printf("Erreur. Recommencez !\n");
+				return modifDonneesPers(p);
+			}
+			break;
+		case 2:
+			printf("Entrez le nouveau mail:\n");
+			scanf("%s",newMail);
+      setMail(p, newMail);
+			break;
+		case 3:
+			printf("Entrez le nouveau numéro:\n");
+			scanf("%s",newTel);
+      setTel(p, newTel);
+			break;
+
+	}
+
+}
+
+
 void addRessourceAtListe(Personne p, Liste ressources){
 
   Ressource r = initRessource(ressources);
   printf("Vous souhaitez ajouter une ressource.\n");
   setNom(r, getString(32, "Entrer le nom de votre ressource: \n"));
   setType(r , getString(32, "Entrer le type de votre ressource: \n"));
-  setDropBy(r, getID(p));
-
+  setDropBy(r, getIDPers(p));
+  
 }
+
 
 
 
@@ -151,6 +160,9 @@ void welcomeUser(Personne p, Liste ressources){
     case 3:
       takeRessource(p, ressources);
       break;
+    case 4:
+      gererTakeRessource(p, ressources);
+      break;
     case 5:
       modifDonneesPers(p);
       break;
@@ -159,8 +171,8 @@ void welcomeUser(Personne p, Liste ressources){
       break;
     default:
       break;
-
-      
   }
 }
+
+
 

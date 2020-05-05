@@ -6,7 +6,6 @@ typedef int Bool ;  //définition du type booléen,
 #define false  0 /* affectation des valeurs conventionnelles*/
 
 #define true  1
-
 #include "personne.h"
 
 //structures
@@ -29,6 +28,9 @@ char * getDateFin(Ressource r);
 char * getTakenBy(Ressource r);
 char * getRessourceDispo(Ressource r);
 char * getID_r(Ressource r);
+char *getPwd(Personne p);
+int getPossess(Personne p,Liste ressources);
+int getEmprunt(Personne p, Liste ressources);
 
 //fonctions sur Ressource
 int isDispo(Ressource r);
@@ -36,6 +38,8 @@ Ressource initRessource(Liste ressources);
 int haveRessource(Personne p, Ressource r);
 char * generateID(Liste ressources);
 void gererDropRessource(Personne p, Liste l);
+void gererTakeRessource(Personne p, Liste l);
+
 
 //fonctions sur Liste :
 int getIndex(Ressource r, Liste l);
@@ -55,7 +59,8 @@ Liste remove_at_l(int i,Liste ls);
 int ress_existing(Liste ls, Ressource r);
 void removeRessource(Ressource r,Liste l);
 void takeRessource(Personne p, Liste l);
-
+Liste depotRessource(Personne p,Liste ressources);
+Liste empruntRessource(Personne p,Liste ressources);
 
 //getters sur les listes
 Ressource getRessource(int index, Liste l);

@@ -113,6 +113,13 @@ char * getRessourceHave(Personne p , Ressource r){
   return "Cette ressource ne vous appartient pas. Vous ne pouvez pas la modifier";
 }
 
+int getPossess(Personne p, Liste ressources){
+    return list_size(depotRessource(p,ressources));
+}
+
+int getEmprunt(Personne p, Liste ressources){
+  return list_size(empruntRessource(p,ressources));
+}
 
 //fonctions liées à ressource
 //fonction d'initialisation
@@ -137,7 +144,7 @@ int isDispo(Ressource r){
 
 
 int haveRessource(Personne p, Ressource r){
-  if(strcmp(getID(p), getDropBy(r)) == 0){
+  if(strcmp(getIDPers(p), getDropBy(r)) == 0){
     return 1;
   }
   return 0;
@@ -168,7 +175,7 @@ Liste new_list(){
     exit(EXIT_FAILURE);
   }
   l->size= 0;
-  return l;
+	return l;
 }
 
 //permet de savoir si une liste est vide
@@ -190,32 +197,32 @@ int list_size(Liste l){
 //affiche les infos liées à une ressource
 void affich_ress(Ressource r){
     printf("\nVoici le récapitulatif des données liées à cette ressource:\n");
-    printf("Type :%s\n", getType(r));
-    printf("Nom :%s\n", getNom(r));
-    printf("ID:%s\n", getID_r(r));
-    printf("Propriétaire :%s\n",getDropBy(r));
+    printf("Type: %s\n", getType(r));
+    printf("Nom: %s\n", getNom(r));
+    printf("ID: %s\n", getID_r(r));
+    printf("Propriétaire: %s\n",getDropBy(r));
 		//printf("Créée le:%s\n",getDateCrea(r));
     printf("\n");
    
     if(isDispo(r)==0){
-        printf("Statut : Emprunté\n");
-        printf("Emprunté par :%s\n", getTakenBy(r));
-        printf("Date de début du pret:%s\n", getDateDeb(r));
-        printf("Date de fin du pret:%s\n", getDateFin(r));
+        printf("Statut: Emprunté\n");
+        printf("Emprunté par: %s\n", getTakenBy(r));
+        printf("Date de début du pret: %s\n", getDateDeb(r));
+        printf("Date de fin du pret: %s\n", getDateFin(r));
     }else{
-         printf("Statut : Disponible\n\n");
+         printf("Statut: Disponible\n\n");
     }
 }
 
 //permet d'afficher une liste
 void print_list(Liste l){
   if(is_empty_list(l)){
-      	    printf("Rien a afficher, la Liste est vide.\n");
+      printf("Rien a afficher, la Liste est vide.\n");
 	  return;
 	}
 	Elementl temp = l->head;
 	while(temp != NULL){
-  	    affich_ress(temp->r);
+      affich_ress(temp->r);
 	  temp = temp->next;
 	}
 	printf("\n");
@@ -223,27 +230,27 @@ void print_list(Liste l){
 
 //ajouter un élèment en bout de liste: 
 Liste push_bl(Liste l,Ressource r){
-  Elementl element = malloc(sizeof(struct s_elementl));
+	Elementl element = malloc(sizeof(struct s_elementl));
   if(element == NULL){
       fprintf(stderr, "Erreur : probleme allocation dynamique.\n");
-     exit(EXIT_FAILURE);
-   }
-   
-   element->r=r;
-   element->next=NULL;
-   element->previous = NULL;
+	  exit(EXIT_FAILURE);
+	}
 
-   if(is_empty_list(l)){
-   l->head= element;
-   l->tail= element;
-   }
-   else{
-   l->tail->next = element;
-   element->previous = l->tail;
-   l->tail= element;
-   }
-   l->size++;
-   return l;
+	element->r=r;
+	element->next=NULL;
+	element->previous = NULL;
+
+	if(is_empty_list(l)){
+		l->head= element;
+		l->tail= element;
+	}
+	else{
+		l->tail->next = element;
+		element->previous = l->tail;
+		l->tail= element;
+	}
+  l->size++;
+  return l;
 }
 
 //ajoute un élèment en début de liste
@@ -260,15 +267,15 @@ Liste push_fl(Liste l,Ressource r){
 	element->previous = NULL;
 
 	if(is_empty_list(l)){   
-     	    l->head = element;
-	    l->tail= element;
+        l->head = element;
+		l->tail= element;
 	}
 	else{
-	    l->head->previous = element;
-	    element->next = l->head;
-	    l->head=element;
+		l->head->previous = element;
+		element->next = l->head;
+		l->head=element;
 	}
-        l->size++;
+  l->size++;
 	return l;
 }
 
@@ -281,8 +288,8 @@ Liste pop_bl(Liste l){
 
 	if(l->head == l->tail){
 		free(l);
-        	l=new_list();
-        	return l;
+        l=new_list();
+        return l;
 	}
 
 	Elementl temp = l->tail;
@@ -292,9 +299,9 @@ Liste pop_bl(Liste l){
 	temp->next = NULL;
 	temp->previous= NULL;
     
-        free(temp->r);
-        free(temp);
-        temp = NULL;
+    free(temp->r);
+    free(temp);
+	temp = NULL;
 
 	l->size--;
 
@@ -429,25 +436,55 @@ int getIndex(Ressource r, Liste l){
 	return pos;
 }
 
+//retourne la liste de ressources déposées
+Liste depotRessource(Personne p,Liste ressources){ 
+	Liste depot = new_list();
+	Elementl current = ressources->head;
+	for(int i=0; i<list_size(ressources);i++){
+	  if(haveRessource(p, current->r)== 1){
+	    push_bl(depot, current->r);
+	  }
+	  current = current-> next;
+	}
+	return depot;
+}
+
+//retourne la liste de ressources empruntées
+Liste empruntRessource(Personne p,Liste ressources){ 
+	Liste emprunt = new_list();
+	Elementl current = ressources->head;
+	for(int i=0; i<list_size(ressources);i++){
+	  if(strcmp(getTakenBy(current->r), getIDPers(p))==0){
+	    push_bl(emprunt, current->r);
+	  }
+	  current = current-> next;
+	}
+	return emprunt;
+}
+
+
+
 //permet de pouvoir sélectionner une ressource qui nous appartient
 void gererDropRessource(Personne p, Liste l){
   color("34;1");
   int choix;
-  Elementl current = l->head;
+  printf("Vous avez %d ressources déposées.\n", getPossess(p, l));
   printf("Selectionnez un des numéros suivants. \n");
   printf("(-1) Revenir en arrière.\n");
-  for(int i =0; i<list_size(l); i++){
-    if(haveRessource(p,current->r) == 1){
-      printf("( %d) %s\n",i,getNom(current->r));
-    } 
+
+  Liste depots = depotRessource(p, l);
+  Elementl current = depots->head;
+  for(int i =0; i<list_size(depots); i++){
+    printf("( %d) %s\n",i,getNom(current->r));
     current = current ->next;
   }
+
   scanf("%d", &choix);
   if(choix == -1){
     welcomeUser(p, l);
     return;
   }
-  Ressource r = getRessource(choix, l);
+  Ressource r = getRessource(choix, depots);
   if(r == NULL || haveRessource(p, r) == 0){
     printf("Numéro incorrect. Réessayez!");
     gererDropRessource(p, l);
@@ -455,6 +492,37 @@ void gererDropRessource(Personne p, Liste l){
   }
   modifRessource(p, r,l);
 }
+
+
+//permet de gérer les ressources empruntées
+void gererTakeRessource(Personne p, Liste l){
+  color("34;1");
+  int choix;
+  printf("Vous avez %d ressource(s) empruntée(s).\n", getEmprunt(p, l));
+  printf("Selectionnez un des numéros suivants. \n");
+  printf("(-1) Revenir en arrière.\n");
+
+  Liste emprunts = empruntRessource(p, l);
+  Elementl current = emprunts->head;
+  for(int i =0; i<list_size(emprunts); i++){
+    printf("( %d) %s\n",i,getNom(current->r));
+    current = current ->next;
+  }
+
+  scanf("%d", &choix);
+  if(choix == -1){
+    welcomeUser(p, l);
+    return;
+  }
+  Ressource r = getRessource(choix, emprunts);
+  if(r == NULL || isDispo(r) == 1){
+    printf("Numéro incorrect. Réessayez!\n");
+    gererTakeRessource(p, l);
+    return;
+  }
+  infoTakeRessource(p,r,l);
+}
+
 
 //fonction pour emprunter une ressource
 void takeRessource(Personne p, Liste l){
@@ -481,7 +549,7 @@ void takeRessource(Personne p, Liste l){
     return;
   }
   printf("Vous venez d'emprunter le livre %s pour 2 semaines. \n", getNom(r));
-  setTakenBy(r, getID(p));
+  setTakenBy(r, getIDPers(p));
   welcomeUser(p, l);
 }
 
