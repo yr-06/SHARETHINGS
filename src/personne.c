@@ -20,66 +20,51 @@ struct s_pers {
     int a;//int qui definit autorisation ou non d'entrer ds le menu admin
     char *nom;//nom de la personne
     char *prenom;//prenom de la personne
-    Date date_naiss;
+    char *date_naiss;//date de naissance de la personne
     char *id;//identifiant de son compte
     char *pwd;//mot de passe lié au compte
     char *mail;//mail de la personne
     char *tel;//numero de telephone de la personne
-    int possess;// nbre de ressources dont la personne est proprio
-    Liste emprunt;//Liste de Ressources empruntées actuellement par la personne
 };
 
-struct s_elementa{
-    Personne p;
-    struct s_elementa *previous;
-    struct s_elementa *next;
-};//element d'un Annuaire
 
 //getters
 
 int getNumAccount(Personne p){
     return p->num_account;
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
 int getAutor(Personne p){
     return p->a;
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
 char *getName(Personne p){
     return (p->nom);
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
 char *getPrenom(Personne p){
     return (p->prenom);
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
-Date getNaiss(Personne p){
+char *getNaiss(Personne p){
     return (p->date_naiss);
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
 char *getIDPers(Personne p){
     return (p->id);
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
 char *getPwd(Personne p){
     return (p->pwd);
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
 char *getMail(Personne p){
     return (p->mail);
-}   
+}//fonctionne  
 /*----------------------------------------------------------------*/
 char *getTel(Personne p){
     return (p->tel);
-}
-/*----------------------------------------------------------------*/
-int getPossess(Personne p){
-    return p->possess;
-}
-/*----------------------------------------------------------------*/
-int getNbPret(Personne p){
-	return(p->emprunt->size);
-}//consulter le nombre de pret
+}//fonctionne
 /*----------------------------------------------------------------*/
 
  //setters
@@ -87,16 +72,11 @@ void setNumAccount(Personne p, int i){
   p->num_account=i;
 }
 /*----------------------------------------------------------------*/
-void setAutor(Personne p,FILE*f){
+void setAutor(Personne p){
+    FILE *f=fopen("../data/Mtdp_admin.txt", "r");
     CLEAR_STDIN
     printf("\nVous allez être invité à choisir l'habilitation de votre compte\n");
     int i;
-    char *cmp;
-    char *mdp_admin;
-    mdp_admin=(char *)malloc(sizeof(char)*65);
-    cmp=(char *)malloc(sizeof(char)*65);
-   
-    
     printf("\nCOMPTE USER: Permet utilisaton de la base de données (1) \n");
     printf("COMPTE ADMIN: Permet utilisaton de la base de données et son administration(2)\n");
     printf("\nVeuillez choisir l'habilitation du compte :\n");
@@ -110,227 +90,154 @@ void setAutor(Personne p,FILE*f){
             return;
         case 2:
             CLEAR_STDIN
-           
-            fgets(mdp_admin,65,f);
-            printf("Mdp_admin=%s\n",mdp_admin);// à utiliser pour tester fct°
-        
+            char *cmp;
+            char *mdp_admin;
+            cmp=(char *)malloc(sizeof(char)*65);
+            mdp_admin=(char *)malloc(sizeof(char)*65);
+            
+            //plante à partir de là 
             printf("Veuillez entrer le mot de passe administrateur :\n");
             fgets(cmp,65,stdin);
-            //cmp=chiffrementMdp(cmp);
             
             printf("cmp=%s\n",cmp);// à utiliser pour tester fct°
-            printf("strcmp=%d\n",strcmp(mdp_admin,cmp));// à utiliser pour tester fct°
             
-            if(strcmp(mdp_admin,cmp)==0){
+            fscanf(f,"%65s",mdp_admin);
+            printf("Mdp_admin=%s\n",mdp_admin);// à utiliser pour tester fct°
+        
+           
+            printf("strcmp=%d\n",strcmp(mdp_admin, chiffrementMdp(cmp)));// à utiliser pour tester fct°
+            
+            if(strcmp(mdp_admin, chiffrementMdp(cmp))==0){
                 p->a=1;
                 printf("Vous êtes habilité en tant qu'administrateur\n");
+                free(mdp_admin);
+                free(cmp);
                return;
             }//pb avec strcmp-->initialiser le mot de passe ds le fichier
             else{
                 CLEAR_STDIN
-                printf("\nERRROR\n");
-                printf("Vous allez être redirigé\n");
+                printf("\nERRROR--Vous allez être redirigé\n");
                 free(mdp_admin);
                 free(cmp);
                 mdp_admin=NULL;
                 cmp=NULL;
-                setAutor(p,f);
+                setAutor(p);
             }
             break;
         default:
             CLEAR_STDIN
-            printf("\nERRROR\n");
-            printf("Vous allez être redirigé\n");
+            printf("\nERRROR--Vous allez être redirigé\n");
             free(mdp_admin);
             free(cmp);
             mdp_admin=NULL;
             cmp=NULL;
-            setAutor(p,f);
+            setAutor(p);
             break;
     }  
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
-void setName(Personne p,char*name){
+void setName(Personne p,char *name){
     strcpy(p->nom,name);
 }
 /*----------------------------------------------------------------*/
-void setPrenom(Personne p,char*prenom){
+void setPrenom(Personne p,char *prenom){
     strcpy(p->prenom,prenom);
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
-void setNaiss(Personne p,Date d){
-    p->date_naiss=d;
-
-}
+void setNaiss(Personne p,char *date){
+    strcpy(p->date_naiss,date);
+}//fonctionne
 /*----------------------------------------------------------------*/
-void setIDPers(Personne p,char*id){
+void setIDPers(Personne p,char *id){
    strcpy(p->id,id);
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
-void setPwd(Personne p,char*pwd){
+void setPwd(Personne p,char *pwd){
     strcpy(p->pwd,pwd);
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
-void setMail(Personne p,char*mail){
+void setMail(Personne p,char *mail){
     strcpy(p->mail,mail);
-}   
+} //fonctionne 
 /*----------------------------------------------------------------*/
-void setTel(Personne p,char*tel){
+void setTel(Personne p,char *tel){
     strcpy(p->tel,tel);
     
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
+Personne setPers(Personne p, int num,int a ,char*name,char*prenom,char*date,char*id,char*pwd,char*mail,char*tel){
+    setNumAccount(p,num);
+    setName(p,name);
+    setPrenom(p,prenom);
+    p->a=a;
+    setNaiss(p,date);
+    setIDPers( p,id);
+    setPwd(p,pwd);
+    setMail(p,mail);
+    setTel(p,tel);
+}//fonctionne
 
 //Fonctions permettants de modifier données d'une personne
 
 void modif_name(Personne p){
-    char *name;
     char *newName;
-    name=(char*)malloc(sizeof(char)*41);
-    name=getName(p);
-    
     newName=(char*)malloc(sizeof(char)*41);
     
     printf("Veuillez entrer un nouveau nom:\n");
     fgets(newName,41,stdin);
     
-    if(strcmp(name,newName)==0){
-        printf("Veuillez entrer un nom différent de celui déjà enregistré\n");
-        free(newName);
-        free(name);
-        CLEAR_STDIN
-        modif_name(p);
-    }else{
-        free(p->nom);
-        (p->nom)=(char*)malloc(sizeof(char)*41);
-        setName(p,newName);
-        return;
-    }    
-}
+    free(p->nom);
+    (p->nom)=(char*)malloc(sizeof(char)*41);
+    setName(p,newName);
+    return;
+}//fonctionne
 /*----------------------------------------------------------------*/
 void modif_prenom(Personne p){
     
-    char *prenom;
     char *newPrenom;
-    prenom=(char*)malloc(sizeof(char)*33);
-    prenom=getPrenom(p);
-    
     newPrenom=(char*)malloc(sizeof(char)*33);
     
     printf("Veuillez entrer un nouveau prénom:\n");
     fgets(newPrenom,33,stdin);
     
-    
-    if(strcmp(prenom,newPrenom)==0){
-        printf("Veuillez entrer un prénom différent de celui déjà enregistré\n");
-        free(newPrenom);
-        free(prenom);
-        CLEAR_STDIN
-        modif_prenom(p);
-    }else{
-        free(p->prenom);
-        (p->prenom)=(char*)malloc(sizeof(char)*33);
-        setPrenom(p,newPrenom);
-        free(newPrenom);
-        return;
-    }    
-}
+    free(p->prenom);
+    (p->prenom)=(char*)malloc(sizeof(char)*33);
+    setPrenom(p,newPrenom);
+    return;
+}//fonctionne
 /*----------------------------------------------------------------*/
 void modif_naiss(Personne p){
-    Date newDate=(Date)malloc(sizeof(struct tm));
     
+    char *date=(char *)malloc(sizeof(char)*21);
     int day,month,year;
-    
-    char *naiss;
-    naiss=(char*)malloc(sizeof(char)*21);
-    strftime(naiss,21,"%d/%m/%Y",getNaiss(p));
 
-    char*newNaiss;
-    newNaiss=(char*)malloc(sizeof(char)*21);
-    
     printf("Veuillez entrer une nouvelle date de naissance au format JJ-MM-AAAA :\n");
     scanf("%02d-%02d-%4d",&day,&month,&year);
+    sprintf(date,"%d/%d/%d",day,month,year);
    
-    newDate->tm_mday = day;
-    newDate->tm_mon = month-1;  
-    newDate->tm_year =year-1900;
-     
-    strftime(newNaiss,21,"%d/%m/%Y",newDate);
-    //printf("naiss=%s\nnewNaiss=%s\n",naiss,newNaiss);
-      
-   // printf("strcmp=%d\n",strcmp(naiss,newNaiss));
-    if(strcmp(naiss,newNaiss)==0){
-        printf("Veuillez entrer une date de naissance différente de celle déjà enregistrée\n");
-        free(newNaiss);
-        free(naiss);
-        CLEAR_STDIN
-        modif_naiss(p);
-    }else{
-        
-        free(p->date_naiss);
-        p->date_naiss=(Date)malloc(sizeof(struct tm));
-        setNaiss(p,newDate);
-        free(newNaiss);
-        free(naiss);
-        return;
-    }    
+    free(p->date_naiss);
+    p->date_naiss=(char *)malloc(sizeof(char)*21);
+    setNaiss(p,date);
+    return;
  
-}
-/*----------------------------------------------------------------*/
-void modif_id(Personne p){
-   
-    char *id;
-    char*newID;
-    id=(char*)malloc(sizeof(char)*33);
-    id=getIDPers(p);
-    
-    newID=(char*)malloc(sizeof(char)*33);
-    
-    printf("Veuillez entrer un nouvel identifiant:\n");
-    fgets(newID,33,stdin);
-    
-   
-    if(strcmp(id,newID)==0){
-        printf("Veuillez entrer un identifiant différent de celui déjà enregistré\n");
-        free(newID);
-        free(id);
-        CLEAR_STDIN
-        modif_id(p);
-    }else{
-         free(p->id);
-         (p->id)=(char*)malloc(sizeof(char)*33);
-         setIDPers(p,id);
-         free(id);
-         return;
-    }    
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
 void modif_pwd(Personne p){
-    
-     char *pwd;//déjà crypté
+   
      char *newPwd;
      char *confirm;
-     //char *crypted;-->pour crypter confirm qui est pareil que newPwd
-     
-     pwd=(char*)malloc(sizeof(char)*65);
-     pwd=getPwd(p);
-     
+  
      newPwd=(char*)malloc(sizeof(char)*65);
      confirm=(char*)malloc(sizeof(char)*65);
-     //crypted=(char*)malloc(sizeof(char)*65);
      
-    printf("Veuillez entrer un nouveau mot de passe:\n");
-    fgets(newPwd,65,stdin);
+     printf("Veuillez entrer un nouveau mot de passe:\n");
+     fgets(newPwd,65,stdin);
+   
     
-    //crypted=chiffrementMdp(newPwd);
-    
-    if(strcmp(pwd,newPwd)==0){
-        //comparer normalement avec crypted si fct°chiffrementMdp() marche-->strcmp(pwd,crypted);
+    if(strcmp(getPwd(p),chiffrementMdp(newPwd))==0){
         printf("Veuillez entrer un mot de passe différent de celui déjà enregistré\n");
-        free(pwd);
         free(newPwd);
         free(confirm);
-        //free(crypted);
         CLEAR_STDIN
         modif_pwd(p);
     }else{
@@ -339,105 +246,75 @@ void modif_pwd(Personne p){
         if(strcmp(newPwd,confirm)==0){
             free(p->pwd);
             (p->pwd)=(char*)malloc(sizeof(char)*65);
-            setPwd(p,newPwd);//normalement setPwd(p,crypted);
+            setPwd(p,chiffrementMdp(newPwd));
+            free(confirm);
             return;
         }else{
             printf("Veuillez entrer le même mot de passe pour confirmer la modification\n");
             printf("Vous allez être rédirigé\n");
-            free(pwd);
             free(newPwd);
-            //free(crypted);
-            //free(newCrypted);
             free(confirm);
             CLEAR_STDIN
             modif_pwd(p);
         }
     }    
     
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
 void modif_mail(Personne p){
-   
-    char *mail;
+    
     char *newMail;
-    mail=(char*)malloc(sizeof(char)*33);
-    mail=getMail(p);
-    
     newMail=(char*)malloc(sizeof(char)*33);
-    
     
     printf("Veuillez entrer une nouvelle adresse mail :\n");
     fgets(newMail,33,stdin);
     
-    if(strcmp(mail,newMail)==0){
-        printf("Veuillez entrer une adresse mail différente de celle déjà enregistrée\n");
-        free(newMail);
-        free(mail);
-        CLEAR_STDIN
-        modif_mail(p);
-    }else{
-        free(p->mail);
-        (p->mail)=(char*)malloc(sizeof(char)*33);
-        setMail(p,newMail);
-        free(newMail);
-        return;
-    }
-}
+    free(p->mail);
+    (p->mail)=(char*)malloc(sizeof(char)*33);
+    setMail(p,newMail);
+    return;
+}//fonctionne
 /*----------------------------------------------------------------*/
 void modif_tel(Personne p){
-    
-    char *tel;
+
     char *newTel;
-    tel=(char*)malloc(sizeof(char)*33);
-    tel=getTel(p);
-    
     newTel=(char*)malloc(sizeof(char)*33);
     
     printf("Veuillez entrer un nouveau numéro de téléphone :\n");
     fgets(newTel,33,stdin);
-   
-    if(strcmp(tel,newTel)==0){
-        printf("Veuillez entrer un numéro de téléphone différent de celui déjà enregistré\n");
-        free(newTel);
-        free(tel);
-        CLEAR_STDIN
-        modif_tel(p);
-    }else{
-        free(p->tel);
-        (p->tel)=(char*)malloc(sizeof(char)*33);
-        setTel(p,newTel);
-        free(newTel);
-        return;
-    }
-}
+    
+    free(p->tel);
+    (p->tel)=(char*)malloc(sizeof(char)*33);
+    setTel(p,newTel);
+    free(newTel);
+    
+    return;
+}//fonctionne
 /*----------------------------------------------------------------*/
 //Fonction sur les manipulations de personnes
 Personne initPers(){
     Personne pers=(Personne)malloc(sizeof(struct s_pers));
     (pers->nom)= (char*)malloc(sizeof(char)*41);
     (pers->prenom)=(char*)malloc(sizeof(char)*33);
-    (pers->date_naiss) =(Date)malloc(sizeof(struct tm));
+    (pers->date_naiss)=(char*)malloc(sizeof(char)*21);
     (pers->id)=(char*)malloc(sizeof(char)*33);
     (pers->pwd)=(char*)malloc(sizeof(char)*65);
     (pers->mail)=(char*)malloc(sizeof(char)*33);
     (pers->tel)=(char*)malloc(sizeof(char)*33);
-    pers->emprunt=new_list();
+    
     return pers;
 }
 /*----------------------------------------------------------------*/
-Personne create_pers(FILE*f){
+Personne create_pers(){
     Personne pers=initPers();
-    
-    pers->possess=0;
-    
     
     CLEAR_STDIN
     char *name;
     name=(char*)malloc(sizeof(char)*41);
-    printf("\n\nVeuillez entrer votre nom :\n");
+    printf("\nVeuillez entrer votre nom en MAJUSCULES:\n");
     fgets(name,41,stdin);
     setName(pers,name);
-    free(name);
+   
     
     CLEAR_STDIN
     char *prenom;
@@ -445,50 +322,41 @@ Personne create_pers(FILE*f){
     printf("Veuillez entrer votre prénom :\n");
     fgets(prenom,33,stdin);
     setPrenom(pers,prenom);
-    free(prenom);
+   
    
     CLEAR_STDIN
     
-    Date date=(Date)malloc(sizeof(struct tm));
+    char *date=(char *)malloc(sizeof(char)*21);
     int day,month,year;
     
     printf("Veuillez entrer votre date de naissance au format JJ-MM-AAAA :\n");
     scanf("%02d-%02d-%4d",&day,&month,&year);
-
-    date->tm_mday = day;
-    date->tm_mon = month-1;  
-    date->tm_year =year-1900;
     
+
+    char *nday=(char *) malloc(sizeof(char)*6);
+    char *nmonth=(char *) malloc(sizeof(char)*3);
+    sprintf(nmonth,"%d",month);
+    sprintf(nday,"%d",day);
+    
+    setIDPers(pers,strcat(nday,nmonth));
+    
+    sprintf(date,"%d/%d/%d",day,month,year);
     setNaiss(pers,date);
    
     CLEAR_STDIN
-    char *id;
-    id=(char*)malloc(sizeof(char)*33);
-    printf("Veuillez entrer votre identifiant:\n");
-    fgets(id,33,stdin);
-    setIDPers(pers,id);
-    free(id);
-    
-    CLEAR_STDIN
     char *pwd;
-    //char *crypted;
     pwd=(char*)malloc(sizeof(char)*65);
-    //crypted=(char*)malloc(sizeof(char)*65);
     printf("Veuillez entrer votre mot de passe:\n");
     fgets(pwd,65,stdin);
-    //crypted=chiffrementMdp(pwd);
-    //set_pwd(pers,crypted);
-    setPwd(pers,pwd);
-    free(pwd);
-    //free(crypted);
-   
+    setPwd(pers,chiffrementMdp(pwd));
+  
     CLEAR_STDIN
     char *mail;
     mail=(char*)malloc(sizeof(char)*33);
     printf("Veuillez entrer votre adresse mail :\n");
     fgets(mail,33,stdin);
     setMail(pers,mail);
-    free(mail);
+   
     
     CLEAR_STDIN
     char *tel;
@@ -496,23 +364,49 @@ Personne create_pers(FILE*f){
     printf("Veuillez entrer votre numéro de téléphone :\n");
     fgets(tel,33,stdin);
     setTel(pers,tel);
-    free(tel);
    
     CLEAR_STDIN
-    setAutor(pers,f);
+    setAutor(pers);
     return pers;
-}//permet d'initialiser les champs de la structure Personne
+}//fonctionne-->permet d'initialiser les champs de la structure Personne
+/*----------------------------------------------------------------*/
+char *createIDPers(Personne p){
+    char * id = (char *) malloc(sizeof(char)*4);
+    id="IDP";
+    
+    char *num=(char *) malloc(sizeof(char)*8);
+    
+    sprintf(num,"%d", getNumAccount(p));
+    
+    char *subname=(char *) malloc(sizeof(char)*3);
+    subname=strncpy(subname,getName(p),3);
+    
+    char *subfname=(char *) malloc(sizeof(char)*1);
+    subfname=strncpy(subfname,getPrenom(p),1);
+    
+    
+    
+    char *fullID= (char *) malloc(sizeof(char)*33);
+    strcpy(fullID,id);
+    strcat( fullID,num);
+    strcat( fullID,subname);
+    strcat( fullID,subfname);
+    strcat( fullID,getIDPers(p));
+    
+    free(p->id);
+    (p->id)=(char *) malloc(sizeof(char)*33);
+
+    return fullID;
+
+}//fonctionne
 /*----------------------------------------------------------------*/
 void affich_pers(Personne p){
     printf("\n--------Voici le récapitulatif des données de ce compte:-------\n");
     printf("N° de compte :%d\n", getNumAccount(p));
     printf("Nom :%s\n", getName(p));
     printf("Prenom :%s\n", getPrenom(p));
-    
-    char*cdate;
-    cdate=(char*)malloc(sizeof(char)*21);
-    strftime(cdate,21,"%d/%m/%Y",getNaiss(p));
-    printf("Date de naissance :%s\n",cdate);
+  
+    printf("Date de naissance :%s\n",getNaiss(p));
     
     printf("\n");
     printf("Identifiant :%s\n", getIDPers(p));
@@ -520,21 +414,19 @@ void affich_pers(Personne p){
     printf("\n");
     printf("Adresse mail :%s\n", getMail(p));
     printf("N° de téléphone :%s\n", getTel(p));
-    //printf("Nombre d'emprunt actuel :%d\n", getNbPret(p));
-    printf("Nombre de ressources créées:%d\n",getPossess(p));
+    
     if(getAutor(p)==1){
         printf("--------Ce compte est habilité à se connecter en tant qu'administrateur----------\n");
     }else{
         printf("-----Ce compte est habilité à se connecter en tant que simple utilisateur-------\n");
     }
-} 
-/*----------------------------------------------------------------*/
-void modif_persAdmin(Personne p,FILE*f){
+} //fonctionne
+void modif_persAdmin(Personne p){
     int i;
     printf("\n\n Que voulez-vous modifier ?\n");
     printf(" Modifier nom: 1\n Modifier prenom: 2\n Modifier date de naissance: 3\n");
-    printf(" Modifier identifiant: 4\n Modifier mot de passe: 5\n Modifier adresse mail: 6\n");
-    printf(" Modifier numéro de téléphone: 7\n Modifier habilitation: 8\n Quitter: 0\n");
+    printf(" Modifier mot de passe: 4\n Modifier adresse mail: 5\n");
+    printf(" Modifier numéro de téléphone: 6\n Modifier habilitation: 7\n Quitter: 0\n");
     printf(" \n\nSaisissez votre choix : \n");
     scanf("%d",&i);
     switch(i){
@@ -558,27 +450,23 @@ void modif_persAdmin(Personne p,FILE*f){
         
         case 4:
             CLEAR_STDIN
-            modif_id(p);
+            modif_pwd(p);
             break;
         
         case 5:
             CLEAR_STDIN
-            modif_pwd(p);
-            break;
-        
-        case 6:
-            CLEAR_STDIN
             modif_mail(p);
             break;
             
-        case 7:
+        case 6:
             CLEAR_STDIN
             modif_tel(p);
             break;
         
-        case 8:
+        case 7:
             CLEAR_STDIN
-            setAutor(p,f);
+            setAutor(p);
+            break;
             
         default :
             break;
@@ -588,9 +476,10 @@ void modif_persAdmin(Personne p,FILE*f){
     scanf("%d",&u);
     if(u==1){
         CLEAR_STDIN
-        modif_persAdmin(p,f);
+        modif_persAdmin(p);
     }
-}
+    return;
+}//fonctionne
 /*----------------------------------------------------------------*/
 void modif_persUser(Personne p){
     int i;
@@ -627,54 +516,193 @@ void modif_persUser(Personne p){
         modif_persUser(p);
     }
     return;
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
 
-void print_pers_JSON(Personne p,FILE*f){
+void print_pers_JSON(Personne p){
+    char path[64];
+    sprintf(path,"../data/Personne/%s.json",getIDPers(p));
+    
     JSON_Value *root_value = json_value_init_object();
     JSON_Object *root_object = json_value_get_object(root_value);
     char *serialized_string = NULL;
+    FILE *fjson = NULL;
+
+    fjson = fopen(path,"w+");
     
     json_object_set_number(root_object, "N° de compte",getNumAccount(p));
     json_object_set_string(root_object, "Nom",getName(p));
     json_object_set_string(root_object, "Prenom",getPrenom(p));
+    json_object_set_number(root_object, "Habilitation",getAutor(p));
     
-    char*date;
-    date=(char*)malloc(sizeof(char)*21);
-    strftime(date,21,"%d/%m/%Y",getNaiss(p));
-    
-    json_object_set_string(root_object,"Date de naissance",date);
+    json_object_set_string(root_object,"Date de naissance",getNaiss(p));
     json_object_set_string(root_object,"Identifiant",getIDPers(p));
     json_object_set_string(root_object,"Mot de passe",getPwd(p));
     json_object_set_string(root_object,"Adresse mail",getMail(p));
     json_object_set_string(root_object,"N° de téléphone",getTel(p));
-    if(getAutor(p)==1){
-        json_object_set_string(root_object,"Habilitation","ADMINISTRATEUR");
-     
-    }else{
-        json_object_set_string(root_object,"Habilitation","USER");
-    }
-    json_object_set_number(root_object, "Nombre d'emprunt actuel",getNbPret(p));
-    json_object_set_number(root_object, "Nombre de ressources créées",getPossess(p));
-    if(getNbPret(p)>0){
-        int i;
-        Elementl current_l=emprunt->head;
-        for(i=0,i<p->emprunt->size,i++){
-            current_l=current_l->next;
-        }
-    }//-->faire en sorte que chaque ressource s'affiche
+    
     serialized_string = json_serialize_to_string_pretty(root_value);
-    fseek(f,0,SEEK_END);
-    fprintf(f,"%s",serialized_string);
+    fprintf(fjson,"%s",serialized_string);
+    fclose(fjson);
     json_free_serialized_string(serialized_string);
     json_value_free(root_value);
+}//fonctionne
+/*----------------------------------------------------------------*/
+void addPersAnnu(Personne p){
+    FILE *Annuf = NULL;
+    Annuf = fopen("../data/Personne/Annuaire.dat","a");
+    //fprintf(Annuf,"%s,%s,%s,%s \n",getIDPers(p),getName(p),getPrenom(p),getPwd(p));
+    fprintf(Annuf,"%s\n",getIDPers(p));
+    fclose(Annuf);
+}//fonctionne
+/*----------------------------------------------------------------*/
+void removePersAnnu(Personne p){
+	//char line[128];
+    char line[33];
+	//char *id;
+    //char *pchain;
+
+	FILE * file = fopen("../data/Personne/Annuaire.dat","r");
+    FILE * Newfile = fopen("../data/Personne/NewAnnuaire.dat","w");
+    rewind(file);
+    rewind(Newfile);
+
+    if(file!= NULL){
+        while (!feof(file) && (fgets(line,33, file) != NULL)){
+            //pchain=(char*)malloc(sizeof(char)*129);
+            //strcpy(pchain,line);
+			//id = strtok(line,",");
+			
+            if(strcmp(line,getIDPers(p))!=0){
+                fprintf(Newfile,"%s \n",line);
+				//fprintf(Newfile,"%s \n",pchain);
+                //free(pchain);
+			}
+			/*while ( id!= NULL ) {
+                id= strtok( NULL,",");
+                
+            }*/
+        }
+    }else{
+        fprintf(stderr, "Erreur :Impossible d'ouvrir le fichier.\n");
+		exit(EXIT_FAILURE);
+    }
+    fclose(file);
+    fclose(Newfile);
+
+    remove("../data/Personne/Annuaire.dat");
+    rename("../data/Personne/NewAnnuaire.dat","../data/Personne/Annuaire.dat");
+}//à revoir
+/*----------------------------------------------------------------*/
+Personne LoadPersonne(char *ID){
+    Personne p=initPers();
+    JSON_Value *root_value;
+    JSON_Object *root_object;
+    char path[64];
+    sprintf(path,"../data/Personne/%s.json",ID);
     
-}//fonctionne-->affichage de \n et /--> possibilité de s'en débarasser
+    
+    root_value = json_parse_file(path);
+    root_object = json_value_get_object(root_value);
+
+   
+    p=setPers(p,(int)json_object_get_number (root_object,"N° de compte"),(int)json_object_get_number (root_object,"Habilitation"),(char*)json_object_get_string (root_object,"Nom"),(char*)json_object_get_string (root_object,"Prenom"),(char*)json_object_get_string (root_object,"Date de naissance"),(char*)json_object_get_string (root_object,"Identifiant"),(char*)json_object_get_string (root_object,"Mot de passe"),(char*)json_object_get_string (root_object,"Adresse mail"),(char*)json_object_get_string (root_object,"N° de téléphone"));
+    return p;
+}//fonctionne
+
+/*
+Ressource setRess(Ressource r,char *type,char *nom,char *ID,char *dropBy,char *takenBy,char *date_d,char *date_f){
+    setType(r,type);
+    setNom(r ,nom);
+    setID_r(r,ID);
+    setDropBy(r,dropBy);
+    setTakenBy(r,takenBy);
+    setDateDeb(r,date_d);
+    setDateFin(r,date_f);
+}//à tester
+void print_ress_JSON(Ressource r){
+    char path[64];
+    sprintf(path,"../data/Ressources/%s.json",getID_r(r));
+    
+    JSON_Value *root_value = json_value_init_object();
+    JSON_Object *root_object = json_value_get_object(root_value);
+    char *serialized_string = NULL;
+    FILE *fjson = NULL;
+
+    fjson = fopen(path,"w+");
+    
+    json_object_set_string(root_object, "Type",getTypeRessource(r));
+    json_object_set_string(root_object, "Nom", getNom(r));
+    json_object_set_string(root_object, "ID",getID_r(r));
+    json_object_set_string(root_object, "Propriétaire",getDropBy(r));
+    json_object_set_number(root_object, "Statut",isDispo(r));
+    json_object_set_string(root_object, "Emprunté par",getTakenBy(r));
+    json_object_set_string(root_object,"Date de début du pret", getDateDebut(r));
+    json_object_set_string(root_object,"Date de fin du pret",getDateFin(r));
+  
+    serialized_string = json_serialize_to_string_pretty(root_value);
+    fprintf(fjson,"%s",serialized_string);
+    fclose(fjson);
+    json_free_serialized_string(serialized_string);
+    json_value_free(root_value);
+   
+}//à tester
+void addRessListe(Ressource r){
+    FILE *Listef = NULL;
+    Listef = fopen("../data/Ressources/Liste.dat","a");
+    fprintf(Listef,"%s,%s,%s,%s \n",getID_r(r),getTypeRessource(r),getNom(r),getDropBy(r));
+    fclose(Listef);
+}//à tester
+void removeRessListe(Ressource r){
+	char line[128];
+	char *id;
+    char *pchain;
+
+	FILE * file = fopen("../data/Ressources/Liste.dat","r");
+    FILE * Newfile = fopen("../data/Ressources/NewListe.dat","w");
+
+    if(file!= NULL){
+        while (fgets(line, 128, file) != NULL){
+            pchain=(char*)malloc(sizeof(char)*129);
+            strcpy(pchain,line);
+			id = strtok(line,",");
+            if(strcmp(id,getID_r(r))!=0){
+				fprintf(Newfile,"%s \n",pchain);
+                free(pchain);
+			}
+        }
+    }else{
+        fprintf(stderr, "Erreur :Impossible d'ouvrir le fichier.\n");
+		exit(EXIT_FAILURE);
+    }
+    fclose(file);
+    fclose(Newfile);
+
+    remove("../data/Ressources/Liste.dat");
+    rename("../data/Ressources/NewListe.dat","../data/Ressources/Liste.dat");
+}//à tester
+Ressource LoadRessource(char *ID){
+    Ressource r=initRessource();
+    JSON_Value *root_value;
+    JSON_Object *root_object;
+    char path[64];
+    sprintf(path,"../data/Ressources/%s.json",ID);
+    
+    root_value = json_parse_file(path);
+    root_object = json_value_get_object(root_value);
+   
+    r=setRess(r,(char*)json_object_get_string (root_object,"Type"),(char*)json_object_get_string (root_object,"Nom"),(char*)json_object_get_string (root_object,"ID"),(char*)json_object_get_string (root_object,"Propriétaire"),(char*)json_object_get_string (root_object,"Emprunté par"),(char*)json_object_get_string (root_object,"Date de début du pret"),(char*)json_object_get_string (root_object,"Date de fin du pret"));
+    return r;
+}//à tester*/
+
+
 int main(int argc, char *argv[]){
     FILE *f=fopen("../data/Mtdp_admin.txt", "r");
-    FILE *g=fopen("../data/Annuaire.json","w+");
-    Personne p= create_pers(f);
+    Personne p=create_pers(f);
+    p->num_account=1000;
+    setIDPers(p,createIDPers(p));
     affich_pers(p);
-    print_pers_JSON(p,g);
-
+    print_pers_JSON(p);
+    addPersAnnu(p);
+    
 }

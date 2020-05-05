@@ -23,7 +23,7 @@
     {
     case 0:
         s=(char*)malloc(sizeof(char)*33);
-        printf("Veuillez entrer votre identifiant :\n");
+        printf("Veuillez entrer votre identifiant ou votre e-mail:\n");
         fgets(s,33,stdin);
         p=search_pers(annu,s);
         if(pers_existing(p)==1){
@@ -64,14 +64,14 @@
  
 
 int main ( int argc, char *argv []){
-
-    FILE *f=fopen("../data/Mtdp_admin.txt", "r+");
-    FILE *g=fopen("../data/Annuaire.json","w");
-    FILE *h=fopen("../data/Liste.json","w");
     Personne p=initPers();
     Annuaire annu=new_annu();
     Liste ls=new_list();
-    gestmenu(f,g,h,annu,ls,p);
+    ls=LoadList(ls);
+    annu=LoadAnnu(annu);
+    
+    
+    //gestmenu(f,g,h,annu,ls,p);
     return 0;
 
 }

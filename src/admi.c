@@ -23,7 +23,8 @@ void get_adm(FILE *f,FILE*g,FILE*h,Annuaire annu,Liste ls,Personne p){
             get_mdp_admin(f,g,annu,p);
             return;
         default :
-            
+            printf("ERROR--Vous allez être redirigé\n");
+            get_adm(f,g,h,annu,ls,p);
             break;
     }
 }
@@ -31,14 +32,14 @@ void get_adm(FILE *f,FILE*g,FILE*h,Annuaire annu,Liste ls,Personne p){
 void get_mdp_admin(FILE*f,FILE*g,Annuaire annu,Personne p){
     if(f==NULL){
         init_mtp_admin(f);
-        get_mdp(f,p,annu,p);
+        get_mdp_admin(f,p,annu,p);
     }
     char *mdp;
     char *c;
     
     mdp=(char*)malloc(sizeof(char)*65);
     c=(char*)malloc(sizeof(char)*65);
-    fgets(mdp,65,f);
+    fscanf(f,"%s",mdp);
     
     printf("Veuillez entrer le mot de passe administrateur :\n");
     fgets(c,65,stdin);
@@ -59,7 +60,7 @@ void get_mdp_admin(FILE*f,FILE*g,Annuaire annu,Personne p){
             printf("OUI= 1 ?\t NON=0 ?\n");
             scanf("%d",&i);
             if(i==1){
-                get_mdp(f,g,annu,p);
+                get_mdp_admin(f,g,annu,p);
             }
             break;
     }
@@ -68,18 +69,20 @@ void get_mdp_admin(FILE*f,FILE*g,Annuaire annu,Personne p){
     printf("OUI= 1 ?\t NON=0 ?\n");
     scanf("%d",&s);
     if(s==0){
-        get_mdp(f,g,annu,p);
+        get_mdp_admin(f,g,annu,p);
     }else{
         return ;
     }
 }
 
-void init_mtp_admin(FILE *f){
+void init_mtp_admin(){
+    FILE *f=fopen("../data/Mtdp_admin.txt", "w+");
     char*pwd;
     pwd=(char*)malloc(sizeof(char)*65);
     printf("Veuillez initialiser le mot de passe administrateur:");
     fgets(pwd,65,stdin);
     fprintf(f,"%s",chiffrementMdp(pwd));
+    printf("cryptage=%s",chiffrementMdp(pwd));
 }// intitialise mot de passe administrateur si f=NULL
 
 
@@ -112,7 +115,7 @@ void choix_admin(Annuaire annu,FILE*f,FILE*g){
         annu=remove_at(i,annu);
         annu=modif_annuaireAdmin(i,annu,temp,f);
         f=fopen("../data/Annuaire.json","w");
-        print_annu(annu,f);
+        print_annu_JSON(annu,f);
         return annu;
 
     case 3:

@@ -15,6 +15,12 @@
     #define CLEAR_STDIN { int c; while((c = getchar()) != '\n' && c != EOF); }
 #endif
 
+struct s_elementa{
+    Personne p;
+    struct s_elementa *previous;
+    struct s_elementa *next;
+};
+
 struct s_annuaire {
     int size;
     Elementa head;
@@ -22,7 +28,7 @@ struct s_annuaire {
 };
 
 
-Annuaire new_annu(void){
+Annuaire new_annu(){
     Annuaire annu=(Annuaire)malloc(sizeof(struct s_annuaire));
     if(annu==NULL){
         fprintf(stderr,"Erreur : probleme allocation dynamique.\n");
@@ -30,42 +36,21 @@ Annuaire new_annu(void){
     }
     annu->size=0;
     return annu;
-}
+}//fonctionne
 /*----------------------------------------------------------------*/
-
 Bool is_empty_annu(Annuaire annu){
 	if(annu->size== 0){
         return true;
     }
     return false;
 }//fonctionne
-
 /*----------------------------------------------------------------*/
-
 int annuaire_size(Annuaire annu){
 	if(is_empty_annu(annu))
 		return 0;
 
 	return annu->size;
 }//fonctionne
-
-/*----------------------------------------------------------------*/
-
-void print_annu(Annuaire annu,FILE*f){
-    if(is_empty_annu(annu)){
-        printf("Rien a afficher, la Liste est vide.\n");
-		return;
-	}
-	Elementa temp = annu->head;
-    int j=annu->size;
-    int i;
-    for (i=0;i<j;i++){
-        fseek(f,0,SEEK_END);
-        print_pers_JSON(temp->p,f);
-		temp = temp->next;
-	}
-	return;
-}//fonctionne->utile lors des tests de fonctions
 
 /*----------------------------------------------------------------*/
 
@@ -271,23 +256,18 @@ int pers_existing(Annuaire annu, Personne p){
     Elementa current_a=annu->head;
     int j=annu->size;
     int i;
-    char*date_p;
-    date_p=(char*)malloc(sizeof(char)*21);
-    strftime(date_p,21,"%d/%m/%Y",getNaiss(p));
+
     for (i=0;i<j;i++){
         if(strcmp(getIDPers(p),getIDPers(current_a->p))==0){
             return 1;
          }
-         if(strcmp(getName(p),getName(current_a->p))==0){
+         /*if(strcmp(getName(p),getName(current_a->p))==0){
              if (strcmp(getPrenom(p),getPrenom(current_a->p))==0){
-                 char*date_n;
-                 date_n=(char*)malloc(sizeof(char)*21);
-                 strftime(date_n,21,"%d/%m/%Y",getNaiss(current_a->p));
-                    if(strcmp(date_p,date_n)==0){
+                    if(strcmp(getNaiss(p),getNaiss(current_a->p))==0){
                       return 2;
                  }
              }
-         }
+         }*/
          if(strcmp(getMail(p),getMail(current_a->p))==0){
              return 3;
          }
@@ -311,7 +291,7 @@ int createNumAccount(Annuaire annu){
         i=num+1;
         return i;
     }
-}//permet d'initialiser le num de compte
+}//à revoir-->permet d'initialiser le num de compte
 /*----------------------------------------------------------------*/
 void affichAnnuaire(Annuaire annu){
     if(is_empty_annu(annu)){
@@ -321,27 +301,27 @@ void affichAnnuaire(Annuaire annu){
 	Elementa current_a= annu->head;
     int i;
     int j=annu->size;
+    printf("*** Voici la liste des usagers ***\n");
 	for (i=0;i<j;i++){
-        printf("N° de compte :%d\n", getNumAccount(p));
-        printf("Nom :%s\n", getName(p));
-        printf("Prenom :%s\n", getPrenom(p));
-        printf("Date de naissance :%s\n",getNaiss(p));
-        printf("Identifiant :%s\n", getID(p));
-        printf("\n");
+        printf("N° de compte :%d\n", getNumAccount(current_a->p));
+        printf("Nom :%s\n", getName(current_a->p));
+        printf("Prenom :%s\n", getPrenom(current_a->p));
+        printf("Identifiant :%s\n", getIDPers(current_a->p));
+        printf("\n\n");
         current_a=current_a->next;
 	}
 	return;
 }//fonctionne
 /*----------------------------------------------------------------*/
-Annuaire add_pers(Annuaire annu,FILE*f,Personne pers){
-
+Annuaire add_pers(Annuaire annu,Personne pers){
     if(annu->size==0){
-        printf("Le compte a été créé avec succès\n");
-        int num=createNumAccount(annu);
-        setNumAccount(pers,num);
-        affich_pers(pers);
+        setNumAccount(pers,createNumAccount(annu));
+        printf("N° de compte=%d",getNumAccount(pers));
+        setIDPers(pers,createIDPers(pers));
         annu=push_ba(annu,pers);
-        print_pers_JSON(pers,f);
+        printf("Le compte a été créé avec succès\n");
+        affich_pers(pers);
+        print_pers_JSON(pers);
         return annu;
     }
     int n;
@@ -349,31 +329,32 @@ Annuaire add_pers(Annuaire annu,FILE*f,Personne pers){
     switch (n)
     {
     case 0 :
-        printf("Le compte a été créé avec succès\n");
-        int num=createNumAccount(annu);
-        setNumAccount(pers,num);
-        affich_pers(pers);
+        setNumAccount(pers,createNumAccount(annu));
+        printf("N° de compte=%d",getNumAccount(pers));
+        setIDPers(pers,createIDPers(pers));
         annu=push_ba(annu,pers);
-        print_pers_JSON(pers,f);
+        printf("Le compte a été créé avec succès\n");
+        affich_pers(pers);
+        print_pers_JSON(pers);
         return annu;
     case 1:
-        printf("Identifiant déjà utilisé.Veuillez en changer\n");
+        printf("ERROR-Identifiant déjà utilisé.Veuillez en changer\n");
         CLEAR_STDIN
-        modif_id(pers);
-        add_pers(annu,f,pers);
-    case 2:
+        exit(EXIT_FAILURE);
+        
+    /*case 2:
         printf("Cet utilisateur existe déjà");
-        return annu;
+        return annu;*/
     case 3:
         printf("Cette adresse mail est déjà liée à un compte. Veuillez en choisir une autre\n");
         CLEAR_STDIN
         modif_mail(pers);
-        add_pers(annu,f,pers);
+        annu=add_pers(annu,pers);
     case 4:
         printf("Ce numéro de téléphone est déjà lié à un compte. Veuillez en utiliser un autre\n");
         CLEAR_STDIN
         modif_tel(pers);
-        add_pers(annu,f,pers);
+        annu=add_pers(annu,pers);
     default:
         break;
     }
@@ -382,7 +363,7 @@ Annuaire add_pers(Annuaire annu,FILE*f,Personne pers){
 Annuaire remove_pers(Annuaire annu, Personne pers){
     int n;
     n=pers_existing(annu,pers);
-    if(n!=0){
+    if(n==1){
     int i;
     i=getIndicePersonne(annu,pers);
     annu=remove_at(i,annu);
@@ -394,28 +375,31 @@ Annuaire remove_pers(Annuaire annu, Personne pers){
     
 }//fonctionne-permet de supprimer une Personne de l'Annuaire
 /*----------------------------------------------------------------*/
-Personne search_pers(Annuaire annu, char * id){
+Personne search_pers(Annuaire annu, char * c){
     Personne pers=initPers();
      int i;
      int j=annu->size;
      Elementa current_a=annu->head;
      for (i=0;i<j;i++){
-         if(strcmp(id,getIDPers(current_a->p))==0){
+         if(strcmp(c,getIDPers(current_a->p))==0){
             pers=current_a->p;
+            return pers;
+         } if(strcmp(c,getMail(current_a->p))==0){
+            pers=current_a->p;
+            return pers;
          }
          current_a=current_a->next;
      }
-     return pers;
-}//fonctionne-permet de rechercher une personne ds un Annuaire à partir de son id 
+}//fonctionne-permet de rechercher une personne ds un Annuaire à partir de son id ou de son adresse mail
 /*----------------------------------------------------------------*/
-Annuaire modifAnnuaireAdmin(int i,Annuaire annu,Personne temp, FILE*f){
+Annuaire modifAnnuaireAdmin(int i,Annuaire annu,Personne temp){
     assert(0<annu->size);
     
-    modif_persAdmin(temp,f);
+    modif_persAdmin(temp);
     int n=pers_existing(annu,temp);
     switch (n){
         case 0:
-            char *id;
+            /*char *id;
             char *tkb;
             id=(char*)malloc(sizeof(char)*33);
             tkb=(char*)malloc(sizeof(char)*33);
@@ -439,27 +423,27 @@ Annuaire modifAnnuaireAdmin(int i,Annuaire annu,Personne temp, FILE*f){
                     }
                     current_l=current_l->next;
                 }
-            }
+            }*/
             
             printf("Modification effectuée avec succès\n");
             annu=insert_at(i,temp,annu);
             return annu;
         case 1:
             printf("Identifiant déjà utilisé.Veuillez en changer\n");
-            modif_annuaireAdmin(i,annu,temp,f);
+            annu=modifAnnuaireAdmin(i,annu,temp);
             break;
         case 2:
             printf("Cet utilisateur existe déjà\n");
             printf("Veuillez vous recréer un compte\n");
-            annu=createAccount(f);
+            annu=createAccount(annu);
             return annu;
         case 3:
             printf("Cette adresse mail est déjà liée à un compte. Veuillez en choisir une autre\n");
-            modif_annuaireAdmin(i,annu,temp,f);
+            annu=modifAnnuaireAdmin(i,annu,temp);
             break;
         case 4:
             printf("Ce numéro de téléphone est déjà lié à un compte. Veuillez en utiliser un autre\n");
-            modif_annuaireAdmin(i,annu,temp,f);
+            annu=modifAnnuaireAdmin(i,annu,temp);
             break;
         default:
             break;
@@ -490,45 +474,87 @@ Annuaire modifAnnuaireUser(int i,Annuaire annu,Personne temp){
         }
 }//à tester
 /*----------------------------------------------------------------*/
-Annuaire createAccount(Annuaire annu,FILE*f,FILE*g){
-    Personne p=create_pers(f);
+Annuaire createAccount(Annuaire annu){
+    Personne p=create_pers();
     affich_pers(p);
+    printf("\nVotre numéro de compte et votre Identifiant vous seront affecés plus tard\n");
     int i;
     printf("\n\nEtes-vous satisfait des données enregistrées ?\nOUI=1\tNON=0\n");
     scanf("%d",&i);
     switch(i){
       case 0:
         CLEAR_STDIN  
-        modif_persAdmin(p,f);
+        modif_persAdmin(p);
         printf("\nSi vous rencontrez des problèmes avec votre compte veuillez vous réfferer à un administrateur\n");
-        affich_pers(p);
-        annu=add_pers(annu,g,p);
+        annu=add_pers(annu,p);
         return annu;
       case 1:
-        annu=add_pers(annu,g,p);
+        annu=add_pers(annu,p);
         return annu;
       default:
-        printf("\nERROR\n");
-        printf("Vous allez être redirigé\n");
-        createAccount(annu,f,g);
+        printf("\nERROR--Vous allez être redirigé\n");
+        annu=createAccount(annu);
     }
 }//pb avec recurrence de setAutor()
 
-/*int main(int argc, char *argv[]){
-    FILE *f=fopen("../data/Mtdp_admin.txt", "r");
-    FILE *g=fopen("../data/Annuaire.json","w+");
-    Annuaire annu =new_annu();
-    /*Personne p=create_pers(f);
-    modif_persAdmin(p,f);
-    affich_pers(p);
+
+Annuaire LoadAnnu(Annuaire annu){
+    char line[33];
+    FILE*f = fopen("../data/Personne/Annuaire.dat","r");
+   
+    if(f!= NULL){
+        while (!feof(f) && fgets(line,33,f) != NULL){
+            puts(line);
+           Personne p=LoadPersonne(line);
+           affich_pers(p);
+           //annu=push_ba(annu,p);
+        }
+    }else{
+        fprintf(stderr, "Erreur :Impossible d'ouvrir le fichier.\n");
+		exit(EXIT_FAILURE);
+    }
     
-    annu=createAccount(annu,f,g);
-    annu=createAccount(annu,f,g);
-    annu=createAccount(annu,f,g);
-    annu=createAccount(annu,f,g);
+    return annu;
+}//à revoir
+
+
+int main(int argc, char *argv[]){
+    Annuaire annu=new_annu();
+    annu=LoadAnnu(annu);
+    affichAnnuaire(annu);
+    annu=clear_annu(annu);
+    free(annu);
+
     
+
+
+    
+    /*Annuaire annu =new_annu();
+    
+    annu=createAccount(annu);
+    annu=createAccount(annu);
+    annu=createAccount(annu);
+    
+    char*m;
+    m=(char*)malloc(sizeof(char)*33);
+    printf("Veuillez entrer l'identifiant du compte que vous souhaitez modifier:\n");
+    fgets(m,33,stdin);
+        
+    Personne pat=initPers();
+    pat=search_pers(annu,m);
+    affich_pers(pat);
+        
+    int i=getIndicePersonne(annu,pat);
+    printf("i=%d",i);
+    Personne temp=initPers();
+    temp=pat;
+        
+    annu=remove_at(i,annu);
+    annu=modifAnnuaireAdmin(i,annu,temp);
+   
     
     
     annu=clear_annu(annu);
-    free(annu);
-}*/
+    free(annu);*/
+
+}
