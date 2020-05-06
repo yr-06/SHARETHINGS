@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
-#include "../include/ressources.h"
 #include "../include/chiffrement.h"
 #include "../include/personne.h"
 #include "../include/parson.h"
@@ -13,6 +12,16 @@
 #ifndef CLEAR_STDIN
     #define CLEAR_STDIN { int c; while((c = getchar()) != '\n' && c != EOF); }
 #endif
+
+#ifndef COLOR
+    #define color(param) printf("\033[%sm",param)
+#endif
+
+/* Paramètre  Couleur
+30 Noir |31 Rouge | 32 Vert | 33 Jaune | 34 Bleu | 35 Magenta | 36 Cyan | 37 Blanc
+ 
+"1" active la haute intensité des caractères.
+*/
 
 //structure a initialiser en dynamique
 struct s_pers {
@@ -75,28 +84,38 @@ void setNumAccount(Personne p, int i){
 void setAutor(Personne p){
     FILE *f=fopen("../data/Mtdp_admin.txt", "r");
     CLEAR_STDIN
+    char *cmp;
+    char *mdp_admin;
+    cmp=(char *)malloc(sizeof(char)*65);
+    mdp_admin=(char *)malloc(sizeof(char)*65);
+        
+    color("33;1");
     printf("\nVous allez être invité à choisir l'habilitation de votre compte\n");
     int i;
+    color("35;1");
     printf("\nCOMPTE USER: Permet utilisaton de la base de données (1) \n");
     printf("COMPTE ADMIN: Permet utilisaton de la base de données et son administration(2)\n");
     printf("\nVeuillez choisir l'habilitation du compte :\n");
+    color("37");
     scanf("%d",&i);
     switch(i)
     {
         case 1:
             CLEAR_STDIN
             p->a=0;
+            color("32;1");
             printf("Vous aves choisi d'être USER\n");
+            color("37");
+            free(mdp_admin);
+            free(cmp);
+            mdp_admin=NULL;
+            cmp=NULL;
             return;
         case 2:
             CLEAR_STDIN
-            char *cmp;
-            char *mdp_admin;
-            cmp=(char *)malloc(sizeof(char)*65);
-            mdp_admin=(char *)malloc(sizeof(char)*65);
-            
-            //plante à partir de là 
+            color("35;1");
             printf("Veuillez entrer le mot de passe administrateur :\n");
+            color("37");
             fgets(cmp,65,stdin);
             
             printf("cmp=%s\n",cmp);// à utiliser pour tester fct°
@@ -109,14 +128,18 @@ void setAutor(Personne p){
             
             if(strcmp(mdp_admin, chiffrementMdp(cmp))==0){
                 p->a=1;
+                color("32;1");
                 printf("Vous êtes habilité en tant qu'administrateur\n");
+                color("37");
                 free(mdp_admin);
                 free(cmp);
                return;
             }//pb avec strcmp-->initialiser le mot de passe ds le fichier
             else{
                 CLEAR_STDIN
+                color("31;1");
                 printf("\nERRROR--Vous allez être redirigé\n");
+                color("37");
                 free(mdp_admin);
                 free(cmp);
                 mdp_admin=NULL;
@@ -126,7 +149,9 @@ void setAutor(Personne p){
             break;
         default:
             CLEAR_STDIN
+            color("31;1");
             printf("\nERRROR--Vous allez être redirigé\n");
+            color("37");
             free(mdp_admin);
             free(cmp);
             mdp_admin=NULL;
@@ -134,7 +159,7 @@ void setAutor(Personne p){
             setAutor(p);
             break;
     }  
-}//fonctionne
+}//fonctionne-->goodc
 /*----------------------------------------------------------------*/
 void setName(Personne p,char *name){
     strcpy(p->nom,name);
@@ -165,7 +190,7 @@ void setTel(Personne p,char *tel){
     
 }//fonctionne
 /*----------------------------------------------------------------*/
-Personne setPers(Personne p, int num,int a ,char*name,char*prenom,char*date,char*id,char*pwd,char*mail,char*tel){
+void setPers(Personne p, int num,int a ,char*name,char*prenom,char*date,char*id,char*pwd,char*mail,char*tel){
     setNumAccount(p,num);
     setName(p,name);
     setPrenom(p,prenom);
@@ -182,36 +207,39 @@ Personne setPers(Personne p, int num,int a ,char*name,char*prenom,char*date,char
 void modif_name(Personne p){
     char *newName;
     newName=(char*)malloc(sizeof(char)*41);
-    
-    printf("Veuillez entrer un nouveau nom:\n");
+    color("33;1");
+    printf("Veuillez entrer un nouveau nom en MAJUSCULES:\n");
+    color("37");
     fgets(newName,41,stdin);
     
     free(p->nom);
     (p->nom)=(char*)malloc(sizeof(char)*41);
     setName(p,newName);
     return;
-}//fonctionne
+}//fonctionne-->goodc
 /*----------------------------------------------------------------*/
 void modif_prenom(Personne p){
     
     char *newPrenom;
     newPrenom=(char*)malloc(sizeof(char)*33);
-    
+    color("33;1");
     printf("Veuillez entrer un nouveau prénom:\n");
+    color("37");
     fgets(newPrenom,33,stdin);
     
     free(p->prenom);
     (p->prenom)=(char*)malloc(sizeof(char)*33);
     setPrenom(p,newPrenom);
     return;
-}//fonctionne
+}//fonctionne-->goodc
 /*----------------------------------------------------------------*/
 void modif_naiss(Personne p){
     
     char *date=(char *)malloc(sizeof(char)*21);
     int day,month,year;
-
+     color("33;1");
     printf("Veuillez entrer une nouvelle date de naissance au format JJ-MM-AAAA :\n");
+    color("37");
     scanf("%02d-%02d-%4d",&day,&month,&year);
     sprintf(date,"%d/%d/%d",day,month,year);
    
@@ -220,7 +248,7 @@ void modif_naiss(Personne p){
     setNaiss(p,date);
     return;
  
-}//fonctionne
+}//fonctionne-->goodc
 /*----------------------------------------------------------------*/
 void modif_pwd(Personne p){
    
@@ -229,19 +257,24 @@ void modif_pwd(Personne p){
   
      newPwd=(char*)malloc(sizeof(char)*65);
      confirm=(char*)malloc(sizeof(char)*65);
-     
+      color("33;1");
      printf("Veuillez entrer un nouveau mot de passe:\n");
+     color("37");
      fgets(newPwd,65,stdin);
    
     
     if(strcmp(getPwd(p),chiffrementMdp(newPwd))==0){
+        color("31;1");
         printf("Veuillez entrer un mot de passe différent de celui déjà enregistré\n");
+        color("37");
         free(newPwd);
         free(confirm);
         CLEAR_STDIN
         modif_pwd(p);
     }else{
+         color("33;1");
         printf("\nVeuillez confirmer le nouveau mot de passe:\n");
+        color("37");
         fgets(confirm,65,stdin);
         if(strcmp(newPwd,confirm)==0){
             free(p->pwd);
@@ -250,8 +283,11 @@ void modif_pwd(Personne p){
             free(confirm);
             return;
         }else{
+            color("33;1");
             printf("Veuillez entrer le même mot de passe pour confirmer la modification\n");
-            printf("Vous allez être rédirigé\n");
+            color("31;1");
+            printf("ERROR--Vous allez être rédirigé\n");
+            color("37");
             free(newPwd);
             free(confirm);
             CLEAR_STDIN
@@ -259,28 +295,30 @@ void modif_pwd(Personne p){
         }
     }    
     
-}//fonctionne
+}//fonctionne-->goodc
 /*----------------------------------------------------------------*/
 void modif_mail(Personne p){
     
     char *newMail;
     newMail=(char*)malloc(sizeof(char)*33);
-    
+    color("33;1");
     printf("Veuillez entrer une nouvelle adresse mail :\n");
+    color("37");
     fgets(newMail,33,stdin);
     
     free(p->mail);
     (p->mail)=(char*)malloc(sizeof(char)*33);
     setMail(p,newMail);
     return;
-}//fonctionne
+}//fonctionne-->goodc
 /*----------------------------------------------------------------*/
 void modif_tel(Personne p){
 
     char *newTel;
     newTel=(char*)malloc(sizeof(char)*33);
-    
+    color("33;1");
     printf("Veuillez entrer un nouveau numéro de téléphone :\n");
+    color("37");
     fgets(newTel,33,stdin);
     
     free(p->tel);
@@ -289,7 +327,7 @@ void modif_tel(Personne p){
     free(newTel);
     
     return;
-}//fonctionne
+}//fonctionne-->goodc
 /*----------------------------------------------------------------*/
 //Fonction sur les manipulations de personnes
 Personne initPers(){
@@ -307,6 +345,8 @@ Personne initPers(){
 /*----------------------------------------------------------------*/
 Personne create_pers(){
     Personne pers=initPers();
+    
+    pers->num_account=0;
     
     CLEAR_STDIN
     char *name;
@@ -328,18 +368,8 @@ Personne create_pers(){
     
     char *date=(char *)malloc(sizeof(char)*21);
     int day,month,year;
-    
     printf("Veuillez entrer votre date de naissance au format JJ-MM-AAAA :\n");
     scanf("%02d-%02d-%4d",&day,&month,&year);
-    
-
-    char *nday=(char *) malloc(sizeof(char)*6);
-    char *nmonth=(char *) malloc(sizeof(char)*3);
-    sprintf(nmonth,"%d",month);
-    sprintf(nday,"%d",day);
-    
-    setIDPers(pers,strcat(nday,nmonth));
-    
     sprintf(date,"%d/%d/%d",day,month,year);
     setNaiss(pers,date);
    
@@ -368,7 +398,7 @@ Personne create_pers(){
     CLEAR_STDIN
     setAutor(pers);
     return pers;
-}//fonctionne-->permet d'initialiser les champs de la structure Personne
+}//fonctionne-->permet d'initialiser les champs de la structure Personne-->good c
 /*----------------------------------------------------------------*/
 char *createIDPers(Personne p){
     char * id = (char *) malloc(sizeof(char)*4);
@@ -378,23 +408,9 @@ char *createIDPers(Personne p){
     
     sprintf(num,"%d", getNumAccount(p));
     
-    char *subname=(char *) malloc(sizeof(char)*3);
-    subname=strncpy(subname,getName(p),3);
-    
-    char *subfname=(char *) malloc(sizeof(char)*1);
-    subfname=strncpy(subfname,getPrenom(p),1);
-    
-    
-    
     char *fullID= (char *) malloc(sizeof(char)*33);
     strcpy(fullID,id);
     strcat( fullID,num);
-    strcat( fullID,subname);
-    strcat( fullID,subfname);
-    strcat( fullID,getIDPers(p));
-    
-    free(p->id);
-    (p->id)=(char *) malloc(sizeof(char)*33);
 
     return fullID;
 
@@ -402,6 +418,7 @@ char *createIDPers(Personne p){
 /*----------------------------------------------------------------*/
 void affich_pers(Personne p){
     printf("\n--------Voici le récapitulatif des données de ce compte:-------\n");
+    
     printf("N° de compte :%d\n", getNumAccount(p));
     printf("Nom :%s\n", getName(p));
     printf("Prenom :%s\n", getPrenom(p));
@@ -414,20 +431,25 @@ void affich_pers(Personne p){
     printf("\n");
     printf("Adresse mail :%s\n", getMail(p));
     printf("N° de téléphone :%s\n", getTel(p));
-    
+
     if(getAutor(p)==1){
         printf("--------Ce compte est habilité à se connecter en tant qu'administrateur----------\n");
     }else{
         printf("-----Ce compte est habilité à se connecter en tant que simple utilisateur-------\n");
     }
-} //fonctionne
+} //fonctionne-->good c
+
 void modif_persAdmin(Personne p){
     int i;
+    color("33;1");
     printf("\n\n Que voulez-vous modifier ?\n");
+    color("37");
     printf(" Modifier nom: 1\n Modifier prenom: 2\n Modifier date de naissance: 3\n");
     printf(" Modifier mot de passe: 4\n Modifier adresse mail: 5\n");
     printf(" Modifier numéro de téléphone: 6\n Modifier habilitation: 7\n Quitter: 0\n");
+    color("33;1");
     printf(" \n\nSaisissez votre choix : \n");
+    color("37");
     scanf("%d",&i);
     switch(i){
         case 0:
@@ -472,16 +494,18 @@ void modif_persAdmin(Personne p){
             break;
         }
     int u;
+    color("33;1");
     printf(" Continuer les modifications ?\n OUI=1 ?\t NON=0 ?\n");
+    color("37");
     scanf("%d",&u);
     if(u==1){
         CLEAR_STDIN
         modif_persAdmin(p);
     }
     return;
-}//fonctionne
+}//fonctionne-->good c
 /*----------------------------------------------------------------*/
-void modif_persUser(Personne p){
+/*void modif_persUser(Personne p){
     int i;
     printf("\n\n Que voulez-vous modifier ?\n");
     printf("Modifier mot de passe: 1\n Modifier adresse mail: 2\n");
@@ -519,6 +543,7 @@ void modif_persUser(Personne p){
 }//fonctionne
 /*----------------------------------------------------------------*/
 
+//fonctions pour le JSON
 void print_pers_JSON(Personne p){
     char path[64];
     sprintf(path,"../data/Personne/%s.json",getIDPers(p));
@@ -548,53 +573,14 @@ void print_pers_JSON(Personne p){
     json_value_free(root_value);
 }//fonctionne
 /*----------------------------------------------------------------*/
-void addPersAnnu(Personne p){
+void addPersAnnu_JSON(Personne p){
     FILE *Annuf = NULL;
     Annuf = fopen("../data/Personne/Annuaire.dat","a");
-    //fprintf(Annuf,"%s,%s,%s,%s \n",getIDPers(p),getName(p),getPrenom(p),getPwd(p));
-    fprintf(Annuf,"%s\n",getIDPers(p));
+    fprintf(Annuf,"%s,%s,%s \n",strtok(getIDPers(p),"\n"),strtok(getName(p),"\n"),strtok(getPrenom(p),"\n"));
     fclose(Annuf);
 }//fonctionne
 /*----------------------------------------------------------------*/
-void removePersAnnu(Personne p){
-	//char line[128];
-    char line[33];
-	//char *id;
-    //char *pchain;
-
-	FILE * file = fopen("../data/Personne/Annuaire.dat","r");
-    FILE * Newfile = fopen("../data/Personne/NewAnnuaire.dat","w");
-    rewind(file);
-    rewind(Newfile);
-
-    if(file!= NULL){
-        while (!feof(file) && (fgets(line,33, file) != NULL)){
-            //pchain=(char*)malloc(sizeof(char)*129);
-            //strcpy(pchain,line);
-			//id = strtok(line,",");
-			
-            if(strcmp(line,getIDPers(p))!=0){
-                fprintf(Newfile,"%s \n",line);
-				//fprintf(Newfile,"%s \n",pchain);
-                //free(pchain);
-			}
-			/*while ( id!= NULL ) {
-                id= strtok( NULL,",");
-                
-            }*/
-        }
-    }else{
-        fprintf(stderr, "Erreur :Impossible d'ouvrir le fichier.\n");
-		exit(EXIT_FAILURE);
-    }
-    fclose(file);
-    fclose(Newfile);
-
-    remove("../data/Personne/Annuaire.dat");
-    rename("../data/Personne/NewAnnuaire.dat","../data/Personne/Annuaire.dat");
-}//à revoir
-/*----------------------------------------------------------------*/
-Personne LoadPersonne(char *ID){
+Personne LoadPersonne_JSON(char *ID){
     Personne p=initPers();
     JSON_Value *root_value;
     JSON_Object *root_object;
@@ -606,20 +592,20 @@ Personne LoadPersonne(char *ID){
     root_object = json_value_get_object(root_value);
 
    
-    p=setPers(p,(int)json_object_get_number (root_object,"N° de compte"),(int)json_object_get_number (root_object,"Habilitation"),(char*)json_object_get_string (root_object,"Nom"),(char*)json_object_get_string (root_object,"Prenom"),(char*)json_object_get_string (root_object,"Date de naissance"),(char*)json_object_get_string (root_object,"Identifiant"),(char*)json_object_get_string (root_object,"Mot de passe"),(char*)json_object_get_string (root_object,"Adresse mail"),(char*)json_object_get_string (root_object,"N° de téléphone"));
+    setPers(p,(int)json_object_get_number (root_object,"N° de compte"),(int)json_object_get_number (root_object,"Habilitation"),(char*)json_object_get_string (root_object,"Nom"),(char*)json_object_get_string (root_object,"Prenom"),(char*)json_object_get_string (root_object,"Date de naissance"),(char*)json_object_get_string (root_object,"Identifiant"),(char*)json_object_get_string (root_object,"Mot de passe"),(char*)json_object_get_string (root_object,"Adresse mail"),(char*)json_object_get_string (root_object,"N° de téléphone"));
     return p;
 }//fonctionne
+/*----------------------------------------------------------------*/
+void suppr_pers_JSON(char *ID){
+    char path[64];
+    sprintf(path,"../data/Personne/%s.json",ID);
+    remove(path);
+}//fonctionne
 
-/*
-Ressource setRess(Ressource r,char *type,char *nom,char *ID,char *dropBy,char *takenBy,char *date_d,char *date_f){
-    setType(r,type);
-    setNom(r ,nom);
-    setID_r(r,ID);
-    setDropBy(r,dropBy);
-    setTakenBy(r,takenBy);
-    setDateDeb(r,date_d);
-    setDateFin(r,date_f);
-}//à tester
+
+
+
+/*//fonctions  JSON pour ressources.c---> surtt ne pas modifier
 void print_ress_JSON(Ressource r){
     char path[64];
     sprintf(path,"../data/Ressources/%s.json",getID_r(r));
@@ -631,13 +617,13 @@ void print_ress_JSON(Ressource r){
 
     fjson = fopen(path,"w+");
     
-    json_object_set_string(root_object, "Type",getTypeRessource(r));
+    json_object_set_string(root_object, "Type",getType(r));
     json_object_set_string(root_object, "Nom", getNom(r));
     json_object_set_string(root_object, "ID",getID_r(r));
-    json_object_set_string(root_object, "Propriétaire",getDropBy(r));
+    json_object_set_string(root_object, "Propriétaire",r->dropBy);
     json_object_set_number(root_object, "Statut",isDispo(r));
     json_object_set_string(root_object, "Emprunté par",getTakenBy(r));
-    json_object_set_string(root_object,"Date de début du pret", getDateDebut(r));
+    json_object_set_string(root_object,"Date de début du pret", getDateDeb(r));
     json_object_set_string(root_object,"Date de fin du pret",getDateFin(r));
   
     serialized_string = json_serialize_to_string_pretty(root_value);
@@ -646,63 +632,74 @@ void print_ress_JSON(Ressource r){
     json_free_serialized_string(serialized_string);
     json_value_free(root_value);
    
-}//à tester
-void addRessListe(Ressource r){
+}//fonctionne
+void addRessListe_JSON(Ressource r){
     FILE *Listef = NULL;
     Listef = fopen("../data/Ressources/Liste.dat","a");
-    fprintf(Listef,"%s,%s,%s,%s \n",getID_r(r),getTypeRessource(r),getNom(r),getDropBy(r));
+    fprintf(Listef,"%s,%s,%s,%s \n",strtok(getID_r(r),"\n"),strtok(getType(r),"\n"),strtok(getNom(r),"\n"),strtok(r->dropBy,"\n"));
     fclose(Listef);
-}//à tester
-void removeRessListe(Ressource r){
-	char line[128];
-	char *id;
-    char *pchain;
+}//fonctionne
+void updateListe_JSON(Liste ls){
+	FILE * file = fopen("../data/Ressources/Liste.dat","w");
+    rewind(file);
+    Elementl current_l=ls->head;
+    int i;
+    for(i=0;i<ls->size;i++){
+        addRessListe(current_l->r);
+        current_l=current_l->next;
+    }
+    fclose(file);
+}//fonctionne
 
-	FILE * file = fopen("../data/Ressources/Liste.dat","r");
-    FILE * Newfile = fopen("../data/Ressources/NewListe.dat","w");
+Ressource LoadRessource_JSON(char *ID){
+    Ressource r =(Ressource)malloc(sizeof(struct s_ressource));
+    (r->type) =(char*)malloc(sizeof(char)*33);
+    (r->takenBy) =(char*)malloc(sizeof(char)*33);
+    (r->dropBy)=(char*)malloc(sizeof(char)*33);
+    (r->date_d)=(char*)malloc(sizeof(char)*33);
+    (r->date_f)=(char*)malloc(sizeof(char)*33);
+    (r->ID)=(char*)malloc(sizeof(char)*33);
+  
+    JSON_Value *root_value;
+    JSON_Object *root_object;
+    char path[64];
+    sprintf(path,"../data/Ressources/%s.json",ID);
+    root_value = json_parse_file(path);
+    root_object = json_value_get_object(root_value);
+    
+    setType(r,(char*)json_object_get_string (root_object,"Type"));
+    setNom(r ,(char*)json_object_get_string (root_object,"Nom"));
+    strcpy(r->ID,(char*)json_object_get_string (root_object,"ID"));
+    setDropBy(r,(char*)json_object_get_string (root_object,"Propriétaire"));
+    setTakenBy(r,(char*)json_object_get_string (root_object,"Emprunté par"));
+    setDateDeb(r,(char*)json_object_get_string (root_object,"Date de début du pret"));
+    strcpy(r->date_f,(char*)json_object_get_string (root_object,"Date de fin du pret"));
+    return r;
+}//fonctionne-->tt les champs de la structure doivent être initialisé et enregistrée dasn le fichier JSON pour que le chargement soit possible
 
-    if(file!= NULL){
-        while (fgets(line, 128, file) != NULL){
-            pchain=(char*)malloc(sizeof(char)*129);
-            strcpy(pchain,line);
-			id = strtok(line,",");
-            if(strcmp(id,getID_r(r))!=0){
-				fprintf(Newfile,"%s \n",pchain);
-                free(pchain);
-			}
+void suppr_ress_JSON(char *ID){
+    char path[64];
+    sprintf(path,"../data/Ressources/%s.json",ID);
+    remove(path);
+}//fonctionne
+
+Liste LoadListe_JSON(Liste ls){
+    char line[160];
+ 
+    FILE*f = fopen("../data/Ressources/Liste.dat","r");
+    rewind(f);
+    if(f!= NULL){
+        while (!feof(f)){
+            if(fgets(line,160,f)!=NULL){
+                Ressource r=LoadRessource_JSON(strtok(line,","));
+                ls=push_bl(ls,r);
+           }else{
+               continue;
+            }
         }
     }else{
         fprintf(stderr, "Erreur :Impossible d'ouvrir le fichier.\n");
 		exit(EXIT_FAILURE);
     }
-    fclose(file);
-    fclose(Newfile);
-
-    remove("../data/Ressources/Liste.dat");
-    rename("../data/Ressources/NewListe.dat","../data/Ressources/Liste.dat");
-}//à tester
-Ressource LoadRessource(char *ID){
-    Ressource r=initRessource();
-    JSON_Value *root_value;
-    JSON_Object *root_object;
-    char path[64];
-    sprintf(path,"../data/Ressources/%s.json",ID);
-    
-    root_value = json_parse_file(path);
-    root_object = json_value_get_object(root_value);
-   
-    r=setRess(r,(char*)json_object_get_string (root_object,"Type"),(char*)json_object_get_string (root_object,"Nom"),(char*)json_object_get_string (root_object,"ID"),(char*)json_object_get_string (root_object,"Propriétaire"),(char*)json_object_get_string (root_object,"Emprunté par"),(char*)json_object_get_string (root_object,"Date de début du pret"),(char*)json_object_get_string (root_object,"Date de fin du pret"));
-    return r;
-}//à tester*/
-
-
-int main(int argc, char *argv[]){
-    FILE *f=fopen("../data/Mtdp_admin.txt", "r");
-    Personne p=create_pers(f);
-    p->num_account=1000;
-    setIDPers(p,createIDPers(p));
-    affich_pers(p);
-    print_pers_JSON(p);
-    addPersAnnu(p);
-    
-}
+    return ls;
+}//fonctionne*/

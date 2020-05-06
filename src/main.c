@@ -67,7 +67,7 @@ int main ( int argc, char *argv []){
     Personne p=initPers();
     Annuaire annu=new_annu();
     Liste ls=new_list();
-    ls=LoadList(ls);
+    ls=LoadListe(ls);
     annu=LoadAnnu(annu);
     
     

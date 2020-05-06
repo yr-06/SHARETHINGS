@@ -1,0 +1,10 @@
+{
+    "Type": "Livre",
+    "Nom": "Les Misérables",
+    "ID": "ipjqalro",
+    "Propriétaire": "IDP1000CAN",
+    "Statut": 0,
+    "Emprunté par": "IDP1001",
+    "Date de début du pret": "1\/01\/2020",
+    "Date de fin du pret": "15\/01\/2020"
+}

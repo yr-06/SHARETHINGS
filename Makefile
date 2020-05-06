@@ -1,7 +1,7 @@
 CC= gcc
 CFLAGS= -Wall -g #-std=c11
 LIB=lib/
-LDFLAGS= -lcrypt -lm
+LDFLAGS= -lcrypt 
 INC=include/
 EXEC= src/main.exe
 SRC= src/main.c

@@ -25,9 +25,6 @@ char *getMail(Personne p);
 
 char *getTel(Personne p);
 
-int getPossess(Personne p);
-
-//int getNbPret(Personne p);
 
  //setters
 void setNumAccount(Personne p, int i);
@@ -48,7 +45,7 @@ void setMail(Personne p,char *mail);
 
 void setTel(Personne p,char *tel);
 
-Personne setPers(Personne p, int num,int a ,char*name,char*prenom,char*date,char*id,char*pwd,char*mail,char*tel,int possess);
+void setPers(Personne p, int num,int a ,char*name,char*prenom,char*date,char*id,char*pwd,char*mail,char*tel);
 
 void modif_name(Personne p);
 
@@ -76,10 +73,10 @@ void modif_persUser(Personne p);
 
 void print_pers_JSON(Personne p);
 
-void addPersAnnu(Personne p);
+void addPersAnnu_JSON(Personne p);
 
-void removePersAnnu(Personne p);
+Personne LoadPersonne_JSON(char *ID);
 
-Personne LoadPersonne(char *ID);
+void suppr_pers_JSON(char *ID);
 
 #endif

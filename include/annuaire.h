@@ -5,9 +5,14 @@
 #include "personne.h"
 typedef struct s_annuaire *Annuaire;
 typedef struct s_elementa *Elementa;
+
+typedef enum{
+    false,
+    true
+} Bool;
+
  
 Annuaire new_annu();
-
 Bool is_empty_annu(Annuaire annu);
 
 int annuaire_size(Annuaire annu);
@@ -40,5 +45,9 @@ Annuaire modifAnnuaireAdmin(int i,Annuaire annu,Personne temp);
 Annuaire modifAnnuaireUser(int i,Annuaire annu,Personne temp);
 
 Annuaire createAccount(Annuaire annu);
+
+Annuaire LoadAnnu_JSON(Annuaire annu);
+
+void updateAnnu_JSON(Annuaire annu);
 
 #endif
