@@ -8,10 +8,11 @@
 char * getString(int size, char * requete);
 void viderBuffer();
 void modifRessource(Personne p, Ressource r, Liste l);
-void modifDonneesPers(Personne p);
+void modifDonneesPers(Personne p, Liste ressources);
 void welcomeUser(Personne p, Liste ressources);
 void addRessourceAtListe(Personne p, Liste ressources);
 void infoTakeRessource(Personne p, Ressource r, Liste ressources);
+
 
 
 #endif

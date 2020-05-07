@@ -7,6 +7,8 @@
 #include "../include/ressources.h"
 #include "../include/personne.h"
 #include "../include/affichageUser.h"
+#include "../include/date.h"
+#include "../include/annuaire.h"
 
 typedef int Bool ;  //définition du type booléen,
 
@@ -27,8 +29,9 @@ struct s_ressource{
     char *ID ;//= ID de la ressource
     char *takenBy;// = ID de l'utilisateur qui a pris la ressource.
     char *dropBy;// = ID de l'utilisateur qui a déposé la ressource.
-    char *date_d;//date de debut du pret
-    char *date_f;//date de fin du pret
+    Date date_d;//date de debut du pret
+    Date date_f;//date de fin du pret
+    Date creation;
 };
 
 struct s_elementl{
@@ -55,8 +58,8 @@ void setNom(Ressource r , char * nom){
   strcpy(r->nom, nom);
 }
 
-void setDateDeb(Ressource r, char * date_d){
-  strcpy(r->date_d, date_d);
+void setDateDeb(Ressource r, Date date_d){
+  r->date_d=date_d;
 }
 
 
@@ -66,6 +69,14 @@ void setTakenBy(Ressource r, char * takenBy){
 
 void setDropBy(Ressource r, char * dropBy){
   strcpy(r->dropBy, dropBy);
+}
+
+void setCreateDate(Ressource r, Date date){
+  r->creation=date;
+} 
+
+void setDateFin(Ressource r, Date date_f){
+  r->date_f=date_f;
 }
 
 //getters
@@ -78,12 +89,16 @@ char * getNom(Ressource r){
   return(r->nom);
 }
 
-char * getDateDeb(Ressource r){
+Date getDateDeb(Ressource r){
   return(r->date_d);
 }
 
-char * getDateFin(Ressource r){
+Date getDateFin(Ressource r){
   return(r->date_f);
+}
+
+Date getDateCrea(Ressource r){
+  return(r->creation);
 }
 
 char * getTakenBy(Ressource r){
@@ -101,6 +116,7 @@ char * getID_r(Ressource r){
 
 char * getRessourceDispo(Ressource r){
   if(isDispo(r) == 1){
+    color("32;1");
     return "La ressource est disponible";
   }
   return getTakenBy(r);
@@ -108,8 +124,10 @@ char * getRessourceDispo(Ressource r){
 
 char * getRessourceHave(Personne p , Ressource r){
   if(haveRessource(p, r)== 1){
+    color("32;1");
     return "Cette ressource vous appartient. Vous pouvez la modifier.";
   }
+  color("31;1");
   return "Cette ressource ne vous appartient pas. Vous ne pouvez pas la modifier";
 }
 
@@ -128,8 +146,9 @@ Ressource initRessource(Liste ressources){
   (r->type) =(char*)malloc(sizeof(char)*33);
   (r->takenBy) =(char*)malloc(sizeof(char)*33);
   (r->dropBy)=(char*)malloc(sizeof(char)*33);
-  (r->date_d)=(char*)malloc(sizeof(char)*33);
-  (r->date_f)=(char*)malloc(sizeof(char)*33);
+  (r->date_d) =initDate();
+  (r->date_f) =initDate();
+  (r->creation)=initDate();
   r->ID = generateID(ressources);
   push_bl(ressources, r);
   return r;
@@ -171,6 +190,7 @@ char * generateID(Liste ressources){
 Liste new_list(){
   Liste l =(Liste)malloc(sizeof(struct s_liste));
   if(l== NULL){
+    color("31;1");
     fprintf(stderr, "Erreur : probleme allocation dynamique.\n");
     exit(EXIT_FAILURE);
   }
@@ -196,19 +216,27 @@ int list_size(Liste l){
 
 //affiche les infos liées à une ressource
 void affich_ress(Ressource r){
+    color("37;1");
     printf("\nVoici le récapitulatif des données liées à cette ressource:\n");
+    color("37;1");
     printf("Type: %s\n", getType(r));
     printf("Nom: %s\n", getNom(r));
     printf("ID: %s\n", getID_r(r));
     printf("Propriétaire: %s\n",getDropBy(r));
-		//printf("Créée le:%s\n",getDateCrea(r));
+		printf("Créée le: ");
+    affichTime(getDateCrea(r));
+    printf("\n");
     printf("\n");
    
     if(isDispo(r)==0){
         printf("Statut: Emprunté\n");
         printf("Emprunté par: %s\n", getTakenBy(r));
-        printf("Date de début du pret: %s\n", getDateDeb(r));
-        printf("Date de fin du pret: %s\n", getDateFin(r));
+        printf("Date de début du pret: ");
+        affichTime(getDateDeb(r));
+        printf("\n");
+        printf("Date de fin du pret: ");
+        affichTime(getDateFin(r));
+        printf("\n");
     }else{
          printf("Statut: Disponible\n\n");
     }
@@ -217,7 +245,8 @@ void affich_ress(Ressource r){
 //permet d'afficher une liste
 void print_list(Liste l){
   if(is_empty_list(l)){
-      printf("Rien a afficher, la Liste est vide.\n");
+      color("31;1");
+      printf("Rien à afficher, la liste est vide.\n");
 	  return;
 	}
 	Elementl temp = l->head;
@@ -232,6 +261,7 @@ void print_list(Liste l){
 Liste push_bl(Liste l,Ressource r){
 	Elementl element = malloc(sizeof(struct s_elementl));
   if(element == NULL){
+      color("31;1");
       fprintf(stderr, "Erreur : probleme allocation dynamique.\n");
 	  exit(EXIT_FAILURE);
 	}
@@ -257,6 +287,7 @@ Liste push_bl(Liste l,Ressource r){
 Liste push_fl(Liste l,Ressource r){
 	Elementl element = malloc(sizeof(struct s_elementl));
 	if(element == NULL){
+    color("31;1");
 		fprintf(stderr, "Erreur : probleme allocation dynamique.\n");
 		exit(EXIT_FAILURE);
 	}
@@ -282,7 +313,8 @@ Liste push_fl(Liste l,Ressource r){
 //supprime un élèment en bout de liste
 Liste pop_bl(Liste l){
 	if(is_empty_list(l)){
-		printf("Rien a supprimer, la Liste est deja vide.\n");
+    color("31;1");
+		printf("Rien à supprimer, la liste est déjà vide.\n");
 		return new_list();
 	}
 
@@ -311,7 +343,8 @@ Liste pop_bl(Liste l){
 //supprimer un élèment en début de liste
 Liste pop_fl(Liste l){
 	if(is_empty_list(l)){
-		printf("Rien a supprimer, la Liste est deja vide.\n");
+    color("31;1");
+		printf("Rien à supprimer, la liste est déjà vide.\n");
 		return new_list();
 	}
 
@@ -418,7 +451,12 @@ int ress_existing(Liste ls, Ressource r){
 
 //permet de supprimer une ressource grace à l'indice dans une liste
 void removeRessource(Ressource r,Liste l){
-	remove_at_l(getIndex(r,l), l);
+  if(isDispo(r)==1){
+    remove_at_l(getIndex(r,l), l);
+    return;
+  }
+  color("31;1");
+	printf("La ressource est empruntée, vous ne pouvez pas la supprimer\n");
 }
 
 //getters sur les listes
@@ -466,10 +504,12 @@ Liste empruntRessource(Personne p,Liste ressources){
 
 //permet de pouvoir sélectionner une ressource qui nous appartient
 void gererDropRessource(Personne p, Liste l){
-  color("34;1");
   int choix;
-  printf("Vous avez %d ressources déposées.\n", getPossess(p, l));
+  color("36;1");
+  printf("Vous avez %d ressource(s) déposée(s).\n", getPossess(p, l));
+  color("36;1");
   printf("Selectionnez un des numéros suivants. \n");
+  color("37;1");
   printf("(-1) Revenir en arrière.\n");
 
   Liste depots = depotRessource(p, l);
@@ -486,6 +526,7 @@ void gererDropRessource(Personne p, Liste l){
   }
   Ressource r = getRessource(choix, depots);
   if(r == NULL || haveRessource(p, r) == 0){
+    color("31;1");
     printf("Numéro incorrect. Réessayez!");
     gererDropRessource(p, l);
     return;
@@ -496,10 +537,12 @@ void gererDropRessource(Personne p, Liste l){
 
 //permet de gérer les ressources empruntées
 void gererTakeRessource(Personne p, Liste l){
-  color("34;1");
   int choix;
+  color("36;1");
   printf("Vous avez %d ressource(s) empruntée(s).\n", getEmprunt(p, l));
+  color("36;1");
   printf("Selectionnez un des numéros suivants. \n");
+  color("37;1");
   printf("(-1) Revenir en arrière.\n");
 
   Liste emprunts = empruntRessource(p, l);
@@ -516,6 +559,7 @@ void gererTakeRessource(Personne p, Liste l){
   }
   Ressource r = getRessource(choix, emprunts);
   if(r == NULL || isDispo(r) == 1){
+    color("31;1");
     printf("Numéro incorrect. Réessayez!\n");
     gererTakeRessource(p, l);
     return;
@@ -526,10 +570,12 @@ void gererTakeRessource(Personne p, Liste l){
 
 //fonction pour emprunter une ressource
 void takeRessource(Personne p, Liste l){
-  color("34;1");
   int choix;
   Elementl current = l->head;
+
+  color("36;1");
   printf("Selectionnez un des numéros suivants. \n");
+  color("37;1");
   printf("(-1) Revenir en arrière.\n");
   for(int i =0; i<list_size(l); i++){
     if(isDispo(current-> r) == 1){
@@ -544,12 +590,18 @@ void takeRessource(Personne p, Liste l){
   }
   Ressource r = getRessource(choix, l);
   if(r == NULL || isDispo(r) == 0){
+    color("31;1");
     printf("Numéro incorrect. Réessayez!");
     takeRessource(p, l);
     return;
   }
-  printf("Vous venez d'emprunter le livre %s pour 2 semaines. \n", getNom(r));
+  color("32;1");
+  printf("Vous venez d'emprunter %s pour 6 semaines. \n", getNom(r));
   setTakenBy(r, getIDPers(p));
+
+  setDateFin(r, getDelayedTime());
+  setDateDeb(r, getActualTime());
+
   welcomeUser(p, l);
 }
 
@@ -567,6 +619,141 @@ Ressource getRessource(int index, Liste l){
 
 }
 
+void searchRessourceByDate(Personne p, Liste ressources){
+  int choix, day, month, year;
+  char * sday;
+  char * smonth;
+  char * syear;
+
+  sday =(char*)malloc(sizeof(char)*16);
+  smonth =(char*)malloc(sizeof(char)*16);
+  syear =(char*)malloc(sizeof(char)*16);
+
+  color("36;1");
+  printf("Entrez une nouvelle date au format JJ/MM/AAAA :\n");
+  scanf("%02d/%02d/%4d",&day,&month,&year);
+  
+  viderBuffer();
+
+  sprintf(sday, "%d", day);
+  sprintf(smonth, "%d", month);
+  sprintf(syear, "%d", year);
+
+  Date date = setTime(sday, smonth, syear);
+
+  Liste search = getRessource_Date(date, ressources);
+  if(list_size(search) == 0){
+    color("31;1");
+    printf("Désolée rien ne correspond à votre recherche... Réessayez!\n");
+    searchRessource(p, ressources);
+    return;
+  }
+  color("36;1");
+  printf("Voici les ressources trouvées: \n");
+  color("37;1");
+  printf("(-1) Revenir en arrière.\n");
+  Elementl current = search->head;
+  for(int i =0; i<list_size(search); i++){
+    printf("( %d) %s\n",i,getNom(current->r));
+    current = current ->next;
+  }
+  scanf("%d", &choix);
+  if(choix == -1){
+    welcomeUser(p, ressources);
+    return;
+  }
+
+  Ressource r = getRessource(choix, search);
+  if(r == NULL){
+    color("31;1");
+    printf("Numéro incorrect. Réessayez!");
+    searchRessource(p, ressources);
+    return;
+  }
+  affich_ress(r);
+  welcomeUser(p,  ressources);
+}
+
+//fonction qui permet de rechercher une ressource par le/la type/nom/date
+void searchRessource(Personne p, Liste ressources){
+  int choix;
+  char * nom_type;
+  nom_type =(char*)malloc(sizeof(char)*16);
+  Liste search;
+  color("36;1");
+  printf("Rechercher une ressource par: \n");
+  color("37;1");
+  printf("(0) Revenir en arrière\n");
+  printf("(1) Nom\n");
+  printf("(2) Type\n");
+  printf("(3) Date\n");
+  color("36;1");
+  printf("Selectionner votre choix de recherche: \n");
+  scanf("%d",&choix);
+  if(choix == 3){
+    viderBuffer();
+    searchRessourceByDate(p, ressources);
+    return;
+  }
+  if (choix == 0){
+    viderBuffer();
+    welcomeUser(p,ressources);
+    return;
+  }
+  if(choix != 1 && choix != 2){
+    searchRessource(p, ressources);
+    return;
+  }
+  color("37;1");
+  printf("Entrer votre recherche: \n");
+  scanf("%s",nom_type);
+  viderBuffer();
+  switch(choix){
+    case 1: 
+      search = getRessource_Nom(nom_type, ressources);
+      break;
+
+    case 2:
+      search = getRessource_Type(nom_type, ressources);
+      break;
+
+    default:
+      break;
+  }
+  
+  if(list_size(search)==0){
+    color("31;1");
+    printf("Désolée rien ne correspond à votre recherche... Réessayez !\n");
+    searchRessource(p, ressources);
+    return;
+  }
+  color("36;1");
+  printf("Voici les ressources trouvées\n");
+  color("37;1");
+  printf("(-1) Revenir en arrière.\n");
+  Elementl current = search->head;
+  for(int i =0; i<list_size(search); i++){
+    printf("( %d) %s\n",i,getNom(current->r));
+    current = current ->next;
+  }
+  scanf("%d", &choix);
+  if(choix == -1){
+    welcomeUser(p, ressources);
+    return;
+  }
+
+  Ressource r = getRessource(choix, search);
+  if(r == NULL){
+    color("31;1");
+    printf("Numéro incorrect. Réessayez!");
+    searchRessource(p, ressources);
+    return;
+  }
+  affich_ress(r);
+  welcomeUser(p, ressources);
+}
+
+
 //fonction qui permet de récuperer une ressource avec un ID
 Ressource getRessource_ID (char * ID, Liste l){
   Elementl current = l->head;
@@ -579,4 +766,98 @@ Ressource getRessource_ID (char * ID, Liste l){
   return NULL;
 }
 
+//fonction qui permet de récuperer une ressource avec un type
+Liste getRessource_Type (char * type, Liste l){
+  Liste trouvees = new_list();
+  Elementl current = l->head;
+  for(int i =0; i<list_size(l); i++){
+    if(strcmp(getType(current->r), type) == 0){
+      push_bl(trouvees, current->r);
+    } 
+    current = current ->next;
+  }
+  return trouvees;
+}
 
+//fonction qui permet de récupérer une ressource avec un nom
+Liste getRessource_Nom (char * nom, Liste l){
+  Liste trouvees = new_list();
+  Elementl current = l->head;
+  for(int i =0; i<list_size(l); i++){
+    if(strcmp(getNom(current->r), nom) == 0){
+      push_bl(trouvees, current->r);
+    } 
+    current = current ->next;
+  }
+  return trouvees;
+}
+
+//fonction qui permet de récupérer une ressource avec une date
+Liste getRessource_Date(Date date, Liste l){
+  Liste trouvees = new_list();
+  Elementl current = l->head;
+  for(int i =0; i<list_size(l); i++){
+    if(compareTime(getDateCrea(current->r), date) == 1){
+      push_bl(trouvees, current->r);
+
+    } else if(compareTime(getDateDeb(current->r), date) == 1){
+      push_bl(trouvees, current->r);
+
+    } else if(compareTime(getDateFin(current->r), date) == 1){
+      push_bl(trouvees, current->r);
+    } 
+    current = current ->next;
+  }
+  return trouvees;
+}
+
+void afficherActions(Personne p, Liste l){
+  int choix, day, month, year;
+  Elementl current = l->head;
+
+  char * sday;
+  char * smonth;
+  char * syear;
+
+  sday =(char*)malloc(sizeof(char)*16);
+  smonth =(char*)malloc(sizeof(char)*16);
+  syear =(char*)malloc(sizeof(char)*16);
+
+  color("36;1");
+  printf("Entrer une nouvelle date au format JJ/MM/AAAA :\n");
+  scanf("%02d/%02d/%4d",&day,&month,&year);
+  
+  viderBuffer();
+
+  sprintf(sday, "%d", day);
+  sprintf(smonth, "%d", month);
+  sprintf(syear, "%d", year);
+
+  Date date = setTime(sday, smonth, syear);
+  color("36;1");
+  printf("Actions à la date: ");
+  affichTime(date);
+  printf("\n");
+  for(int i =0; i<list_size(l); i++){
+    if(compareTime(getDateCrea(current->r), date) == 1){
+      printf("Depôt de la ressource > %s\n", getNom(current->r));
+    }
+    if(compareTime(getDateDeb(current->r), date) == 1){
+       printf("Emprunt de la ressource > %s\n", getNom(current->r));
+    } 
+    if(compareTime(getDateFin(current->r), date) == 1){
+      printf("Fin d'emprunt de la ressource %s\n", getNom(current->r));
+    }
+    current = current ->next;
+  }
+  color("37;1");
+  printf("Selectionner votre choix: \n");
+  printf("(0) Revenir en arrière.\n");
+  scanf("%d", &choix);
+  switch(choix){
+    case 0:
+    default:
+      welcomeUser(p, l);
+      break;
+  }
+}
