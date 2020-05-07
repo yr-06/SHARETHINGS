@@ -315,6 +315,7 @@ Liste pop_bl(Liste l){
 	if(is_empty_list(l)){
     color("31;1");
 		printf("Rien à supprimer, la liste est déjà vide.\n");
+    color("37");
 		return new_list();
 	}
 
@@ -345,6 +346,7 @@ Liste pop_fl(Liste l){
 	if(is_empty_list(l)){
     color("31;1");
 		printf("Rien à supprimer, la liste est déjà vide.\n");
+    color("37");
 		return new_list();
 	}
 
@@ -861,3 +863,5 @@ void afficherActions(Personne p, Liste l){
       break;
   }
 }
+
+
