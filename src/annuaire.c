@@ -339,14 +339,13 @@ Annuaire add_pers(Annuaire annu,Personne pers){
         setNumAccount(pers,createNumAccount(annu));
         printf("N° de compte=%d\n",getNumAccount(pers));//pour tester
         setIDPers(pers,createIDPers(pers));
-        annu=push_ba(annu,pers);
         color("32;01");
         printf("Le compte a été créé avec succès\n");
         color("37");
         affich_pers(pers);
         print_pers_JSON(pers);
         addPersAnnu_JSON(pers);
-        return annu;
+        return push_ba(annu,pers);
     }
     int n;
     n=pers_existing(annu,pers);
@@ -356,15 +355,16 @@ Annuaire add_pers(Annuaire annu,Personne pers){
         setNumAccount(pers,createNumAccount(annu));
         printf("N° de compte=%d\n",getNumAccount(pers));
         setIDPers(pers,createIDPers(pers));
-        annu=push_ba(annu,pers);
         color("32;01");
         printf("Le compte a été créé avec succès\n");
         color("37");
         affich_pers(pers);
         print_pers_JSON(pers);
         addPersAnnu_JSON(pers);
-        return annu;
-    /*case 1:
+        
+        return push_ba(annu,pers);
+        break;
+    case 1:
         color("31;01");
         printf("ERROR-Identifiant déjà utilisé.Veuillez en changer\n");
         color("37");
@@ -373,21 +373,25 @@ Annuaire add_pers(Annuaire annu,Personne pers){
         
     case 2:
         printf("Cet utilisateur existe déjà");
-        return annu;*/
+        return annu;
+        break;
     case 3:
         CLEAR_STDIN
         color("31;1");
         printf("Cette adresse mail est déjà liée à un compte. Veuillez en choisir une autre\n");
         color("37");
         modif_mail(pers);
-        annu=add_pers(annu,pers);
+        
+        return add_pers(annu,pers);
+        
     case 4:
         CLEAR_STDIN
         color("31;1");
         printf("Ce numéro de téléphone est déjà lié à un compte. Veuillez en utiliser un autre\n");
         color("37");
         modif_tel(pers);
-        annu=add_pers(annu,pers);
+        
+        return add_pers(annu,pers);
     default:
         break;
     }
@@ -487,7 +491,7 @@ Annuaire createAccount(Annuaire annu){
     Personne p=create_pers();
     affich_pers(p);
     int i;
-    color("35;1");
+    color("35;01");
     printf("\n\nEtes-vous satisfait des données enregistrées ?\nOUI=1\tNON=0\n");
     color("37");
     scanf("%d",&i);
@@ -498,18 +502,17 @@ Annuaire createAccount(Annuaire annu){
         color("33;1");
         printf("\nSi vous rencontrez des problèmes avec votre compte veuillez vous réfferer à un administrateur\n");
         color("37");
-        annu=add_pers(annu,p);
-        return annu;
+        return add_pers(annu,p); 
       case 1:
-        annu=add_pers(annu,p);
-        return annu;
+        return add_pers(annu,p); 
       default:
         color("31;1");
         printf("\nERROR--Vous allez être redirigé\n");
         color("37");
+        free(p);
         annu=createAccount(annu);
     }
-}//pb avec recurrence de setAutor()-->good c
+}//fonctionne-->good c
 
 //fonctions pour le JSON
 Annuaire LoadAnnu_JSON(Annuaire annu){
@@ -546,34 +549,17 @@ void updateAnnu_JSON(Annuaire annu){
 }//fonctionne
 
 int main(int argc, char *argv[]){
-    Annuaire annu =new_annu();
+    Annuaire annu=new_annu();
     annu=LoadAnnu_JSON(annu);
-    affichAnnuaire(annu);
-    Personne
+    affichAnnuaire()
     
-    switch(i){
-      case 0:
-        CLEAR_STDIN  
-        modif_persAdmin(p);
-        color("33;1");
-        printf("\nSi vous rencontrez des problèmes avec votre compte veuillez vous réfferer à un administrateur\n");
-        color("37");
-        annu=add_pers(annu,p);
-        return annu;
-      case 1:
-        annu=add_pers(annu,p);
-        return annu;
-      default:
-        color("31;1");
-        printf("\nERROR--Vous allez être redirigé\n");
-        color("37");
-        annu=createAccount(annu);
-    }
+    suppr_pers_JSON("IDP1000");
+    suppr_pers_JSON("IDP1001");
+    suppr_pers_JSON("IDP1002");
     
-    /*annu=createAccount(annu);
-    affichAnnuaire(annu);
+     
     
-    char*m;
+    /*char*m;
     m=(char*)malloc(sizeof(char)*33);
     printf("Veuillez entrer l'identifiant du compte que vous souhaitez modifier:\n");
     fgets(m,33,stdin);
