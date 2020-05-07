@@ -678,15 +678,14 @@ void searchRessourceByDate(Personne p, Liste ressources){
 void searchRessource(Personne p, Liste ressources){
   int choix;
   char * nom_type;
-  nom_type =(char*)malloc(sizeof(char)*16);
   Liste search;
   color("36;1");
   printf("Rechercher une ressource par: \n");
   color("37;1");
   printf("(0) Revenir en arrière\n");
-  printf("(1) Nom\n");
-  printf("(2) Type\n");
-  printf("(3) Date\n");
+  printf("(1) Nom.\n");
+  printf("(2) Type.\n");
+  printf("(3) Date.\n");
   color("36;1");
   printf("Selectionner votre choix de recherche: \n");
   scanf("%d",&choix);
@@ -706,8 +705,16 @@ void searchRessource(Personne p, Liste ressources){
   }
   color("37;1");
   printf("Entrer votre recherche: \n");
-  scanf("%s",nom_type);
   viderBuffer();
+  nom_type =(char*)malloc(sizeof(char)*128);
+  strcpy(nom_type, "");
+  char c = ' '; 
+  while(strlen(nom_type)<128 && c != '\n'){
+    scanf("%c", &c);
+    if(c!='\n'){
+      sprintf(nom_type, "%s%c", nom_type, c);
+    }
+  }
   switch(choix){
     case 1: 
       search = getRessource_Nom(nom_type, ressources);
@@ -723,7 +730,7 @@ void searchRessource(Personne p, Liste ressources){
   
   if(list_size(search)==0){
     color("31;1");
-    printf("Désolée rien ne correspond à votre recherche... Réessayez !\n");
+    printf("Désolé rien ne correspond à votre recherche... Réessayez !\n");
     searchRessource(p, ressources);
     return;
   }
