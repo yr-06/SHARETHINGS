@@ -82,7 +82,7 @@ void setNumAccount(Personne p, int i){
 }
 /*----------------------------------------------------------------*/
 void setAutor(Personne p){
-    FILE *f=fopen("../data/Mtdp_admin.txt", "r");
+    FILE *f=fopen("./data/Mtdp_admin.txt", "r");
     CLEAR_STDIN
     char *cmp;
     char *mdp_admin;
@@ -117,15 +117,8 @@ void setAutor(Personne p){
             printf("Veuillez entrer le mot de passe administrateur :\n");
             color("37");
             fgets(cmp,65,stdin);
-            
-            printf("cmp=%s\n",cmp);// à utiliser pour tester fct°
-            
+
             fscanf(f,"%65s",mdp_admin);
-            printf("Mdp_admin=%s\n",mdp_admin);// à utiliser pour tester fct°
-        
-           
-            printf("strcmp=%d\n",strcmp(mdp_admin, chiffrementMdp(cmp)));// à utiliser pour tester fct°
-            
             if(strcmp(mdp_admin, chiffrementMdp(cmp))==0){
                 p->a=1;
                 color("32;1");
