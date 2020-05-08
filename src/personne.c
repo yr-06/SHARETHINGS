@@ -552,7 +552,7 @@ void modif_persUser(Personne p){
 //fonctions pour le JSON
 void print_pers_JSON(Personne p){
     char path[64];
-    sprintf(path,"../data/Personne/%s.json",getIDPers(p));
+    sprintf(path,"./data/Personne/%s.json",getIDPers(p));
     
     JSON_Value *root_value = json_value_init_object();
     JSON_Object *root_object = json_value_get_object(root_value);
@@ -581,7 +581,7 @@ void print_pers_JSON(Personne p){
 /*----------------------------------------------------------------*/
 void addPersAnnu_JSON(Personne p){
     FILE *Annuf = NULL;
-    Annuf = fopen("../data/Personne/Annuaire.dat","a");
+    Annuf = fopen("./data/Personne/Annuaire.dat","a");
     fprintf(Annuf,"%s,%s,%s \n",strtok(getIDPers(p),"\n"),strtok(getName(p),"\n"),strtok(getPrenom(p),"\n"));
     fclose(Annuf);
 }//fonctionne
@@ -591,20 +591,29 @@ Personne LoadPersonne_JSON(char *ID){
     JSON_Value *root_value;
     JSON_Object *root_object;
     char path[64];
-    sprintf(path,"../data/Personne/%s.json",ID);
-    
+    sprintf(path,"./data/Personne/%s.json",ID);
     
     root_value = json_parse_file(path);
     root_object = json_value_get_object(root_value);
 
+    int number_compte = (int) json_object_get_number (root_object,"N° de compte");
+    int habit = (int) json_object_get_number (root_object,"Habilitation");
    
-    setPers(p,(int)json_object_get_number (root_object,"N° de compte"),(int)json_object_get_number (root_object,"Habilitation"),(char*)json_object_get_string (root_object,"Nom"),(char*)json_object_get_string (root_object,"Prenom"),(char*)json_object_get_string (root_object,"Date de naissance"),(char*)json_object_get_string (root_object,"Identifiant"),(char*)json_object_get_string (root_object,"Mot de passe"),(char*)json_object_get_string (root_object,"Adresse mail"),(char*)json_object_get_string (root_object,"N° de téléphone"));
+    char * nom = (char*)json_object_get_string (root_object,"Nom");
+    char * prenom = (char*)json_object_get_string (root_object,"Prenom");
+    char * date_naissance = (char*)json_object_get_string (root_object,"Date de naissance");
+    char * identifiant = (char*)json_object_get_string (root_object,"Identifiant");
+    char * mdp = (char*)json_object_get_string (root_object,"Mot de passe");
+    char * mail = (char*)json_object_get_string (root_object,"Adresse mail");
+    char * tel = (char*)json_object_get_string (root_object,"N° de téléphone");
+    
+    setPers(p, number_compte, habit, nom, prenom, date_naissance, identifiant, mdp, mail, tel);
     return p;
 }//fonctionne
 /*----------------------------------------------------------------*/
 void suppr_pers_JSON(char *ID){
     char path[64];
-    sprintf(path,"../data/Personne/%s.json",ID);
+    sprintf(path,"./data/Personne/%s.json",ID);
     remove(path);
 }//fonctionne
 
