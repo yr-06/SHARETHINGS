@@ -313,7 +313,11 @@ Liste LoadListe_JSON(Liste ls){
 	rewind(f);
         while (!feof(f)){
             if(fgets(line,160,f)!=NULL){
-                Ressource r=LoadRessource_JSON(strtok(line,","));
+		char * strToken = strtok(line, ",");
+		if(strToken == NULL){
+			continue;
+		}
+                Ressource r=LoadRessource_JSON(strToken));
                 ls=push_bl(ls,r);
            }else{
                continue;
