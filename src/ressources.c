@@ -315,7 +315,7 @@ Liste LoadListe_JSON(Liste ls){
             if(fgets(line,160,f)!=NULL){
 		char * strToken = strtok(line, ",");
 		if(strToken == NULL){
-			continue;
+			break;
 		}
                 Ressource r=LoadRessource_JSON(strToken));
                 ls=push_bl(ls,r);
