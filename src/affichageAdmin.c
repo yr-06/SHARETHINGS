@@ -70,74 +70,6 @@ void init_mtp_admin(){
 
 }// intitialise mot de passe administrateur si f=NULL
 
-/*
-Ressource selectionRessource(Personne p, Liste l, Annuaire a){ // dans ressources.c
-  int choix;
-  Elementl current = l->head;
-  printf("Selectionnez une des ressources suivantes. \n");
-  printf("(-1) Revenir en arrière.\n");
-  for(int i = 0; i < list_size(l); i++){
-    printf("( %d) %s\n",i,getNom(current->r));
-    current = current ->next;
-  }
-  scanf("%d", &choix);
-  if(choix == -1){
-    choix_admin(a,l,p);
-    return NULL;
-  }
-  Ressource r = getRessource(choix, l);
-  if(r == NULL){
-    color("31;1");
-    printf("Numéro incorrect. Réessayez!");
-    color("37");
-    return selectionRessource(p, l, a);
-  }
-  return r;
-}
-
-Personne selectionPersonne(Personne p, Liste l, Annuaire a){ // dans annuaire.c
-  int choix;
-  Elementa current = a->head;
-  printf("Selectionnez une des ressources suivantes. \n");
-  printf("(-1) Revenir en arrière.\n");
-  for(int i = 0; i < annuaire_size(a); i++){
-    printf("( %d) %s,%s\n",i,getName(current->p),getPrenom(current->p));
-    current = current ->next;
-  }
-
-  scanf("%d", &choix);
-  if(choix == -1){
-      choix_admin(a,l,p);
-    return NULL;
-  }
-  Personne t = getPersonne_int(choix,a); // METTRE TA FONCTION QUI PERMET DE RECUPERER UNE PERSONNE A PARTIR D'UN INDEX DANS UN ANNUAIRE
-  if(t == NULL){ // SI NOMBRE INCORRECT, REGARDE NOS FONCTIONS getRessource à la limite
-    color("31;1");
-    printf("Numéro incorrect. Réessayez!");
-    color("37");
-    return selectionPersonne(p, l, a);
-  }else{
-    color("31;1");
-    printf("Numéro incorrect. Réessayez!");
-    color("37");
-    return selectionPersonne(p, l, a);
-  }
-  return t;
-}
-
-void transfererRessource(Personne p, Liste l, Annuaire a){ // dans annuaire.c
-  Ressource r = selectionRessource(p , l, a);
-  printf("Vous allez transferer la ressource %s de type %s.\n", getNom(r),getType(r));
-  Personne t = selectionPersonne(p, l, a);
-  printf("Vous donnez la ressource à %s %s.\n", getName(t),getPrenom(t));
-  setTakenBy(r, getIDPers(t));
-  return;
-}*-->où les mettre par rapport aux header?*/
-
-
-
-
-
 
 
 void welcomeAdmin(Annuaire annu,Liste ls,Personne p){
@@ -358,9 +290,9 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
         scanf("%s",q);
         printf("q=%s\n",q);
         Personne pts=search_pers(annu,q);
-        if (pat!=NULL){
+        if (pts!=NULL){
             CLEAR_STDIN
-            transfererRessource(pat,ls,annu);
+            transfererRessource(pts,ls,annu);
             break;
         }else{
             CLEAR_STDIN

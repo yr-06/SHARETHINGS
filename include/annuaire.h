@@ -3,6 +3,8 @@
 
 
 #include "personne.h"
+#include "ressources.h"
+
 typedef struct s_annuaire *Annuaire;
 typedef struct s_elementa *Elementa;
 
@@ -51,5 +53,8 @@ Annuaire createAccount(Annuaire annu);
 Annuaire LoadAnnu_JSON(Annuaire annu);
 
 void updateAnnu_JSON(Annuaire annu);
+Ressource selectionRessource(Personne p, Liste l, Annuaire a);
+Personne selectionPersonne(Personne p, Liste l, Annuaire a);
+void transfererRessource(Personne p, Liste l, Annuaire a);
 
 #endif

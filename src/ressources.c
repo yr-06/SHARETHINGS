@@ -7,7 +7,6 @@
 #include "../include/personne.h"
 #include "../include/affichageUser.h"
 #include "../include/date.h"
-#include "../include/annuaire.h"
 #include "../include/parson.h"
 
 
@@ -341,11 +340,11 @@ Liste new_list(){
 }
 
 //permet de savoir si une liste est vide
-Bool is_empty_list(Liste l){
+int is_empty_list(Liste l){
 	if(l->size== 0)
-		return true;
+		return 1;
 
-	return false;
+	return 0;
 }
 
 //permet de savoir la taille d'une liste
@@ -569,6 +568,20 @@ Liste remove_at_l(int i,Liste ls){
             return ls;
     }
 }
+
+
+Elementl getHead(Liste l){
+	return (l->head);
+}
+
+Ressource getCurrentRessource(Elementl e){
+	return(e->r);
+}
+
+Elementl getNext(Elementl e){
+	return(e->next);
+}
+
 
 //permet de savoir si une ressource existe
 int ress_existing(Liste ls, Ressource r){
@@ -1024,4 +1037,5 @@ void afficherActions(Personne p, Liste l){
       break;
   }
 }
+
 

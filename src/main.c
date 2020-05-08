@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include "../include/ressources.h"
 #include "../include/welcome.h"
-#include "../include/personne.h"
 #include "../include/annuaire.h"
 
 
@@ -28,9 +27,7 @@ int main ( int argc, char *argv []){
 
     ls=clear_list(ls);
     annu=clear_annu(annu);
-    free(ls);
-    free(annu);
-   
+
     return 0;
 
 }

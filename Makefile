@@ -1,16 +1,49 @@
-CC= gcc
-CFLAGS= -Wall -g #-std=c11 -lcrypt
-LIB=lib/
-LDFLAGS= -lcrypt 
-INC=include/
-EXEC= src/main.exe
-SRC= src/main.c
-OBJ= $(SRC:.c=.o)
+MAKE = make
 
-all : $(EXEC)
+GCC = gcc
 
-$(EXEC) : src/main.c
-	$(CC) $< -o $@ $(CFLAGS) $(LDFLAGS) -I $(INC) -L $(LIB)
+LIBFLAGS = -lcrypt
 
-clean:
-	rm *.exe *.o
+CFLAGS =-Wall -g #-std=c11 -lcrypt
+
+INCLUDE = include/
+
+SRC = $(wildcard src/*.c)
+
+MOVE = mv
+
+EXC = ./main.exe
+
+LIB = lib/
+
+BIN = bin/*
+
+LOG = log/*
+
+
+all :
+	@mkdir -p lib
+
+	$(MAKE) compile -s
+
+	$(MAKE) run -s
+
+compile :
+
+	@$(GCC) $(CFLAGS) -I $(INCLUDE) -c $(SRC) $(LIBFLAGS)
+
+	@$(MOVE) *.o $(LIB)
+
+	@$(GCC) $(CFLAGS) -o $(EXC) $(LIB)*.o $(LIBFLAGS)
+
+
+run :
+
+	@$(EXC)
+
+
+clean :
+
+	rm $(EXC)
+
+	rm $(LIB)*

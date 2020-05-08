@@ -4,7 +4,7 @@
 
 #include "personne.h"
 #include "date.h"
-#include "annuaire.h"
+
 
 //structures
 typedef struct s_ressource *Ressource;
@@ -48,7 +48,7 @@ void afficherActions(Personne p, Liste l);
 int getIndex(Ressource r, Liste l);
 Ressource getRessouce(int index, Liste l);
 Liste new_list();
-Bool is_empty_list(Liste l);
+int is_empty_list(Liste l);
 int list_size(Liste l);
 void affich_ress(Ressource r);
 void print_list(Liste l);
@@ -65,6 +65,11 @@ void takeRessource(Personne p, Liste l);
 Liste depotRessource(Personne p,Liste ressources);
 Liste empruntRessource(Personne p,Liste ressources);
 
+Elementl getNext(Elementl e);
+Elementl getHead(Liste l);
+Ressource getCurrentRessource(Elementl e);
+
+
 //getters sur les listes
 Ressource getRessource(int index, Liste l);
 Ressource getRessource_ID(char * ID, Liste l);
@@ -72,9 +77,9 @@ Liste getRessource_Type (char * type, Liste l);
 Liste getRessource_Nom (char * nom, Liste l);
 Liste getRessource_Date (Date date, Liste l);
 
-Ressource selectionRessource(Personne p, Liste l, Annuaire a);
 
-Personne selectionPersonne(Personne p, Liste l, Annuaire a);
+
+
 void print_ress_JSON(Ressource r);
 void addRessListe_JSON(Ressource r);
 void updateListe_JSON(Liste ls);

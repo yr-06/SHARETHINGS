@@ -7,6 +7,7 @@
 #include "../include/personne.h"
 #include "../include/chiffrement.h"
 #include "../include/annuaire.h"
+#include "../include/ressources.h"
 #include "../include/parson.h"
 #ifndef CLEAR_STDIN
     #define CLEAR_STDIN { int c; while((c = getchar()) != '\n' && c != EOF); }
@@ -266,6 +267,7 @@ int getIndicePersonne(Annuaire annu, Personne pers){
          }
          current_a=current_a->next;
      }
+	return -1;
 }//fonctionne-indice d'une personne ds l'Annuaire
 /*----------------------------------------------------------------*/
 int pers_existing(Annuaire annu, Personne p){
@@ -369,7 +371,7 @@ Annuaire add_pers(Annuaire annu,Personne pers){
         print_pers_JSON(pers);
         addPersAnnu_JSON(pers);
         
-        return push_ba(annu,pers);
+        annu=push_ba(annu,pers);
         break;
     case 1:
         CLEAR_STDIN
@@ -378,6 +380,7 @@ Annuaire add_pers(Annuaire annu,Personne pers){
         color("37");
         CLEAR_STDIN
         exit(EXIT_FAILURE);
+	break;
     case 3:
         CLEAR_STDIN
         color("31;1");
@@ -385,19 +388,21 @@ Annuaire add_pers(Annuaire annu,Personne pers){
         color("37");
         modif_mail(pers);
         
-        return add_pers(annu,pers);
-        
+        annu=add_pers(annu,pers);
+        break;
     case 4:
         CLEAR_STDIN
         color("31;1");
         printf("Ce numéro de téléphone est déjà lié à un compte. Veuillez en utiliser un autre\n");
         color("37");
         modif_tel(pers);
-        
-        return add_pers(annu,pers);
+       
+        annu=add_pers(annu,pers);
+	break;
     default:
         break;
     }
+	return annu;
 }//fonctionne-permet d'ajouter une Personne n'existant pas encore à l'Annuaire-->good color
 /*----------------------------------------------------------------*/
 Annuaire remove_pers(Annuaire annu, Personne pers){
@@ -524,7 +529,6 @@ Personne getPersonne_int(int i,Annuaire annu){
     if(i>=annu->size || i <0){
         return NULL;
     }
-    int j;
     for(int j = 0;j<i; j++){
         current_a=current_a->next;
     }
@@ -550,13 +554,13 @@ Annuaire createAccount(Annuaire annu){
         color("33;1");
         printf("\nSi vous rencontrez des problèmes avec votre compte veuillez vous réfferer à un administrateur\n");
         color("37");
-        return add_pers(annu,p); 
+        annu=add_pers(annu,p); 
       case 1:
         CLEAR_STDIN
         color("33;1");
         printf("\nSi vous rencontrez des problèmes avec votre compte veuillez vous réfferer à un administrateur\n");
         color("37");
-        return add_pers(annu,p); 
+        annu=add_pers(annu,p); 
       default:
         CLEAR_STDIN
         color("31;1");
@@ -565,6 +569,7 @@ Annuaire createAccount(Annuaire annu){
         free(p);
         annu=createAccount(annu);
     }
+	return annu;
 }//fonctionne-->good c
 
 //fonctions pour le JSON
@@ -603,4 +608,64 @@ void updateAnnu_JSON(Annuaire annu){
 }//fonctionne
 
 
+Ressource selectionRessource(Personne p, Liste l, Annuaire a){
+  int choix;
+  Elementl current = getHead(l);
+  printf("Selectionnez une des ressources suivantes. \n");
+  printf("(-1) Revenir en arrière.\n");
+  for(int i = 0; i < list_size(l); i++){
+    printf("( %d) %s\n",i,getNom(getCurrentRessource(current)));
+    current = getNext(current);
+  }
+  scanf("%d", &choix);
+  if(choix == -1){
+    choix_admin(a,l,p);
+    return NULL;
+  }
+  Ressource r = getRessource(choix, l);
+  if(r == NULL){
+    color("31;1");
+    printf("Numéro incorrect. Réessayez!");
+    color("37");
+    return selectionRessource(p, l, a);
+  }
+  return r;
+}
 
+Personne selectionPersonne(Personne p, Liste l, Annuaire a){
+
+  int choix;
+  Elementa current = a->head;
+  printf("Selectionnez une des ressources suivantes. \n");
+  printf("(-1) Revenir en arrière.\n");
+  for(int i = 0; i < annuaire_size(a); i++){
+    printf("( %d) %s,%s\n",i,getName(current->p),getPrenom(current->p));
+    current = current ->next;
+  }
+  scanf("%d", &choix);
+  if(choix == -1){
+      choix_admin(a,l,p);
+    return NULL;
+  }
+  Personne t = getPersonne_int(choix,a); // METTRE TA FONCTION QUI PERMET DE RECUPERER UNE PERSONNE A PARTIR D'UN INDEX DANS UN ANNUAIRE
+  if(t == NULL){ // SI NOMBRE INCORRECT, REGARDE NOS FONCTIONS getRessource à la limite
+    color("31;1");
+    printf("Numéro incorrect. Réessayez!");
+    color("37");
+    return selectionPersonne(p, l, a);
+  }else{
+    color("31;1");
+    printf("Numéro incorrect. Réessayez!");
+    color("37");
+    return selectionPersonne(p, l, a);
+  }
+  return t;
+}
+void transfererRessource(Personne p, Liste l, Annuaire a){
+  Ressource r = selectionRessource(p , l, a);
+  printf("Vous allez transferer la ressource %s de type %s.\n", getNom(r),getType(r));
+  Personne t = selectionPersonne(p, l, a);
+  printf("Vous donnez la ressource à %s %s.\n", getName(t),getPrenom(t));
+  setTakenBy(r, getIDPers(t));
+  return;
+}
