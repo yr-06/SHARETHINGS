@@ -281,7 +281,6 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
         q=(char*)malloc(sizeof(char)*33);
         printf("Veuillez entrer l'identifiant du compte dont vous souhaitez transférer la ressource:\n");
         scanf("%s",q);
-        printf("q=%s\n",q);
         Personne pts=search_pers(annu,q);
         if (pts!=NULL){
             CLEAR_STDIN
