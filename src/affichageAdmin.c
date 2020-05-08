@@ -193,7 +193,6 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
         m=(char*)malloc(sizeof(char)*33);
         printf("Veuillez entrer l'identifiant du compte que vous souhaitez modifier:\n");
         scanf("%s",m);
-        printf("m=%s\n",m);
         
         CLEAR_STDIN
         
@@ -203,13 +202,12 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
             CLEAR_STDIN
             affich_pers(pat);
             int i=getIndicePersonne(annu,pat);
-            printf("i=%d\n",i);
+            
             Personne temp=initPers();
             setPers(temp,getNumAccount(pat),getAutor(pat),getName(pat),getPrenom(pat),getNaiss(pat),getIDPers(pat),getPwd(pat),getMail(pat),getTel(pat));
             annu=remove_at(i,annu);
             annu=modifAnnuaireAdmin(i,annu,temp);
             break;
-   
         }else{
             CLEAR_STDIN
             color("31;1");
