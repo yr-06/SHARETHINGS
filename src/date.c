@@ -3,15 +3,15 @@
 #include <time.h>
 #include "../include/date.h"
 
-typedef struct date_s{
+struct date_s{
     int tm_mday;
     int tm_mon;
     int tm_year;
-}date_s;
+};
 
 //initialisation de la date
 Date initDate(){
-    return (Date)malloc(sizeof(date_s));
+    return (Date)malloc(sizeof(struct date_s));
 }
 
 //Permet de retourner une date
@@ -83,3 +83,14 @@ int compareTime(Date time1, Date time2){
     return 0;
   return 1;
 }
+
+int getDayofDate(Date d){
+    return d->tm_mday;
+}
+int getMonthofDate(Date d){
+    return d->tm_mon;
+}
+int getYearofDate(Date d){
+    return d->tm_year;
+}
+

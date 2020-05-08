@@ -12,6 +12,7 @@
 #ifndef COLOR
     #define color(param) printf("\033[%sm",param)
 #endif
+/*verifier enchaînement des couleurs +intégrer JSON et fonctions modifAnnuaireUser */
 
 char * getString(int size, char * request) {
   char * phrase = (char*)malloc(sizeof(char)*size);
@@ -65,9 +66,11 @@ void infoTakeRessource(Personne p, Ressource r, Liste ressources){
  
 //fonction qui permet de modifier une ressource si elle nous appartient 
 void modifRessource(Personne p , Ressource r, Liste l){
-  color("31;1");
+  
   if(haveRessource(p, r) == 0){
+    color("31;1");
     printf("Cette ressource ne vous appartient pas, vous ne pouvez pas la modifier.\n");
+    color("37");
 
   }
   else{
@@ -87,16 +90,21 @@ void modifRessource(Personne p , Ressource r, Liste l){
     switch(choix) {
       case 1:
         setNom(r, getString(32, "Entrer la modification sur le nom de votre ressource:\n"));
+        print_ress_JSON(r);
         break;
       case 2:
         setType(r , getString(32, "Entrer la modification sur le type de votre ressource:\n"));
+        print_ress_JSON(r);
        break;
       case 3:
+        suppr_ress_JSON(getID_r(r));
         removeRessource(r, l);
+        updateListe_JSON(l);
       case 4:
         break;
     
     }
+    print_ress_JSON(r);
     gererDropRessource(p, l);
   }
 }
@@ -109,10 +117,10 @@ void modifDonneesPers(Personne p, Liste ressources){
 	char * checkNewMdp;
 	char * newMail;
 	char * newTel;
-  newMail = (char*)malloc(sizeof(char)*16);
-  newTel = (char*)malloc(sizeof(char)*16);
-  newMdp = (char*)malloc(sizeof(char)*16);
-  checkNewMdp = (char*)malloc(sizeof(char)*16);;
+  newMail = (char*)malloc(sizeof(char)*33);
+  newTel = (char*)malloc(sizeof(char)*33);
+  newMdp = (char*)malloc(sizeof(char)*33);
+  checkNewMdp = (char*)malloc(sizeof(char)*65);;
 
   affich_pers(p);
   color("36;1");
@@ -130,6 +138,7 @@ void modifDonneesPers(Personne p, Liste ressources){
       welcomeUser(p, ressources);
       break;
 		case 1:
+//             modif_pwd(p);
 			printf("Entrez votre nouveau mot de passe: \n");
 			scanf("%s", newMdp);
 			printf("Veuillez confirmer votre mot de passe: \n");
@@ -147,12 +156,14 @@ void modifDonneesPers(Personne p, Liste ressources){
       welcomeUser(p, ressources);
 			break;
 		case 2:
+//            modif_mail(p);
 			printf("Entrez le nouveau mail:\n");
 			scanf("%s",newMail);
       setMail(p, newMail);
       welcomeUser(p, ressources);
 			break;
 		case 3:
+//             modif_tel;
 			printf("Entrez le nouveau numéro:\n");
 			scanf("%s",newTel);
       setTel(p, newTel);
@@ -161,7 +172,7 @@ void modifDonneesPers(Personne p, Liste ressources){
 
 	}
 
-}
+}//-->see color + add modifyers de personne.c
 
 
 void addRessourceAtListe(Personne p, Liste ressources){
@@ -174,6 +185,8 @@ void addRessourceAtListe(Personne p, Liste ressources){
   setType(r , getString(32, "Entrer le type de votre ressource: \n"));
   setDropBy(r, getIDPers(p));
   setCreateDate(r, getActualTime());
+  print_ress_JSON(r);
+  addRessListe_JSON(r);
   color("32;1");
   printf("Vous avez bien ajouté la ressource %s .\n", getNom(r));
   
@@ -227,6 +240,19 @@ void welcomeUser(Personne p, Liste ressources){
       break;
   }
 }
-
+int main ( int argc, char *argv []){
+    //Annuaire annu=new_annu();
+//     annu=LoadAnnu_JSON(annu);
+    Liste ls=new_list();
+    Personne p=LoadPersonne_JSON("IDP1000");
+//     annu=createAccount(annu);
+//     annu=createAccount(annu);
+    welcomeUser(p,ls);
+    ls=clear_list(ls);
+//     annu=clear_annu(annu);
+    free(ls);
+    free(p);
+//     free(annu);
+}
 
 

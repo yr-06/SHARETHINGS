@@ -4,7 +4,6 @@
 #include <crypt.h>
 #include <unistd.h>
 #include <string.h>
-#include <time.h>
 #include "../include/personne.h"
 #include "../include/chiffrement.h"
 #include "../include/annuaire.h"
@@ -199,24 +198,34 @@ Annuaire insert_at(int i,Personne p,Annuaire annu){
     assert((i<=annu->size)&&(i>=0));
     int t=(annu->size)-1;
     if(i==0){
+         printf("inch'allah\n");
         return (push_fa(annu,p));
-    }
-   if(i==t){
+    }if(i==t||i==annu->size){
+        printf("ça passe\n");
        return (push_ba(annu,p));
     }else{
+        printf("on y est presque\n");
         Elementa a= (Elementa)malloc(sizeof(struct s_elementa));
-        a->p=initPers();
+        printf("allez\n");
         a->p=p;
+        printf("encore un effort\n");
         int j=0;
+        printf("on y croit\n");
         Elementa current_a=annu->head;
+        printf("si proche\n");
         for(j=0;j<i;j++){
+            printf("c parti pour un tour ou %d\n",j);
             current_a=current_a->next;
         }
         current_a->previous->next=a;
+        printf("yas\n");
         a->previous=current_a->previous;
+        printf("bzartek\n");
         current_a->previous=a;
+        printf("c parti pour un tour ou %d\n",j);
         a->next=current_a;
         annu->size++;
+        printf("enfin !\n");
         return annu;
     }
 }//fonctionne-permet d'ajouter un Elementa à un indice précis de l'Annuaire
@@ -265,7 +274,6 @@ int pers_existing(Annuaire annu, Personne p){
     Elementa current_a=annu->head;
     int j=annu->size;
     int i;
-
     for (i=0;i<j;i++){
         if(strcmp(getIDPers(p),getIDPers(current_a->p))==0){
             return 1;
@@ -336,6 +344,7 @@ void affichAnnuaire(Annuaire annu){
 /*----------------------------------------------------------------*/
 Annuaire add_pers(Annuaire annu,Personne pers){
     if(annu->size==0){
+        CLEAR_STDIN
         setNumAccount(pers,createNumAccount(annu));
         printf("N° de compte=%d\n",getNumAccount(pers));//pour tester
         setIDPers(pers,createIDPers(pers));
@@ -352,6 +361,7 @@ Annuaire add_pers(Annuaire annu,Personne pers){
     switch (n)
     {
     case 0 :
+        CLEAR_STDIN
         setNumAccount(pers,createNumAccount(annu));
         printf("N° de compte=%d\n",getNumAccount(pers));
         setIDPers(pers,createIDPers(pers));
@@ -365,16 +375,17 @@ Annuaire add_pers(Annuaire annu,Personne pers){
         return push_ba(annu,pers);
         break;
     case 1:
+        CLEAR_STDIN
         color("31;01");
-        printf("ERROR-Identifiant déjà utilisé.Veuillez en changer\n");
+        printf("ERROR-Identifiant déjà utilisé.\n");
         color("37");
         CLEAR_STDIN
         exit(EXIT_FAILURE);
         
-    case 2:
+    /*case 2:
         printf("Cet utilisateur existe déjà");
         return annu;
-        break;
+        break;*/
     case 3:
         CLEAR_STDIN
         color("31;1");
@@ -395,7 +406,7 @@ Annuaire add_pers(Annuaire annu,Personne pers){
     default:
         break;
     }
-}//fonctionne-permet d'ajouter une Personne n'existant pas encore à l'Annuaire
+}//fonctionne-permet d'ajouter une Personne n'existant pas encore à l'Annuaire-->good color
 /*----------------------------------------------------------------*/
 Annuaire remove_pers(Annuaire annu, Personne pers){
     int n;
@@ -406,6 +417,9 @@ Annuaire remove_pers(Annuaire annu, Personne pers){
     suppr_pers_JSON(getIDPers(pers));
     annu=remove_at(i,annu);
     updateAnnu_JSON(annu);
+    color("32;01");
+    printf("Ce compte a été supprimé avec succès\n");
+    color("37");
     return annu;
     }else{
         color("31;01");
@@ -414,18 +428,25 @@ Annuaire remove_pers(Annuaire annu, Personne pers){
         return annu;
     }
     
-}//fonctionne-permet de supprimer une Personne de l'Annuaire
+}//fonctionne-permet de supprimer une Personne de l'Annuaire-->good color
 /*----------------------------------------------------------------*/
 Personne search_pers(Annuaire annu, char * c){
     Personne pers=initPers();
+    printf("on commence\n");
      int i;
      int j=annu->size;
+     printf("size annu=%d",j);
      Elementa current_a=annu->head;
+     printf("on continue\n");
      for (i=0;i<j;i++){
          if(strcmp(c,getIDPers(current_a->p))==0){
+            printf("tourID %d\n",i);
+            printf("strcmpID=%d\n",strcmp(c,getIDPers(current_a->p)));
             pers=current_a->p;
             return pers;
          } if(strcmp(c,getMail(current_a->p))==0){
+            printf("tourMail %d\n",i);
+            printf("strcmpMail=%d\n",strcmp(c,getMail(current_a->p)));
             pers=current_a->p;
             return pers;
          }
@@ -440,56 +461,97 @@ Annuaire modifAnnuaireAdmin(int i,Annuaire annu,Personne temp){
     int n=pers_existing(annu,temp);
     switch (n){
         case 0:
+            CLEAR_STDIN
             color("32;01");
             printf("Modification effectuée avec succès\n");
             color("37");
-            annu=insert_at(i,temp,annu);
+            affich_pers(temp);
+            printf("ça commence à coincé\n");
             print_pers_JSON(temp);
-            return annu;
+            return insert_at(i,temp,annu);
         case 3:
+            CLEAR_STDIN
             color("31;1");
             printf("Cette adresse mail est déjà liée à un compte. Veuillez en choisir une autre\n");
             color("37");
-            annu=modifAnnuaireAdmin(i,annu,temp);
-            break;
+            return modifAnnuaireAdmin(i,annu,temp);
         case 4:
+            CLEAR_STDIN
             color("31;1");
             printf("Ce numéro de téléphone est déjà lié à un compte. Veuillez en utiliser un autre\n");
             color("37");
-            annu=modifAnnuaireAdmin(i,annu,temp);
-            break;
+            return modifAnnuaireAdmin(i,annu,temp);
         default:
+            CLEAR_STDIN
+            color("31;1");
+            printf("\n----ERROR---\n");
+            color("37");
+            exit(EXIT_FAILURE);
+
             break;
         }
-}//à tester-->good color
+}//fonctionne-->good color
 /*----------------------------------------------------------------*/
-/*Annuaire modifAnnuaireUser(int i,Annuaire annu,Personne temp){
+Annuaire modifAnnuaireUser(int i,Annuaire annu,Personne temp){
     assert(0<annu->size);
     
     modif_persUser(temp);
     int n=pers_existing(annu,temp);
     switch (n){
         case 0:
+            CLEAR_STDIN
+            color("32;01");
             printf("Modification effectuée avec succès\n");
-            annu=insert_at(i,temp,annu);
-            return annu;
+            color("37");
+            affich_pers(temp);
+            print_pers_JSON(temp);
+            
+            return insert_at(i,temp,annu);
 
         case 3:
+            CLEAR_STDIN
+            color("31;1");
             printf("Cette adresse mail est déjà liée à un compte. Veuillez en choisir une autre\n");
-            modifAnnuaireUser(i,annu,temp);
-            break;
+            color("37");
+            return modifAnnuaireUser(i,annu,temp);
         case 4:
+            CLEAR_STDIN
+            color("31;1");
             printf("Ce numéro de téléphone est déjà lié à un compte. Veuillez en utiliser un autre\n");
-            modifAnnuaireUser(i,annu,temp);
-            break;
+            color("37");
+            return modifAnnuaireUser(i,annu,temp);
+            
         default:
+            CLEAR_STDIN
+            color("31;1");
+            printf("\n----ERROR---\n");
+            color("37");
+            exit(EXIT_FAILURE);
             break;
         }
-}//à tester
+}//fonctionne-->good color
 /*----------------------------------------------------------------*/
+
+Personne getPersonne_int(int i,Annuaire annu){
+    Elementa current_a = annu->head;
+    if(i>=annu->size || i <0){
+        return NULL;
+    }
+    int j;
+    for(int j = 0;j<i; j++){
+        current_a=current_a->next;
+    }
+	return current_a->p;
+}
+
 Annuaire createAccount(Annuaire annu){
     Personne p=create_pers();
     affich_pers(p);
+    color("33;1");
+    printf("\nVotre numéro de compte et Identifiant définitifs vous seront affectés plus tard\n");
+    color("31;1");
+    printf("\n !!! Veuillez noter votre identifiant,il vous est indipensable pour bénéficier pleinement de nos services !!!\n");
+    color("37");
     int i;
     color("35;01");
     printf("\n\nEtes-vous satisfait des données enregistrées ?\nOUI=1\tNON=0\n");
@@ -504,8 +566,13 @@ Annuaire createAccount(Annuaire annu){
         color("37");
         return add_pers(annu,p); 
       case 1:
+        CLEAR_STDIN
+        color("33;1");
+        printf("\nSi vous rencontrez des problèmes avec votre compte veuillez vous réfferer à un administrateur\n");
+        color("37");
         return add_pers(annu,p); 
       default:
+        CLEAR_STDIN
         color("31;1");
         printf("\nERROR--Vous allez être redirigé\n");
         color("37");
@@ -537,7 +604,8 @@ Annuaire LoadAnnu_JSON(Annuaire annu){
 }//fonctionne
 
 void updateAnnu_JSON(Annuaire annu){
-	FILE * file = fopen("../data/Personne/Annuaire.dat","w");
+	FILE * file = fopen("../data/Personne/Annuaire.dat","w+");
+    //fseek(file, 0, SEEK_SET);
     rewind(file);
     Elementa current_a=annu->head;
     int i;
@@ -548,35 +616,3 @@ void updateAnnu_JSON(Annuaire annu){
     fclose(file);
 }//fonctionne
 
-int main(int argc, char *argv[]){
-    Annuaire annu=new_annu();
-    annu=LoadAnnu_JSON(annu);
-    affichAnnuaire()
-    
-    suppr_pers_JSON("IDP1000");
-    suppr_pers_JSON("IDP1001");
-    suppr_pers_JSON("IDP1002");
-    
-     
-    
-    /*char*m;
-    m=(char*)malloc(sizeof(char)*33);
-    printf("Veuillez entrer l'identifiant du compte que vous souhaitez modifier:\n");
-    fgets(m,33,stdin);
-        
-    Personne pat=initPers();
-    pat=search_pers(annu,m);
-    affich_pers(pat);
-        
-    int i=getIndicePersonne(annu,pat);
-    printf("i=%d",i);
-    Personne temp=initPers();
-    temp=pat;
-        
-    annu=remove_at(i,annu);
-    annu=modifAnnuaireAdmin(i,annu,temp);*/
-   
-    annu=clear_annu(annu);
-    free(annu);
-
-}

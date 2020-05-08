@@ -2,25 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include <stdbool.h>
 #include <time.h>
 #include "../include/ressources.h"
 #include "../include/personne.h"
 #include "../include/affichageUser.h"
 #include "../include/date.h"
 #include "../include/annuaire.h"
+#include "../include/parson.h"
 
-typedef int Bool ;  //définition du type booléen,
-
-#define false  0 /* affectation des valeurs conventionnelles*/
-
-#define true  1
 
 #ifndef COLOR
     #define color(param) printf("\033[%sm",param)
 #endif
-
-
 
 //structures
 struct s_ressource{                        
@@ -184,13 +177,162 @@ char * generateID(Liste ressources){
   return newabc;
 }
 
+/*----------------------------------------------------------------*/
+
+
+//fonctions  JSON pour ressources.c---> surtt ne pas modifier
+void print_ress_JSON(Ressource r){
+    char path[64];
+    sprintf(path,"../data/Ressources/%s.json",getID_r(r));
+    
+    JSON_Value *root_value = json_value_init_object();
+    JSON_Object *root_object = json_value_get_object(root_value);
+    char *serialized_string = NULL;
+    FILE *fjson = NULL;
+
+    fjson = fopen(path,"w+");
+    
+    json_object_set_string(root_object, "Type",getType(r));
+    json_object_set_string(root_object, "Nom", getNom(r));
+    json_object_set_string(root_object, "ID",getID_r(r));
+    json_object_set_string(root_object, "Propriétaire",r->dropBy);
+    
+    //date de création
+    json_object_set_number(root_object, "Jour de Création",getDayofDate(r->creation));
+    json_object_set_number(root_object, "Mois de Création",getMonthofDate(r->creation));
+    json_object_set_number(root_object, "Année de Création",getYearofDate(r->creation));
+
+    json_object_set_number(root_object, "Statut",isDispo(r));
+    json_object_set_string(root_object, "Emprunté par",getTakenBy(r));
+    
+    //date de début de prêt
+    json_object_set_number(root_object, "Jour du début de prêt",getDayofDate(r->date_d));
+    json_object_set_number(root_object, "Mois du début de prêt",getMonthofDate(r->date_d));
+    json_object_set_number(root_object, "Année du début de prêt",getYearofDate(r->date_d));
+
+    //date de fin de prêt
+    json_object_set_number(root_object, "Jour de fin de prêt",getDayofDate(r->date_f));
+    json_object_set_number(root_object, "Mois de fin de prêt",getMonthofDate(r->date_f));
+    json_object_set_number(root_object, "Année de fin de prêt",getYearofDate(r->date_f));
+    
+    serialized_string = json_serialize_to_string_pretty(root_value);
+    fprintf(fjson,"%s",serialized_string);
+    fclose(fjson);
+    json_free_serialized_string(serialized_string);
+    json_value_free(root_value);
+   
+}//fonctionne
+
+void addRessListe_JSON(Ressource r){
+    FILE *Listef = NULL;
+    Listef = fopen("../data/Ressources/Liste.dat","a");
+    fprintf(Listef,"%s,%s,%s,%s \n",strtok(getID_r(r),"\n"),strtok(getType(r),"\n"),strtok(getNom(r),"\n"),strtok(r->dropBy,"\n"));
+    fclose(Listef);
+}//fonctionne
+
+void updateListe_JSON(Liste ls){
+	FILE * file = fopen("../data/Ressources/Liste.dat","w+");
+    rewind(file);
+    Elementl current_l=ls->head;
+    int i;
+    for(i=0;i<ls->size;i++){
+        addRessListe_JSON(current_l->r);
+        current_l=current_l->next;
+    }
+    fclose(file);
+}//fonctionne
+
+Ressource LoadRessource_JSON(char *ID){
+    Ressource r =(Ressource)malloc(sizeof(struct s_ressource));
+    (r->type) =(char*)malloc(sizeof(char)*33);
+    (r->ID)=(char*)malloc(sizeof(char)*33);
+    (r->creation)=initDate();
+    (r->takenBy) =(char*)malloc(sizeof(char)*33);
+    (r->dropBy)=(char*)malloc(sizeof(char)*33);
+    (r->date_d)=initDate();
+    (r->date_f)=initDate();
+
+    JSON_Value *root_value;
+    JSON_Object *root_object;
+    char path[64];
+    sprintf(path,"../data/Ressources/%s.json",ID);
+    root_value = json_parse_file(path);
+    root_object = json_value_get_object(root_value);
+    
+    setType(r,(char*)json_object_get_string (root_object,"Type"));
+    setNom(r ,(char*)json_object_get_string (root_object,"Nom"));
+    strcpy(r->ID,(char*)json_object_get_string (root_object,"ID"));
+
+    //date de creation
+    
+    char *jc=(char *)malloc(sizeof(char)*3);
+    char *mc=(char *)malloc(sizeof(char)*3);
+    char *yc=(char *)malloc(sizeof(char)*5);
+    sprintf(jc,"%d",(int)json_object_get_number (root_object,"Jour de Création"));
+    sprintf(mc,"%d",(int)json_object_get_number (root_object,"Mois de Création")); 
+    sprintf(yc,"%d", (int)json_object_get_number (root_object,"Année de Création"));
+    (r->creation)=setTime(jc,mc,yc);
+    
+    setDropBy(r,(char*)json_object_get_string (root_object,"Propriétaire"));
+    
+    setTakenBy(r,(char*)json_object_get_string (root_object,"Emprunté par"));
+      
+    //date de début de prêt
+    char *jdd=(char *)malloc(sizeof(char)*3);
+    char *mdd=(char *)malloc(sizeof(char)*3);
+    char *ydd=(char *)malloc(sizeof(char)*5);
+    sprintf(jdd,"%d",(int)json_object_get_number (root_object,"Jour du début de prêt"));
+    sprintf(mdd,"%d",(int)json_object_get_number (root_object,"Mois du début de prêt")); 
+    sprintf(ydd,"%d",(int)json_object_get_number (root_object,"Année du début de prêt"));
+    (r->date_d)=setTime(jdd,mdd,ydd);
+
+    //date de fin de prêt
+    char *jdf=(char *)malloc(sizeof(char)*3);
+    char *mdf=(char *)malloc(sizeof(char)*3);
+    char *ydf=(char *)malloc(sizeof(char)*5);
+    sprintf(jdf,"%d",(int)json_object_get_number (root_object,"Jour de fin de prêt"));
+    sprintf(mdf,"%d",(int)json_object_get_number (root_object,"Mois de fin de prêt")); 
+    sprintf(ydf,"%d",(int)json_object_get_number (root_object,"Année de fin de prêt"));
+    (r->date_f)=setTime(jdf,mdf,ydf);
+
+    
+    return r;
+}//fonctionne-->tt les champs de la structure doivent être initialisé et enregistrée dasn le fichier JSON pour que le chargement soit possible
+
+void suppr_ress_JSON(char *ID){
+    char path[64];
+    sprintf(path,"../data/Ressources/%s.json",ID);
+    remove(path);
+}//fonctionne
+
+Liste LoadListe_JSON(Liste ls){
+    char line[160];
+ 
+    FILE*f = fopen("../data/Ressources/Liste.dat","r");
+    rewind(f);
+    if(f!= NULL){
+        while (!feof(f)){
+            if(fgets(line,160,f)!=NULL){
+                Ressource r=LoadRessource_JSON(strtok(line,","));
+                ls=push_bl(ls,r);
+           }else{
+               continue;
+            }
+        }
+    }else{
+        fprintf(stderr, "Erreur :Impossible d'ouvrir le fichier.\n");
+		exit(EXIT_FAILURE);
+    }
+    return ls;
+}//fonctionne
+/*----------------------------------------------------------------*/
+
 
 //fonctions sur les listes
 //fonction initialisation liste
 Liste new_list(){
   Liste l =(Liste)malloc(sizeof(struct s_liste));
   if(l== NULL){
-    color("31;1");
     fprintf(stderr, "Erreur : probleme allocation dynamique.\n");
     exit(EXIT_FAILURE);
   }
@@ -231,7 +373,7 @@ void affich_ress(Ressource r){
     if(isDispo(r)==0){
         printf("Statut: Emprunté\n");
         printf("Emprunté par: %s\n", getTakenBy(r));
-        printf("Date de début du pret: ");
+       printf("Date de début du pret: ");
         affichTime(getDateDeb(r));
         printf("\n");
         printf("Date de fin du pret: ");
@@ -247,6 +389,7 @@ void print_list(Liste l){
   if(is_empty_list(l)){
       color("31;1");
       printf("Rien à afficher, la liste est vide.\n");
+      color("37");
 	  return;
 	}
 	Elementl temp = l->head;
@@ -261,7 +404,6 @@ void print_list(Liste l){
 Liste push_bl(Liste l,Ressource r){
 	Elementl element = malloc(sizeof(struct s_elementl));
   if(element == NULL){
-      color("31;1");
       fprintf(stderr, "Erreur : probleme allocation dynamique.\n");
 	  exit(EXIT_FAILURE);
 	}
@@ -287,7 +429,6 @@ Liste push_bl(Liste l,Ressource r){
 Liste push_fl(Liste l,Ressource r){
 	Elementl element = malloc(sizeof(struct s_elementl));
 	if(element == NULL){
-    color("31;1");
 		fprintf(stderr, "Erreur : probleme allocation dynamique.\n");
 		exit(EXIT_FAILURE);
 	}
@@ -339,7 +480,7 @@ Liste pop_bl(Liste l){
 	l->size--;
 
 	return l;
-}
+}//-->good color
 
 //supprimer un élèment en début de liste
 Liste pop_fl(Liste l){
@@ -369,7 +510,7 @@ Liste pop_fl(Liste l){
 	l->size--;
 
 	return l;
-}
+}//-->good color
 
 //permet de vider une liste
 Liste clear_list(Liste l){
@@ -454,12 +595,14 @@ int ress_existing(Liste ls, Ressource r){
 //permet de supprimer une ressource grace à l'indice dans une liste
 void removeRessource(Ressource r,Liste l){
   if(isDispo(r)==1){
+      
     remove_at_l(getIndex(r,l), l);
     return;
   }
   color("31;1");
-	printf("La ressource est empruntée, vous ne pouvez pas la supprimer\n");
-}
+  printf("La ressource est empruntée, vous ne pouvez pas la supprimer\n");
+  color("37");
+}//-->good c
 
 //getters sur les listes
 
@@ -502,8 +645,6 @@ Liste empruntRessource(Personne p,Liste ressources){
 	return emprunt;
 }
 
-
-
 //permet de pouvoir sélectionner une ressource qui nous appartient
 void gererDropRessource(Personne p, Liste l){
   int choix;
@@ -530,11 +671,12 @@ void gererDropRessource(Personne p, Liste l){
   if(r == NULL || haveRessource(p, r) == 0){
     color("31;1");
     printf("Numéro incorrect. Réessayez!");
+    color("37");
     gererDropRessource(p, l);
     return;
   }
   modifRessource(p, r,l);
-}
+}//-->good c
 
 
 //permet de gérer les ressources empruntées
@@ -563,11 +705,12 @@ void gererTakeRessource(Personne p, Liste l){
   if(r == NULL || isDispo(r) == 1){
     color("31;1");
     printf("Numéro incorrect. Réessayez!\n");
+    color("37");
     gererTakeRessource(p, l);
     return;
   }
   infoTakeRessource(p,r,l);
-}
+}//-->good c
 
 
 //fonction pour emprunter une ressource
@@ -594,18 +737,21 @@ void takeRessource(Personne p, Liste l){
   if(r == NULL || isDispo(r) == 0){
     color("31;1");
     printf("Numéro incorrect. Réessayez!");
+    color("37;1");
     takeRessource(p, l);
     return;
   }
   color("32;1");
   printf("Vous venez d'emprunter %s pour 6 semaines. \n", getNom(r));
+  color("37;1");
   setTakenBy(r, getIDPers(p));
 
   setDateFin(r, getDelayedTime());
   setDateDeb(r, getActualTime());
+  print_ress_JSON(r);
 
   welcomeUser(p, l);
-}
+}//-->good c
 
 
 //fonction qui récupère une ressource à partir d'un indice dans une liste de ressources.
@@ -633,6 +779,7 @@ void searchRessourceByDate(Personne p, Liste ressources){
 
   color("36;1");
   printf("Entrez une nouvelle date au format JJ/MM/AAAA :\n");
+  color("37;1");
   scanf("%02d/%02d/%4d",&day,&month,&year);
   
   viderBuffer();
@@ -646,7 +793,8 @@ void searchRessourceByDate(Personne p, Liste ressources){
   Liste search = getRessource_Date(date, ressources);
   if(list_size(search) == 0){
     color("31;1");
-    printf("Désolée rien ne correspond à votre recherche... Réessayez!\n");
+    printf("Désolé rien ne correspond à votre recherche... Réessayez!\n");
+    color("37;1");
     searchRessource(p, ressources);
     return;
   }
@@ -669,12 +817,13 @@ void searchRessourceByDate(Personne p, Liste ressources){
   if(r == NULL){
     color("31;1");
     printf("Numéro incorrect. Réessayez!");
+    color("37;1");
     searchRessource(p, ressources);
     return;
   }
   affich_ress(r);
   welcomeUser(p,  ressources);
-}
+}//-->good c
 
 //fonction qui permet de rechercher une ressource par le/la type/nom/date
 void searchRessource(Personne p, Liste ressources){
@@ -690,6 +839,7 @@ void searchRessource(Personne p, Liste ressources){
   printf("(3) Date.\n");
   color("36;1");
   printf("Selectionner votre choix de recherche: \n");
+  color("37;1");
   scanf("%d",&choix);
   if(choix == 3){
     viderBuffer();
@@ -733,6 +883,7 @@ void searchRessource(Personne p, Liste ressources){
   if(list_size(search)==0){
     color("31;1");
     printf("Désolé rien ne correspond à votre recherche... Réessayez !\n");
+    color("37;1");
     searchRessource(p, ressources);
     return;
   }
@@ -755,12 +906,13 @@ void searchRessource(Personne p, Liste ressources){
   if(r == NULL){
     color("31;1");
     printf("Numéro incorrect. Réessayez!");
+    color("37;1");
     searchRessource(p, ressources);
     return;
   }
   affich_ress(r);
   welcomeUser(p, ressources);
-}
+}//-->good c
 
 
 //fonction qui permet de récuperer une ressource avec un ID
@@ -834,6 +986,7 @@ void afficherActions(Personne p, Liste l){
 
   color("36;1");
   printf("Entrer une nouvelle date au format JJ/MM/AAAA :\n");
+  color("37;1");
   scanf("%02d/%02d/%4d",&day,&month,&year);
   
   viderBuffer();
@@ -845,6 +998,7 @@ void afficherActions(Personne p, Liste l){
   Date date = setTime(sday, smonth, syear);
   color("36;1");
   printf("Actions à la date: ");
+  color("37;1");//à voir
   affichTime(date);
   printf("\n");
   for(int i =0; i<list_size(l); i++){
@@ -870,5 +1024,4 @@ void afficherActions(Personne p, Liste l){
       break;
   }
 }
-
 

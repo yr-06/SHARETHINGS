@@ -1,11 +1,7 @@
 #ifndef __RESSOURCES_H__
 #define __RESSOURCES_H__
 
-typedef int Bool ;  //définition du type booléen,
 
-#define false  0 /* affectation des valeurs conventionnelles*/
-
-#define true  1
 #include "personne.h"
 #include "date.h"
 #include "annuaire.h"
@@ -75,5 +71,13 @@ Ressource getRessource_ID(char * ID, Liste l);
 Liste getRessource_Type (char * type, Liste l);
 Liste getRessource_Nom (char * nom, Liste l);
 Liste getRessource_Date (Date date, Liste l);
+
+
+void print_ress_JSON(Ressource r);
+void addRessListe_JSON(Ressource r);
+void updateListe_JSON(Liste ls);
+Ressource LoadRessource_JSON(char *ID);
+void suppr_ress_JSON(char *ID);
+Liste LoadListe_JSON(Liste ls);
 
 #endif

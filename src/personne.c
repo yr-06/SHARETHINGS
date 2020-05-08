@@ -505,12 +505,16 @@ void modif_persAdmin(Personne p){
     return;
 }//fonctionne-->good c
 /*----------------------------------------------------------------*/
-/*void modif_persUser(Personne p){
+void modif_persUser(Personne p){
     int i;
+    color("33;1");
     printf("\n\n Que voulez-vous modifier ?\n");
-    printf("Modifier mot de passe: 1\n Modifier adresse mail: 2\n");
-    printf(" Modifier numéro de téléphone: 3\nQuitter: 0\n");
+    color("37");
+    printf("(1)Modifier mot de passe\n (2)Modifier adresse mail\n");
+    printf("(3)Modifier numéro de téléphone \n (0)Quitter\n");
+    color("33;1");
     printf(" \n\nSaisissez votre choix : \n");
+    color("37");
     scanf("%d",&i);
     switch(i){
         case 0:
@@ -533,7 +537,9 @@ void modif_persAdmin(Personne p){
             break;
         }
     int u;
+    color("33;1");
     printf(" Continuer les modifications ?\n OUI=1 ?\t NON=0 ?\n");
+    color("37");
     scanf("%d",&u);
     if(u==1){
         CLEAR_STDIN

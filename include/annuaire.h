@@ -44,6 +44,8 @@ Personne search_pers(Annuaire annu, char * id);
 Annuaire modifAnnuaireAdmin(int i,Annuaire annu,Personne temp);
 Annuaire modifAnnuaireUser(int i,Annuaire annu,Personne temp);
 
+Personne getPersonne_int(int i,Annuaire annu);
+
 Annuaire createAccount(Annuaire annu);
 
 Annuaire LoadAnnu_JSON(Annuaire annu);

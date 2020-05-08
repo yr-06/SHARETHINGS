@@ -13,6 +13,10 @@ Date setDelayedTime(Date d);
 Date getDelayedTime();
 Date getActualTime();
 
+int getDayofDate(Date d);
+int getMonthofDate(Date d);
+int getYearofDate(Date d);
+
 //fonctions :
 Date initDate();
 void affichTime(Date date);
