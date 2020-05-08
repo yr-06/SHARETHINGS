@@ -556,21 +556,23 @@ Annuaire createAccount(Annuaire annu){
         printf("\nSi vous rencontrez des problèmes avec votre compte veuillez vous réfferer à un administrateur\n");
         color("37");
         annu=add_pers(annu,p); 
+	break;
       case 1:
         CLEAR_STDIN
         color("33;1");
         printf("\nSi vous rencontrez des problèmes avec votre compte veuillez vous réfferer à un administrateur\n");
         color("37");
         annu=add_pers(annu,p); 
+	break;
       default:
         CLEAR_STDIN
         color("31;1");
         printf("\nERROR--Vous allez être redirigé\n");
         color("37");
         free(p);
-        annu=createAccount(annu);
+        break;
     }
-	return annu;
+    return annu;
 }//fonctionne-->good c
 
 //fonctions pour le JSON
