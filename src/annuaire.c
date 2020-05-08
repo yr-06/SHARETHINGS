@@ -582,7 +582,11 @@ Annuaire LoadAnnu_JSON(Annuaire annu){
 	rewind(f);
         while (!feof(f)){
             if(fgets(line,160,f)!=NULL){
-                Personne p=LoadPersonne_JSON(strtok(line,","));
+		char * strToken = strtok(line, ",");
+		if(strToken == NULL || strcmp(strToken, "") == 0 || strcmp(strToken, " ") == 0 || strlen(strToken) < 6){
+		   continue;
+		}
+                Personne p=LoadPersonne_JSON(strToken);
                 annu=push_ba(annu,p);
            }else{
                continue;
@@ -596,7 +600,7 @@ Annuaire LoadAnnu_JSON(Annuaire annu){
 }//fonctionne
 
 void updateAnnu_JSON(Annuaire annu){
-	FILE * file = fopen("./data/Personne/Annuaire.dat","w+");
+    FILE * file = fopen("./data/Personne/Annuaire.dat","w+");
     //fseek(file, 0, SEEK_SET);
     rewind(file);
     Elementa current_a=annu->head;
