@@ -182,7 +182,7 @@ char * generateID(Liste ressources){
 //fonctions  JSON pour ressources.c---> surtt ne pas modifier
 void print_ress_JSON(Ressource r){
     char path[64];
-    sprintf(path,"../data/Ressources/%s.json",getID_r(r));
+    sprintf(path,"./data/Ressources/%s.json",getID_r(r));
     
     JSON_Value *root_value = json_value_init_object();
     JSON_Object *root_object = json_value_get_object(root_value);
@@ -224,13 +224,13 @@ void print_ress_JSON(Ressource r){
 
 void addRessListe_JSON(Ressource r){
     FILE *Listef = NULL;
-    Listef = fopen("../data/Ressources/Liste.dat","a");
+    Listef = fopen("./data/Ressources/Liste.dat","a");
     fprintf(Listef,"%s,%s,%s,%s \n",strtok(getID_r(r),"\n"),strtok(getType(r),"\n"),strtok(getNom(r),"\n"),strtok(r->dropBy,"\n"));
     fclose(Listef);
 }//fonctionne
 
 void updateListe_JSON(Liste ls){
-	FILE * file = fopen("../data/Ressources/Liste.dat","w+");
+	FILE * file = fopen("./data/Ressources/Liste.dat","w+");
     rewind(file);
     Elementl current_l=ls->head;
     int i;
@@ -254,7 +254,7 @@ Ressource LoadRessource_JSON(char *ID){
     JSON_Value *root_value;
     JSON_Object *root_object;
     char path[64];
-    sprintf(path,"../data/Ressources/%s.json",ID);
+    sprintf(path,"./data/Ressources/%s.json",ID);
     root_value = json_parse_file(path);
     root_object = json_value_get_object(root_value);
     
@@ -300,14 +300,14 @@ Ressource LoadRessource_JSON(char *ID){
 
 void suppr_ress_JSON(char *ID){
     char path[64];
-    sprintf(path,"../data/Ressources/%s.json",ID);
+    sprintf(path,"./data/Ressources/%s.json",ID);
     remove(path);
 }//fonctionne
 
 Liste LoadListe_JSON(Liste ls){
     char line[160];
  
-    FILE*f = fopen("../data/Ressources/Liste.dat","r");
+    FILE*f = fopen("./data/Ressources/Liste.dat","r");
    
     if(f!= NULL){
 	rewind(f);
