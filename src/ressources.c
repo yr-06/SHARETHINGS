@@ -314,11 +314,10 @@ Liste LoadListe_JSON(Liste ls){
         while (!feof(f)){
             if(fgets(line,160,f)!=NULL){
 		char * strToken = strtok(line, ",");
-		printf("%s", strToken);
 		if(strToken == NULL){
 			break;
 		}
-                Ressource r=LoadRessource_JSON(strToken));
+                Ressource r=LoadRessource_JSON(strToken);
                 ls=push_bl(ls,r);
            }else{
                continue;
