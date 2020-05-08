@@ -8,7 +8,6 @@
 #include "../include/chiffrement.h"
 #include "../include/annuaire.h"
 #include "../include/parson.h"
-
 #ifndef CLEAR_STDIN
     #define CLEAR_STDIN { int c; while((c = getchar()) != '\n' && c != EOF); }
 #endif
@@ -198,34 +197,34 @@ Annuaire insert_at(int i,Personne p,Annuaire annu){
     assert((i<=annu->size)&&(i>=0));
     int t=(annu->size)-1;
     if(i==0){
-         printf("inch'allah\n");
+        
         return (push_fa(annu,p));
     }if(i==t||i==annu->size){
-        printf("ça passe\n");
+       
        return (push_ba(annu,p));
     }else{
-        printf("on y est presque\n");
+       
         Elementa a= (Elementa)malloc(sizeof(struct s_elementa));
-        printf("allez\n");
+        
         a->p=p;
-        printf("encore un effort\n");
+        
         int j=0;
-        printf("on y croit\n");
+      
         Elementa current_a=annu->head;
-        printf("si proche\n");
+       
         for(j=0;j<i;j++){
-            printf("c parti pour un tour ou %d\n",j);
+            
             current_a=current_a->next;
         }
         current_a->previous->next=a;
-        printf("yas\n");
+       
         a->previous=current_a->previous;
-        printf("bzartek\n");
+        
         current_a->previous=a;
-        printf("c parti pour un tour ou %d\n",j);
+       
         a->next=current_a;
         annu->size++;
-        printf("enfin !\n");
+      
         return annu;
     }
 }//fonctionne-permet d'ajouter un Elementa à un indice précis de l'Annuaire
@@ -346,7 +345,6 @@ Annuaire add_pers(Annuaire annu,Personne pers){
     if(annu->size==0){
         CLEAR_STDIN
         setNumAccount(pers,createNumAccount(annu));
-        printf("N° de compte=%d\n",getNumAccount(pers));//pour tester
         setIDPers(pers,createIDPers(pers));
         color("32;01");
         printf("Le compte a été créé avec succès\n");
@@ -363,7 +361,6 @@ Annuaire add_pers(Annuaire annu,Personne pers){
     case 0 :
         CLEAR_STDIN
         setNumAccount(pers,createNumAccount(annu));
-        printf("N° de compte=%d\n",getNumAccount(pers));
         setIDPers(pers,createIDPers(pers));
         color("32;01");
         printf("Le compte a été créé avec succès\n");
@@ -381,11 +378,6 @@ Annuaire add_pers(Annuaire annu,Personne pers){
         color("37");
         CLEAR_STDIN
         exit(EXIT_FAILURE);
-        
-    /*case 2:
-        printf("Cet utilisateur existe déjà");
-        return annu;
-        break;*/
     case 3:
         CLEAR_STDIN
         color("31;1");
@@ -432,21 +424,17 @@ Annuaire remove_pers(Annuaire annu, Personne pers){
 /*----------------------------------------------------------------*/
 Personne search_pers(Annuaire annu, char * c){
     Personne pers=initPers();
-    printf("on commence\n");
+    
      int i;
      int j=annu->size;
-     printf("size annu=%d",j);
+    
      Elementa current_a=annu->head;
-     printf("on continue\n");
+   
      for (i=0;i<j;i++){
          if(strcmp(c,getIDPers(current_a->p))==0){
-            printf("tourID %d\n",i);
-            printf("strcmpID=%d\n",strcmp(c,getIDPers(current_a->p)));
             pers=current_a->p;
             return pers;
          } if(strcmp(c,getMail(current_a->p))==0){
-            printf("tourMail %d\n",i);
-            printf("strcmpMail=%d\n",strcmp(c,getMail(current_a->p)));
             pers=current_a->p;
             return pers;
          }
@@ -466,7 +454,6 @@ Annuaire modifAnnuaireAdmin(int i,Annuaire annu,Personne temp){
             printf("Modification effectuée avec succès\n");
             color("37");
             affich_pers(temp);
-            printf("ça commence à coincé\n");
             print_pers_JSON(temp);
             return insert_at(i,temp,annu);
         case 3:
@@ -543,7 +530,6 @@ Personne getPersonne_int(int i,Annuaire annu){
     }
 	return current_a->p;
 }
-
 Annuaire createAccount(Annuaire annu){
     Personne p=create_pers();
     affich_pers(p);
@@ -615,4 +601,6 @@ void updateAnnu_JSON(Annuaire annu){
     }
     fclose(file);
 }//fonctionne
+
+
 

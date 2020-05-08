@@ -60,7 +60,6 @@ void init_mtp_admin(){
     printf("Veuillez entrer le nouveau mot de passe administrateur:\n");
     fgets(pwd,65,stdin);
     fprintf(f,"%s",chiffrementMdp(pwd));
-    printf("cryptage=%s",chiffrementMdp(pwd));
 
     color("32;01");
     printf("Mot de passe changé avec succès\n");
@@ -133,7 +132,13 @@ void transfererRessource(Personne p, Liste l, Annuaire a){ // dans annuaire.c
   printf("Vous donnez la ressource à %s %s.\n", getName(t),getPrenom(t));
   setTakenBy(r, getIDPers(t));
   return;
-}*/
+}*-->où les mettre par rapport aux header?*/
+
+
+
+
+
+
 
 void welcomeAdmin(Annuaire annu,Liste ls,Personne p){
     int i;
@@ -147,7 +152,7 @@ void welcomeAdmin(Annuaire annu,Liste ls,Personne p){
         color("33;1");
         printf("Vous allez être redirigé vers le menu utilisateur\n");
         color("37");
-//         welcomeUser(p,ls);
+        welcomeUser(p,ls);
         break;
     case 1:
         color("33;1");
@@ -202,9 +207,7 @@ void menuAdmin(Annuaire annu,Liste ls,Personne p){
                     menuAdmin(annu,ls,p);
                 }else{
                     CLEAR_STDIN
-                    //messAurevoir();
-                    messQuit();
-                    messByeAdmin(p);
+                    messAurevoir();
                     return;
                 }   
             }
@@ -283,7 +286,7 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
         }else{
             CLEAR_STDIN
             color("31;1");
-            printf("Il n'existe pas de compte associé à cet email ou identifiant.\n");
+            printf("Il n'existe pas de compte associé à cet identifiant.\n");
             color("37");
             choix_admin(annu,ls,p);
         }
@@ -292,7 +295,7 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
         CLEAR_STDIN
         char *n;
         n=(char*)malloc(sizeof(char)*33);
-        printf("Veuillez entrer l'identifiant ou l'e-mail du compte que vous souhaitez supprimer:\n");
+        printf("Veuillez entrer l'identifiant du compte que vous souhaitez supprimer:\n");
         scanf("%s",n);
         Personne pa=search_pers(annu,n);
         if (pa!=NULL){
@@ -313,7 +316,7 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
         }else{
             CLEAR_STDIN
             color("31;1");
-            printf("Il n'existe pas de compte associé à cet email ou identifiant.\n");
+            printf("Il n'existe pas de compte associé à cet identifiant.\n");
             color("37");
             choix_admin(annu,ls,p);
          }
@@ -322,7 +325,7 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
         CLEAR_STDIN
         char*o;
         o=(char*)malloc(sizeof(char)*33);
-        printf("Veuillez entrer l'identifiant ou l'e-mail du compte que vous souhaitez afficher:\n");
+        printf("Veuillez entrer l'identifiant du compte que vous souhaitez afficher:\n");
         scanf("%s",o);
         Personne pt=search_pers(annu,o);
         if (pt!=NULL){
@@ -332,7 +335,7 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
         }else{
             CLEAR_STDIN
             color("31;1");
-            printf("Il n'existe pas de compte associé à cet email ou identifiant.\n");
+            printf("Il n'existe pas de compte associé à cet identifiant.\n");
             color("37");
             choix_admin(annu,ls,p);
         }
@@ -351,18 +354,18 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
         CLEAR_STDIN
         char*q;
         q=(char*)malloc(sizeof(char)*33);
-        printf("Veuillez entrer l'identifiant ou l'e-mail du compte dont vous souhaitez transférer la ressource:\n");
+        printf("Veuillez entrer l'identifiant du compte dont vous souhaitez transférer la ressource:\n");
         scanf("%s",q);
         printf("q=%s\n",q);
         Personne pts=search_pers(annu,q);
         if (pat!=NULL){
             CLEAR_STDIN
-//             transfererRessource(pat,ls,annu);
+            transfererRessource(pat,ls,annu);
             break;
         }else{
             CLEAR_STDIN
             color("31;1");
-            printf("Il n'existe pas de compte associé à cet email ou identifiant.\n");
+            printf("Il n'existe pas de compte associé à cet identifiant.\n");
             color("37");
             choix_admin(annu,ls,p);
         }
@@ -370,9 +373,9 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
         //Basculer vers le menu utilisateur:8
         CLEAR_STDIN
         color("33;1");
-        printf("Vous allez être redirigé vers le menu utilisateur\n");
+        printf("\nVous allez être redirigé vers le menu utilisateur\n");
         color("37");
-//         welcomeUser(p,ls);
+        welcomeUser(p,ls);
     default :
         printf("Choix invalide.Réessayer ?\n OUI=1 ?\t NON=0 ?\n");
         int v;

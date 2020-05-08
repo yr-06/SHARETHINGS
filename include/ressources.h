@@ -72,7 +72,9 @@ Liste getRessource_Type (char * type, Liste l);
 Liste getRessource_Nom (char * nom, Liste l);
 Liste getRessource_Date (Date date, Liste l);
 
+Ressource selectionRessource(Personne p, Liste l, Annuaire a);
 
+Personne selectionPersonne(Personne p, Liste l, Annuaire a);
 void print_ress_JSON(Ressource r);
 void addRessListe_JSON(Ressource r);
 void updateListe_JSON(Liste ls);

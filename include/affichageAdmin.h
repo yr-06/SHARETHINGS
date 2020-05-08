@@ -1,9 +1,7 @@
 #ifndef __AFFICHAGEADMIN_H__
 #define __AFFICHAGEADMIN_H__
 
-#include "personne.h"
-#include "annuaire.h"
-#include "ressources.h"
+// #include "ressources.h"
 
 void messwelcomeAdmin(Personne p);
 void messByeAdmin(Personne p);

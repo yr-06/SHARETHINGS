@@ -1,24 +1,35 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h>                        
 #include <string.h>
 #include <crypt.h>
 #include <unistd.h>
-#include "../include/admi.h"
-#include "../include/chiffrement.h"
+#include "../include/ressources.h"
+#include "../include/welcome.h"
+#include "../include/personne.h"
 #include "../include/annuaire.h"
+
 
 #ifndef CLEAR_STDIN
     #define CLEAR_STDIN { int c; while((c = getchar()) != '\n' && c != EOF); }
 #endif
 
 int main ( int argc, char *argv []){
-    Personne p=initPers();
+   
     Annuaire annu=new_annu();
     Liste ls=new_list();
-    ls=LoadListe(ls);
-    annu=LoadAnnu(annu);
+    
+    ls=LoadListe_JSON(ls);
+    annu=LoadAnnu_JSON(annu);
+    
     affichageGen(ls,annu);
-    update
+
+    updateListe_JSON(ls);
+    updateAnnu_JSON(annu);
+
+    ls=clear_list(ls);
+    annu=clear_annu(annu);
+    free(ls);
+    free(annu);
    
     return 0;
 

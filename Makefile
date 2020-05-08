@@ -1,5 +1,5 @@
 CC= gcc
-CFLAGS= -Wall -g #-std=c11
+CFLAGS= -Wall -g #-std=c11 -lcrypt
 LIB=lib/
 LDFLAGS= -lcrypt 
 INC=include/
@@ -9,7 +9,7 @@ OBJ= $(SRC:.c=.o)
 
 all : $(EXEC)
 
-$(EXEC) : main.c
+$(EXEC) : src/main.c
 	$(CC) $< -o $@ $(CFLAGS) $(LDFLAGS) -I $(INC) -L $(LIB)
 
 clean:

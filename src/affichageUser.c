@@ -104,7 +104,7 @@ void modifRessource(Personne p , Ressource r, Liste l){
         break;
     
     }
-    print_ress_JSON(r);
+    
     gererDropRessource(p, l);
   }
 }
@@ -172,7 +172,8 @@ void modifDonneesPers(Personne p, Liste ressources){
 
 	}
 
-}//-->see color + add modifyers de personne.c
+}
+
 
 
 void addRessourceAtListe(Personne p, Liste ressources){
@@ -183,10 +184,14 @@ void addRessourceAtListe(Personne p, Liste ressources){
   color("37;1");
   setNom(r, getString(32, "Entrer le nom de votre ressource: \n"));
   setType(r , getString(32, "Entrer le type de votre ressource: \n"));
+  setTakenBy(r,"");
   setDropBy(r, getIDPers(p));
   setCreateDate(r, getActualTime());
+  
+  
   print_ress_JSON(r);
   addRessListe_JSON(r);
+  
   color("32;1");
   printf("Vous avez bien ajouté la ressource %s .\n", getNom(r));
   
@@ -240,19 +245,3 @@ void welcomeUser(Personne p, Liste ressources){
       break;
   }
 }
-int main ( int argc, char *argv []){
-    //Annuaire annu=new_annu();
-//     annu=LoadAnnu_JSON(annu);
-    Liste ls=new_list();
-    Personne p=LoadPersonne_JSON("IDP1000");
-//     annu=createAccount(annu);
-//     annu=createAccount(annu);
-    welcomeUser(p,ls);
-    ls=clear_list(ls);
-//     annu=clear_annu(annu);
-    free(ls);
-    free(p);
-//     free(annu);
-}
-
-

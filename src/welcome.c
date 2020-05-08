@@ -41,35 +41,32 @@ void messAurevoir(){
 
 //fonction de connexion
 void connexionPersonne(Liste ressources, Annuaire annu){
-  char * email_id;
+    char * email_id;
   char * pwd;
-
+ 
   email_id =(char*)malloc(sizeof(char)*33);
   pwd = (char*)malloc(sizeof(char)*65);
   color("37;1");
   printf("Pour vous connecter : \n ");
-  printf("Entrez votre email ou votre identifiant de compte: \n");
-  fgets(email_id,33,stdin);
-  //scanf("%s", email_id);
+  printf("Entrez votre identifiant de compte: \n");
+  scanf("%s", email_id);
   viderBuffer();
   printf("Entrez votre mot de passe: \n");
-  fgets(pwd,65,stdin);
-  //scanf("%s", pwd);
+  scanf("%s", pwd);
   viderBuffer();
   Personne p = search_pers(annu, email_id);
   if(p == NULL){
     int i;
     color("31;1");
-    printf("Il n'existe pas de compte associé à cet email ou identifiant. Réessayez ?\nOUI=1 ?\tNON=0?\n");
+    printf("Il n'existe pas de compte associé à cet identifiant. Réessayez ?\nOUI=1 ?\tNON=0?\n");
     color("37");
     scanf("%d",&i);
     if(i==1){
       free(email_id);
       free(pwd);
       connexionPersonne(ressources, annu);
-    }else{
-      return;
     }
+    return;
   }
   if(strcmp(getPwd(p),chiffrementMdp(pwd)) != 0){
     int d;
@@ -81,21 +78,22 @@ void connexionPersonne(Liste ressources, Annuaire annu){
       free(email_id);
       free(pwd);
       connexionPersonne(ressources, annu);
-    }else{
-      return;
     }
+    return;
   }
   if(getAutor(p) == 1){
     welcomeAdmin(annu,ressources,p);
   } else{
     welcomeUser(p,ressources);
   }
+  
 }
 
 void messChoix(Liste ressources, Annuaire annu){
   color("34:1");
   int choix;
   printf("\nBienvenue sur le site ShareThings, votre site préféré de dépôt et d'emprunt de ressources ! \n");
+  
   printf("Choix d'options : \n");
   color("37;1");
   printf("\n");
@@ -141,3 +139,5 @@ void affichageGen(Liste ressources,Annuaire annu){
   messBienvenue();
   messChoix(ressources, annu);
 }
+
+
