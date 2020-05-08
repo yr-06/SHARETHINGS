@@ -316,7 +316,7 @@ Liste LoadListe_JSON(Liste ls){
 		printf("Line: <%s>", line);
 		char * strToken = strtok(line, ",");
 		printf("strToken: <%s>", strToken);
-		if(strToken == NULL){
+		if(strToken == NULL || strcmp(strToken, "") == 0 || strcmp(strToken, " ") == 0 || strlen(strToken) < 7){
 		   continue;
 		}
                 Ressource r=LoadRessource_JSON(strToken);
