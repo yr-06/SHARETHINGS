@@ -12,7 +12,7 @@ SRC = $(wildcard src/*.c)
 
 MOVE = mv
 
-EXC = ./main.exe
+EXC = ./src/main.exe
 
 LIB = lib/
 

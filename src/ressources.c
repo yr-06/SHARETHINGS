@@ -308,8 +308,9 @@ Liste LoadListe_JSON(Liste ls){
     char line[160];
  
     FILE*f = fopen("../data/Ressources/Liste.dat","r");
-    rewind(f);
+   
     if(f!= NULL){
+	rewind(f);
         while (!feof(f)){
             if(fgets(line,160,f)!=NULL){
                 Ressource r=LoadRessource_JSON(strtok(line,","));
@@ -871,13 +872,16 @@ void searchRessource(Personne p, Liste ressources){
   color("37;1");
   printf("Entrer votre recherche: \n");
   viderBuffer();
+
   nom_type =(char*)malloc(sizeof(char)*128);
+  char * temp = (char*)malloc(sizeof(char)*128);
   strcpy(nom_type, "");
   char c = ' '; 
   while(strlen(nom_type)<128 && c != '\n'){
     scanf("%c", &c);
     if(c!='\n'){
-      sprintf(nom_type, "%s%c", nom_type, c);
+      strcpy(temp, nom_type);
+      sprintf(nom_type, "%s%c", temp, c);
     }
   }
   switch(choix){

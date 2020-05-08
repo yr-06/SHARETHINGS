@@ -9,6 +9,7 @@
 #include "../include/annuaire.h"
 #include "../include/ressources.h"
 #include "../include/parson.h"
+#include "../include/affichageAdmin.h"
 #ifndef CLEAR_STDIN
     #define CLEAR_STDIN { int c; while((c = getchar()) != '\n' && c != EOF); }
 #endif

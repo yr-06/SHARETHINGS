@@ -16,6 +16,8 @@
 
 char * getString(int size, char * request) {
   char * phrase = (char*)malloc(sizeof(char)*size);
+ 
+ char * temp = (char*)malloc(sizeof(char)*size);
   strcpy(phrase, "");
   char c = ' ';
 
@@ -23,7 +25,8 @@ char * getString(int size, char * request) {
   while(strlen(phrase)<size && c != '\n'){
     scanf("%c", &c);
     if(c!='\n'){
-      sprintf(phrase, "%s%c", phrase, c);
+      strcpy(temp, phrase);
+      sprintf(phrase, "%s%c", temp, c);
     }
   }
   return phrase;
