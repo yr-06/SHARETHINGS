@@ -53,7 +53,7 @@ void messQuit(){
 }
 
 void init_mtp_admin(){
-    FILE *f=fopen("../data/Mtdp_admin.txt", "w+");
+    FILE *f=fopen("./data/Mtdp_admin.txt", "w+");
     
     char*pwd;
     pwd=(char*)malloc(sizeof(char)*65);
@@ -101,7 +101,7 @@ void welcomeAdmin(Annuaire annu,Liste ls,Personne p){
 }//-->good color
 
 void menuAdmin(Annuaire annu,Liste ls,Personne p){
-    FILE *f=fopen("../data/Mtdp_admin.txt", "r");
+    FILE *f=fopen("./data/Mtdp_admin.txt", "r");
     if(f!=NULL){
         CLEAR_STDIN
         char *mdp;
@@ -111,13 +111,8 @@ void menuAdmin(Annuaire annu,Liste ls,Personne p){
         
         printf("\nVeuillez entrer le mot de passe administrateur :\n");
         fgets(c,65,stdin);
-        printf("c=%s\n",c);// à utiliser pour tester fct°
             
         fscanf(f,"%65s",mdp);
-        printf("Mdp_admin=%s\n",mdp);// à utiliser pour tester fct°
-        
-           
-        printf("strcmp=%d\n",strcmp(mdp, chiffrementMdp(c)));// à utiliser pour tester fct°
        
         int n=strcmp(mdp,chiffrementMdp(c));
         switch(n){
