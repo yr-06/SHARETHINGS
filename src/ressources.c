@@ -314,6 +314,7 @@ Liste LoadListe_JSON(Liste ls){
         while (!feof(f)){
             if(fgets(line,160,f)!=NULL){
 		char * strToken = strtok(line, ",");
+		printf("%s", strToken);
 		if(strToken == NULL){
 			break;
 		}
