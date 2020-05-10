@@ -643,7 +643,7 @@ Personne selectionPersonne(Personne p, Liste l, Annuaire a){
 
   int choix;
   Elementa current = a->head;
-  printf("Selectionnez une des ressources suivantes. \n");
+  printf("Selectionnez une des personnes suivantes. \n");
   printf("(-1) Revenir en arrière.\n");
   for(int i = 0; i < annuaire_size(a); i++){
     printf("( %d) %s,%s\n",i,getName(current->p),getPrenom(current->p));
@@ -654,13 +654,8 @@ Personne selectionPersonne(Personne p, Liste l, Annuaire a){
       choix_admin(a,l,p);
     return NULL;
   }
-  Personne t = getPersonne_int(choix,a); // METTRE TA FONCTION QUI PERMET DE RECUPERER UNE PERSONNE A PARTIR D'UN INDEX DANS UN ANNUAIRE
-  if(t == NULL){ // SI NOMBRE INCORRECT, REGARDE NOS FONCTIONS getRessource à la limite
-    color("31;1");
-    printf("Numéro incorrect. Réessayez!");
-    color("37");
-    return selectionPersonne(p, l, a);
-  }else{
+  Personne t = getPersonne_int(choix,a); 
+  if(t == NULL){ 
     color("31;1");
     printf("Numéro incorrect. Réessayez!");
     color("37");

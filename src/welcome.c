@@ -68,6 +68,7 @@ void connexionPersonne(Liste ressources, Annuaire annu){
     }
     return;
   }
+  
   if(strcmp(getPwd(p),chiffrementMdp(pwd)) != 0){
     int d;
     color("31;1");

@@ -37,6 +37,13 @@ struct s_pers {
 };
 
 
+void viderBuffer2() {
+    int c = 0;
+    while (c != '\n' && c != EOF) {
+        c = getchar();
+    }
+}
+
 //getters
 
 int getNumAccount(Personne p){
@@ -83,7 +90,7 @@ void setNumAccount(Personne p, int i){
 /*----------------------------------------------------------------*/
 void setAutor(Personne p){
     FILE *f=fopen("./data/Mtdp_admin.txt", "r");
-    CLEAR_STDIN
+    viderBuffer2();
     char *cmp;
     char *mdp_admin;
     cmp=(char *)malloc(sizeof(char)*65);
@@ -98,10 +105,11 @@ void setAutor(Personne p){
     printf("\nVeuillez choisir l'habilitation du compte :\n");
     color("37");
     scanf("%d",&i);
+    viderBuffer2();
     switch(i)
     {
         case 1:
-            CLEAR_STDIN
+            
             p->a=0;
             color("32;1");
             printf("Vous aves choisi d'être USER\n");
@@ -112,11 +120,12 @@ void setAutor(Personne p){
             cmp=NULL;
             return;
         case 2:
-            CLEAR_STDIN
+            
             color("35;1");
             printf("Veuillez entrer le mot de passe administrateur :\n");
             color("37");
-            fgets(cmp,65,stdin);
+            scanf("%s",cmp);
+	    viderBuffer2();
 
             fscanf(f,"%65s",mdp_admin);
             if(strcmp(mdp_admin, chiffrementMdp(cmp))==0){
@@ -129,7 +138,7 @@ void setAutor(Personne p){
                return;
             }//pb avec strcmp-->initialiser le mot de passe ds le fichier
             else{
-                CLEAR_STDIN
+                
                 color("31;1");
                 printf("\nERRROR--Vous allez être redirigé\n");
                 color("37");
@@ -141,7 +150,6 @@ void setAutor(Personne p){
             }
             break;
         default:
-            CLEAR_STDIN
             color("31;1");
             printf("\nERRROR--Vous allez être redirigé\n");
             color("37");
@@ -338,57 +346,53 @@ Personne initPers(){
 /*----------------------------------------------------------------*/
 Personne create_pers(){
     Personne pers=initPers();
-    
     pers->num_account=0;
-    
-    CLEAR_STDIN
+
     char *name;
     name=(char*)malloc(sizeof(char)*41);
     printf("\nVeuillez entrer votre nom en MAJUSCULES:\n");
-    fgets(name,41,stdin);
+    scanf("%s",name);
+    viderBuffer2();
     setName(pers,name);
-   
-    
-    CLEAR_STDIN
+
     char *prenom;
     prenom=(char*)malloc(sizeof(char)*33);
     printf("Veuillez entrer votre prénom :\n");
-    fgets(prenom,33,stdin);
+    scanf("%s",prenom);
+    viderBuffer2();
     setPrenom(pers,prenom);
-   
-   
-    CLEAR_STDIN
-    
+
     char *date=(char *)malloc(sizeof(char)*21);
     int day,month,year;
-    printf("Veuillez entrer votre date de naissance au format JJ-MM-AAAA :\n");
-    scanf("%02d-%02d-%4d",&day,&month,&year);
+    printf("Veuillez entrer votre date de naissance au format JJ/MM/AAAA :\n");
+    scanf("%02d/%02d/%4d",&day,&month,&year);
     sprintf(date,"%d/%d/%d",day,month,year);
+    viderBuffer2();
     setNaiss(pers,date);
-   
-    CLEAR_STDIN
+
+    
     char *pwd;
     pwd=(char*)malloc(sizeof(char)*65);
     printf("Veuillez entrer votre mot de passe:\n");
-    fgets(pwd,65,stdin);
+    scanf("%s",pwd);
+    viderBuffer2();
     setPwd(pers,chiffrementMdp(pwd));
-  
-    CLEAR_STDIN
+
     char *mail;
     mail=(char*)malloc(sizeof(char)*33);
     printf("Veuillez entrer votre adresse mail :\n");
-    fgets(mail,33,stdin);
+    scanf("%s",mail);
+    viderBuffer2();
     setMail(pers,mail);
-   
-    
-    CLEAR_STDIN
+
     char *tel;
     tel=(char*)malloc(sizeof(char)*33);
     printf("Veuillez entrer votre numéro de téléphone :\n");
-    fgets(tel,33,stdin);
+    scanf("%s",tel);
+    viderBuffer2();
     setTel(pers,tel);
-   
-    CLEAR_STDIN
+
+
     setAutor(pers);
     return pers;
 }//fonctionne-->permet d'initialiser les champs de la structure Personne-->good c

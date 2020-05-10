@@ -277,22 +277,8 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
     case 7:
         //Transférer une ressource à un autre utilisateur:7
         CLEAR_STDIN
-        char*q;
-        q=(char*)malloc(sizeof(char)*33);
-        printf("Veuillez entrer l'identifiant du compte dont vous souhaitez transférer la ressource:\n");
-        scanf("%s",q);
-        Personne pts=search_pers(annu,q);
-        if (pts!=NULL){
-            CLEAR_STDIN
-            transfererRessource(pts,ls,annu);
-            break;
-        }else{
-            CLEAR_STDIN
-            color("31;1");
-            printf("Il n'existe pas de compte associé à cet identifiant.\n");
-            color("37");
-            choix_admin(annu,ls,p);
-        }
+        transfererRessource(p,ls,annu);
+        break;
     case 8:
         //Basculer vers le menu utilisateur:8
         CLEAR_STDIN
@@ -300,6 +286,7 @@ void choix_admin(Annuaire annu,Liste ls,Personne p){
         printf("\nVous allez être redirigé vers le menu utilisateur\n");
         color("37");
         welcomeUser(p,ls);
+	break;
     default :
         printf("Choix invalide.Réessayer ?\n OUI=1 ?\t NON=0 ?\n");
         int v;

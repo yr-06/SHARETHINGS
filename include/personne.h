@@ -4,7 +4,7 @@
 
 typedef struct s_pers *Personne;
 
-
+void viderBuffer2();
 //getters
 
 int getNumAccount(Personne p);
